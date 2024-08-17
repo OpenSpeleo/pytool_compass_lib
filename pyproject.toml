@@ -76,8 +76,8 @@ test = [
 
 [project.urls]
 "Homepage" = "https://pypi.org/project/compass-lib/"
-"Bug Reports" = "https://github.com/SpeleoDB/pytool_compass_lib/issues"
-"Source" = "https://github.com/SpeleoDB/pytool_compass_lib"
+"Bug Reports" = "https://github.com/OpenSpeleo/pytool_compass_lib/issues"
+"Source" = "https://github.com/OpenSpeleo/pytool_compass_lib"
 
 [project.scripts]
 compass = "compass_lib.commands.main:main"
