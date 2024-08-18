@@ -5,6 +5,9 @@ build-backend = "setuptools.build_meta"
 [tool.distutils.bdist_wheel]
 universal = true
 
+[tool.setuptools.package-dir]
+compass_lib = "compass_lib"
+
 [project]
 name = "compass_lib"
 version = "0.0.1"
