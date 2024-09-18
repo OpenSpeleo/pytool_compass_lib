@@ -10,6 +10,7 @@ def convert(args: list[str]) -> int:
     parser = argparse.ArgumentParser(prog="compass convert")
 
     parser.add_argument(
+        "-i",
         "--input_file",
         type=str,
         default=None,
@@ -18,6 +19,7 @@ def convert(args: list[str]) -> int:
     )
 
     parser.add_argument(
+        "-o",
         "--output_file",
         type=str,
         default=None,
@@ -26,6 +28,7 @@ def convert(args: list[str]) -> int:
     )
 
     parser.add_argument(
+        "-w",
         "--overwrite",
         action="store_true",
         help="Allow overwrite an already existing file.",
@@ -33,6 +36,7 @@ def convert(args: list[str]) -> int:
     )
 
     parser.add_argument(
+        "-f",
         "--format",
         type=str,
         choices=["json"],

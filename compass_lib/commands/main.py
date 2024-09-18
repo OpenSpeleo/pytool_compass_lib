@@ -5,11 +5,13 @@ from importlib.metadata import entry_points
 
 import compass_lib
 
+
 def main():
-    registered_commands = entry_points(group='compass.actions')
+    registered_commands = entry_points(group="compass.actions")
 
     parser = argparse.ArgumentParser(prog="compass_lib")
     parser.add_argument(
+        "-v",
         "--version",
         action="version",
         version=f"%(prog)s version: {compass_lib.__version__}",
