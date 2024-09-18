@@ -1,16 +1,15 @@
 #!/usr/bin/env python
 
-import dataclasses
 import datetime
 import hashlib
 import json
 import re
+from dataclasses import asdict
 from dataclasses import dataclass
 from functools import cached_property
 from pathlib import Path
-from typing import Optional
-from typing import Union
 
+from compass_lib.encoding import EnhancedJSONEncoder
 from compass_lib.enums import ShotFlag
 from compass_lib.section import SurveySection
 from compass_lib.shot import SurveyShot
@@ -54,32 +53,18 @@ class CompassFileFormat:
 
     @classmethod
     def from_str(cls, input):
-        return cls(
-            displayAzimuthUnit="",
-            displayLengthUnit="",
-            displayLrudUnit="",
-            displayInclinationUnit="",
-            lrudOrder="",
-            shotMeasurementOrder="",
-            hasBacksights="",
-            lrudAssociation="",
-        )
-
-
-
-class EnhancedJSONEncoder(json.JSONEncoder):
-    def default(self, obj):
-
-        if dataclasses.is_dataclass(obj):
-            return dataclasses.asdict(obj)
-
-        if isinstance(obj, datetime.date):
-            return obj.isoformat()
-
-        if isinstance(obj, ShotFlag):
-            return obj.value
-
-        return super().default(obj)
+        # TODO
+        raise NotImplementedError
+        # return cls(
+        #     displayAzimuthUnit="",
+        #     displayLengthUnit="",
+        #     displayLrudUnit="",
+        #     displayInclinationUnit="",
+        #     lrudOrder="",
+        #     shotMeasurementOrder="",
+        #     hasBacksights="",
+        #     lrudAssociation="",
+        # )
 
 
 class CompassParser:
@@ -113,19 +98,18 @@ class CompassParser:
     # =================== File Properties =================== #
 
     def __repr__(self) -> str:
-        repr = f"[CompassSurveyFile {self.filetype.upper()}] `{self.filepath}`:"
+        return f"[CompassSurveyFile {self.filetype.upper()}] `{self.filepath}`:"
         # for key in self._KEY_MAP.keys():
         #     if key.startswith("_"):
         #         continue
         #     repr += f"\n\t- {key}: {getattr(self, key)}"
         # repr += f"\n\t- shots: Total Shots: {len(self.shots)}"
         # repr += f"\n\t- hash: {self.hash}"
-        return repr
 
     @cached_property
     def __hash__(self):
         # return hashlib.sha256(self._as_binary()).hexdigest()
-        return hashlib.sha256("0".encode()).hexdigest()
+        return hashlib.sha256(b"0").hexdigest()
 
     @property
     def hash(self):
@@ -185,32 +169,46 @@ class CompassParser:
                 raise RuntimeError
             survey_comment = comment_str.split(":")[-1].strip()
 
-            if "SURVEY TEAM:" != entries[3].strip():
+            if entries[3].strip() != "SURVEY TEAM:":
                 raise RuntimeError
 
-            surveyors = [suveyor.strip() for suveyor in entries[4].split(",") if suveyor.strip() != ""]
+            surveyors = [
+                suveyor.strip() for suveyor in entries[4].split(",")
+                if suveyor.strip() != ""
+            ]
 
-            if "DECLINATION:" not in entries[5]:
-                raise RuntimeError
-            if "FORMAT:" not in entries[5]:
-                raise RuntimeError
-            if "CORRECTIONS:" not in entries[5]:
-                raise RuntimeError
+            for _str in ["DECLINATION:", "FORMAT:", "CORRECTIONS:"]:
+                if _str not in entries[5]:
+                    raise RuntimeError(f"`{_str}` not found in {entries[5]=}")
 
-            _, declination_str, _, format_str, _, correct_A, correct_B, correct_C = entries[5].split()
+            try:
+                _, declination_str, _, format_str, _, correct_A, correct_B, correct_C = entries[5].split()  # noqa: E501
+                correct2_A, correct2_B = 0, 0
+            except ValueError:
+                _, declination_str, _, format_str, _, correct_A, correct_B, correct_C, _, correct2_A, correct2_B = entries[5].split()  # noqa: E501
 
-            shots = list()
+            shots = []
+
             for shot in entries[9:]:
                 shot_data = shot.split(maxsplit=9)
-                from_id, to_id, length, bearing, incl, left, up, down, right = shot_data[:9]
+
+                from_id, to_id, length, bearing, incl, left, up, down, right = shot_data[:9]  # noqa: E501
 
                 try:
                     flags_comment = shot_data[9]
 
-                    flag_regex = rf"({ShotFlag.__start_token__}([{''.join(ShotFlag._value2member_map_.keys())}]*){ShotFlag.__end_token__})*(.*)"
+                    flag_regex = (
+                        rf"({ShotFlag.__start_token__}"
+                        rf"([{''.join(ShotFlag._value2member_map_.keys())}]*){ShotFlag.__end_token__})*(.*)"  # noqa: SLF001
+                    )
+
                     _, flag_str, comment = re.search(flag_regex, flags_comment).groups()
 
-                    flags = [ShotFlag._value2member_map_[f] for f in flag_str] if flag_str else None
+                    flags = (
+                        [ShotFlag._value2member_map_[f] for f in flag_str]  # noqa: SLF001
+                        if flag_str else
+                        None
+                    )
 
                 except IndexError:
                     flags = None
@@ -239,6 +237,7 @@ class CompassParser:
                 declination=float(declination_str),
                 format=format_str,
                 correction=(float(correct_A), float(correct_B), float(correct_C)),
+                correction2=(float(correct2_A), float(correct2_B)),
                 shots=shots
             )
             sections.append(section)
@@ -248,11 +247,63 @@ class CompassParser:
 
     # =================== Export Formats =================== #
 
-    def to_json(self, filepath: Optional[Union[str, Path]] = None) -> str:
-        json_str = json.dumps(self.data, indent=4, sort_keys=True, cls=EnhancedJSONEncoder)
+    def to_json(self, filepath: str | Path | None = None, include_depth: bool = False) -> str:  # noqa: E501
+        data = [asdict(section) for section in self.data]
+
+        if not include_depth:
+            for section in data:
+                for shot in section["shots"]:
+                    del shot["depth"]
+        else:
+            import copy
+            shots = {
+                shot["to_id"]: copy.deepcopy(shot)
+                for section in data
+                for shot in section["shots"]
+            }
+
+            import math
+            from functools import lru_cache
+
+            @lru_cache(maxsize=99999)
+            def find_depth_shot(target: str):
+                # if target not in shots:
+                if False:
+                    print("hello")
+                    return 0.0
+
+                try:
+                    if shots[target]["depth"] is not None:
+                        print(f"{target=}, {shots[target]}")
+                        print("---- TEST _----")
+                        return shots[target]["depth"]
+                except KeyError:
+                    return 0.0
+
+                start_depth = find_depth_shot(target=shots[target]["from_id"])
+                vertical_delta = math.cos(math.radians(90 + float(shot["inclination"]))) * float(shot["length"])
+                rslt = round(start_depth + vertical_delta, ndigits=4)
+                print(f"{target=}  => {start_depth} + {vertical_delta} = {rslt}")
+                return rslt
+
+            for section in data:
+                for shot in section["shots"]:
+                    shot["depth"] = find_depth_shot(target=shot["to_id"])
+
+        print(data)
+        json_str = json.dumps(
+            data,
+            indent=4,
+            sort_keys=True,
+            cls=EnhancedJSONEncoder
+        )
 
         if filepath is not None:
-            with open(filepath, mode="w") as file:
+
+            if not isinstance(filepath, Path):
+                filepath = Path(filepath)
+
+            with filepath.open(mode="w") as file:
                 file.write(json_str)
 
         return json_str

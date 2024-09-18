@@ -220,6 +220,10 @@ ignore = [
   "PLR0913", # Checks for function definitions that include too many arguments.
   "S311",    # Checks for uses of cryptographically weak pseudo-random number generators.
   "ERA001",  # Checks for commented-out Python code.
+  "N806",    # Checks for the use of non-lowercase variable names in functions.
+  "DTZ007",  # Checks for uses of datetime.datetime.strptime() that lead to naive datetime objects.
+  "N815",    # Checks for class variable names that follow the mixedCase convention.
+  "FBT001",  # Checks for the use of boolean positional arguments in function definitions, as determined by the presence of a bool type hint.
 ]
 # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]

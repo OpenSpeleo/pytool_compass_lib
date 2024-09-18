@@ -16,4 +16,5 @@ class SurveySection:
     declination: float
     format: str
     correction: tuple[float, float, float]
+    correction2: tuple[float, float]
     shots: list[SurveyShot]

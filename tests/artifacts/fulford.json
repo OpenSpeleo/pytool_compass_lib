@@ -7,6 +7,10 @@
             0.0,
             0.0
         ],
+        "correction2": [
+            0.0,
+            0.0
+        ],
         "date": "1987-06-29",
         "declination": 11.18,
         "format": "DDDDUDLRLADN",
@@ -176,6 +180,10 @@
         "comment": "Big Meander Area",
         "correction": [
             0.0,
+            0.0,
+            0.0
+        ],
+        "correction2": [
             0.0,
             0.0
         ],
@@ -455,6 +463,10 @@
         "comment": "Stream Gallery",
         "correction": [
             0.0,
+            0.0,
+            0.0
+        ],
+        "correction2": [
             0.0,
             0.0
         ],
@@ -777,6 +789,10 @@
             0.0,
             0.0
         ],
+        "correction2": [
+            0.0,
+            0.0
+        ],
         "date": "1988-07-16",
         "declination": 11.18,
         "format": "DDDDUDLRLADN",
@@ -1017,6 +1033,10 @@
             0.0,
             0.0
         ],
+        "correction2": [
+            0.0,
+            0.0
+        ],
         "date": "1988-07-17",
         "declination": 11.18,
         "format": "DDDDUDLRLADN",
@@ -1137,6 +1157,10 @@
         "comment": "Stalagmite Room",
         "correction": [
             0.0,
+            0.0,
+            0.0
+        ],
+        "correction2": [
             0.0,
             0.0
         ],
@@ -1577,6 +1601,10 @@
             0.0,
             0.0
         ],
+        "correction2": [
+            0.0,
+            0.0
+        ],
         "date": "1988-08-28",
         "declination": 11.18,
         "format": "DDDDUDLRLADN",
@@ -1621,6 +1649,10 @@
         "comment": "North Entrance",
         "correction": [
             0.0,
+            0.0,
+            0.0
+        ],
+        "correction2": [
             0.0,
             0.0
         ],
@@ -1774,6 +1806,10 @@
         "comment": "Lower Room",
         "correction": [
             0.0,
+            0.0,
+            0.0
+        ],
+        "correction2": [
             0.0,
             0.0
         ],
@@ -1967,6 +2003,10 @@
             0.0,
             0.0
         ],
+        "correction2": [
+            0.0,
+            0.0
+        ],
         "date": "1988-08-28",
         "declination": 11.18,
         "format": "DDDDUDLRLADN",
@@ -2142,6 +2182,10 @@
             0.0,
             0.0
         ],
+        "correction2": [
+            0.0,
+            0.0
+        ],
         "date": "1988-08-28",
         "declination": 11.18,
         "format": "DDDDUDLRLADN",
@@ -2267,6 +2311,10 @@
             0.0,
             0.0
         ],
+        "correction2": [
+            0.0,
+            0.0
+        ],
         "date": "1988-08-28",
         "declination": 11.18,
         "format": "DDDDUDLRLADN",
@@ -2327,6 +2375,10 @@
         "comment": "Upper Level Side Passage",
         "correction": [
             0.0,
+            0.0,
+            0.0
+        ],
+        "correction2": [
             0.0,
             0.0
         ],
@@ -2399,6 +2451,10 @@
         "comment": "Attic, Stove Pipe, Two Level Room",
         "correction": [
             0.0,
+            0.0,
+            0.0
+        ],
+        "correction2": [
             0.0,
             0.0
         ],
@@ -2722,6 +2778,10 @@
             0.0,
             0.0
         ],
+        "correction2": [
+            0.0,
+            0.0
+        ],
         "date": "1988-10-08",
         "declination": 11.18,
         "format": "DDDDUDLRLADN",
@@ -2869,6 +2929,10 @@
         "comment": "Upper Stream",
         "correction": [
             0.0,
+            0.0,
+            0.0
+        ],
+        "correction2": [
             0.0,
             0.0
         ],
@@ -3088,6 +3152,10 @@
             0.0,
             0.0
         ],
+        "correction2": [
+            0.0,
+            0.0
+        ],
         "date": "1989-02-11",
         "declination": 11.18,
         "format": "DDDDUDLRLADN",
@@ -3187,6 +3255,10 @@
             0.0,
             0.0
         ],
+        "correction2": [
+            0.0,
+            0.0
+        ],
         "date": "1989-02-11",
         "declination": 11.18,
         "format": "DDDDUDLRLADN",
@@ -3244,6 +3316,10 @@
         "comment": "Devils Washboard Connection",
         "correction": [
             0.0,
+            0.0,
+            0.0
+        ],
+        "correction2": [
             0.0,
             0.0
         ],
@@ -3359,6 +3435,10 @@
             0.0,
             0.0
         ],
+        "correction2": [
+            0.0,
+            0.0
+        ],
         "date": "1989-06-10",
         "declination": 11.18,
         "format": "DDDDUDLRLADN",
@@ -3429,6 +3509,10 @@
         "comment": "JFK Room",
         "correction": [
             0.0,
+            0.0,
+            0.0
+        ],
+        "correction2": [
             0.0,
             0.0
         ],
@@ -3570,6 +3654,10 @@
             0.0,
             0.0
         ],
+        "correction2": [
+            0.0,
+            0.0
+        ],
         "date": "1989-06-10",
         "declination": 11.18,
         "format": "DDDDUDLRLADN",
@@ -3679,6 +3767,10 @@
         "comment": "Balconies",
         "correction": [
             0.0,
+            0.0,
+            0.0
+        ],
+        "correction2": [
             0.0,
             0.0
         ],
@@ -3794,6 +3886,10 @@
             0.0,
             0.0
         ],
+        "correction2": [
+            0.0,
+            0.0
+        ],
         "date": "1989-06-10",
         "declination": 11.18,
         "format": "DDDDUDLRLADN",
@@ -3838,6 +3934,10 @@
         "comment": "Moon Milk Side Passage",
         "correction": [
             0.0,
+            0.0,
+            0.0
+        ],
+        "correction2": [
             0.0,
             0.0
         ],

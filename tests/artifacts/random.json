@@ -7,6 +7,10 @@
             0.0,
             0.0
         ],
+        "correction2": [
+            0.0,
+            0.0
+        ],
         "date": "2001-04-22",
         "declination": 0.0,
         "format": "DDDWLRUDALDN",

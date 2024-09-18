@@ -20,3 +20,4 @@ class SurveyShot:
     right: float
     flags: list[ShotFlag]
     comment: str
+    depth: float | None = None
