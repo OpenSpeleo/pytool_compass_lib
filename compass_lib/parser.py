@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 
+import codecs
+import contextlib
+import copy
 import datetime
 import hashlib
 import json
 import re
 from dataclasses import asdict
 from dataclasses import dataclass
+from enum import IntEnum
 from functools import cached_property
 from pathlib import Path
 
@@ -40,31 +44,56 @@ from compass_lib.shot import SurveyShot
 #     }`
 #   }
 
-@dataclass
-class CompassFileFormat:
-    displayAzimuthUnit: str
-    displayLengthUnit: str
-    displayLrudUnit: str
-    displayInclinationUnit: str
-    lrudOrder: str
-    shotMeasurementOrder: str
-    hasBacksights: str
-    lrudAssociation: str
+# @dataclass
+# class CompassFileFormat:
+#     displayAzimuthUnit: str
+#     displayLengthUnit: str
+#     displayLrudUnit: str
+#     displayInclinationUnit: str
+#     lrudOrder: str
+#     shotMeasurementOrder: str
+#     hasBacksights: str
+#     lrudAssociation: str
+
+#     @classmethod
+#     def from_str(cls, input):
+#         # TODO
+#         raise NotImplementedError
+#         # return cls(
+#         #     displayAzimuthUnit="",
+#         #     displayLengthUnit="",
+#         #     displayLrudUnit="",
+#         #     displayInclinationUnit="",
+#         #     lrudOrder="",
+#         #     shotMeasurementOrder="",
+#         #     hasBacksights="",
+#         #     lrudAssociation="",
+#         # )
+
+class CompassFileType(IntEnum):
+    DAT = 0
+    MAK = 1
+    PLT = 2
 
     @classmethod
-    def from_str(cls, input):
-        # TODO
-        raise NotImplementedError
-        # return cls(
-        #     displayAzimuthUnit="",
-        #     displayLengthUnit="",
-        #     displayLrudUnit="",
-        #     displayInclinationUnit="",
-        #     lrudOrder="",
-        #     shotMeasurementOrder="",
-        #     hasBacksights="",
-        #     lrudAssociation="",
-        # )
+    def from_str(cls, value: str):
+        value = value.upper()
+        match value:
+            case "DAT":
+                return cls.DAT
+            case "MAK":
+                return cls.MAK
+            case "PLT":
+                return cls.PLT
+            case _:
+                raise ValueError(f"Unknown value: {value}")
+
+    @classmethod
+    def from_path(cls, filepath: str | Path):
+        if not isinstance(filepath, Path):
+            filepath = Path(filepath)
+
+        return cls.from_str(filepath.suffix.upper()[1:])  # Remove the leading `.`
 
 
 class CompassParser:
@@ -86,7 +115,7 @@ class CompassParser:
     @cached_property
     def _data(self):
 
-        with self.filepath.open(mode="r") as f:
+        with codecs.open(self.filepath, "rb", "windows-1252") as f:
             data = f.read()
 
         return [
@@ -99,16 +128,9 @@ class CompassParser:
 
     def __repr__(self) -> str:
         return f"[CompassSurveyFile {self.filetype.upper()}] `{self.filepath}`:"
-        # for key in self._KEY_MAP.keys():
-        #     if key.startswith("_"):
-        #         continue
-        #     repr += f"\n\t- {key}: {getattr(self, key)}"
-        # repr += f"\n\t- shots: Total Shots: {len(self.shots)}"
-        # repr += f"\n\t- hash: {self.hash}"
 
     @cached_property
     def __hash__(self):
-        # return hashlib.sha256(self._as_binary()).hexdigest()
         return hashlib.sha256(b"0").hexdigest()
 
     @property
@@ -124,10 +146,6 @@ class CompassParser:
     @property
     def filetype(self):
         return self.filepath.suffix[1:]
-        # try:
-        #     return ArianeFileType.from_str(self.filepath.suffix[1:])
-        # except ValueError as e:
-        #     raise TypeError(e) from e
 
     @property
     def lstat(self):
@@ -159,15 +177,29 @@ class CompassParser:
                 raise RuntimeError
             survey_name = entries[1].split(":")[-1].strip()
 
-            date_str, comment_str = entries[2].split("  ", maxsplit=1)
+            try:
+                date_str, comment_str = entries[2].split("  ", maxsplit=1)
+            except ValueError:
+                date_str = entries[2]
+                comment_str = None
 
             if "SURVEY DATE: " not in date_str:
                 raise RuntimeError
             date = date_str.split(":")[-1].strip()
 
-            if "COMMENT:" not in comment_str:
-                raise RuntimeError
-            survey_comment = comment_str.split(":")[-1].strip()
+            for date_format in ["%m %d %Y", "%m %d %y"]:
+                try:
+                    date = datetime.datetime.strptime(date, date_format).date()
+                    break
+                except ValueError:
+                    continue
+
+            if comment_str is None:
+                survey_comment = ""
+            elif "COMMENT:" not in comment_str:
+                raise ValueError(f"Improper Comment Format: `{survey_comment}`")
+            else:
+                survey_comment = comment_str.split(":")[-1].strip()
 
             if entries[3].strip() != "SURVEY TEAM:":
                 raise RuntimeError
@@ -177,15 +209,20 @@ class CompassParser:
                 if suveyor.strip() != ""
             ]
 
-            for _str in ["DECLINATION:", "FORMAT:", "CORRECTIONS:"]:
-                if _str not in entries[5]:
-                    raise RuntimeError(f"`{_str}` not found in {entries[5]=}")
+            optional_data = entries[5].split()
+            declination_str = format_str = None
 
-            try:
-                _, declination_str, _, format_str, _, correct_A, correct_B, correct_C = entries[5].split()  # noqa: E501
-                correct2_A, correct2_B = 0, 0
-            except ValueError:
-                _, declination_str, _, format_str, _, correct_A, correct_B, correct_C, _, correct2_A, correct2_B = entries[5].split()  # noqa: E501
+            correct_A = correct_B = correct_C = \
+            correct2_A = correct2_B = 0.0
+
+            with contextlib.suppress(IndexError, ValueError):
+                header, declination_str = optional_data[0:2]
+                header, format_str = optional_data[2:4]
+                header, correct_A = optional_data[4:6]
+                header, correct_B = optional_data[6:8]
+                header, correct_C = optional_data[8:10]
+                header, correct2_A = optional_data[10:12]
+                header, correct2_B = optional_data[12:14]
 
             shots = []
 
@@ -231,7 +268,7 @@ class CompassParser:
             section = SurveySection(
                 cave_name=cave_name,
                 survey_name=survey_name,
-                date=datetime.datetime.strptime(date, "%m %d %Y").date(),
+                date=date,
                 comment=survey_comment,
                 surveyors=surveyors,
                 declination=float(declination_str),
@@ -255,7 +292,6 @@ class CompassParser:
                 for shot in section["shots"]:
                     del shot["depth"]
         else:
-            import copy
             shots = {
                 shot["to_id"]: copy.deepcopy(shot)
                 for section in data
@@ -267,30 +303,24 @@ class CompassParser:
 
             @lru_cache(maxsize=99999)
             def find_depth_shot(target: str):
-                # if target not in shots:
-                if False:
-                    print("hello")
-                    return 0.0
-
                 try:
                     if shots[target]["depth"] is not None:
-                        print(f"{target=}, {shots[target]}")
-                        print("---- TEST _----")
                         return shots[target]["depth"]
                 except KeyError:
                     return 0.0
 
                 start_depth = find_depth_shot(target=shots[target]["from_id"])
-                vertical_delta = math.cos(math.radians(90 + float(shot["inclination"]))) * float(shot["length"])
-                rslt = round(start_depth + vertical_delta, ndigits=4)
-                print(f"{target=}  => {start_depth} + {vertical_delta} = {rslt}")
-                return rslt
+
+                vertical_delta = math.cos(
+                    math.radians(90 + float(shot["inclination"]))
+                ) * float(shot["length"])
+
+                return round(start_depth + vertical_delta, ndigits=4)
 
             for section in data:
                 for shot in section["shots"]:
                     shot["depth"] = find_depth_shot(target=shot["to_id"])
 
-        print(data)
         json_str = json.dumps(
             data,
             indent=4,
@@ -307,6 +337,58 @@ class CompassParser:
                 file.write(json_str)
 
         return json_str
+
+    def to_dat(self, filepath: Path | str) -> None:
+        if isinstance(filepath, str):
+            filepath = Path(filepath)
+
+        filetype = CompassFileType.from_path(filepath)
+
+        if filetype != CompassFileType.DAT:
+            raise TypeError(f"Unsupported fileformat: `{filetype.name}`. "
+                            f"Expected: `{CompassFileType.DAT.name}`")
+
+        with codecs.open(filepath, "wb", "windows-1252") as f:
+            for section in self.data:
+                # Section Header
+                f.write(f"{section.cave_name}\n")
+                f.write(f"SURVEY NAME: {section.survey_name}\n")
+                f.write(f"SURVEY DATE: {section.date.strftime('%m %-d %Y')}  ")
+                f.write(f"COMMENT:{section.comment}\n")
+                f.write("SURVEY TEAM:\n")
+                f.write(f"{','.join(section.surveyors)}\n")
+                f.write(f"DECLINATION: {section.declination: >7}  ")
+                f.write(f"FORMAT: {section.format}  ")
+                f.write(f"CORRECTIONS: {" ".join(f'{nbr:.02f}' for nbr in section.correction)}  ")  # noqa: E501
+                f.write(f"CORRECTIONS2: {" ".join(f'{nbr:.02f}' for nbr in section.correction2)}\n\n")  # noqa: E501
+
+                # Shots - Header
+                f.write("        FROM           TO   LENGTH  BEARING      INC")
+                f.write("     LEFT       UP     DOWN    RIGHT")
+                f.write("     AZM2     INC2   FLAGS  COMMENTS\n\n")
+
+                # Shots - Data
+                for shot in section.shots:
+                    f.write(f"{shot.from_id: >12} ")
+                    f.write(f"{shot.to_id: >12} ")
+                    f.write(f"{shot.length:8.2f} ")
+                    f.write(f"{shot.bearing:8.2f} ")
+                    f.write(f"{shot.inclination:8.2f} ")
+                    f.write(f"{shot.left:8.2f} ")
+                    f.write(f"{shot.up:8.2f} ")
+                    f.write(f"{shot.down:8.2f} ")
+                    f.write(f"{shot.right:8.2f} ")
+                    f.write(f"{shot.azimuth2:8.2f} ")
+                    f.write(f"{shot.inclination2:8.2f}")
+                    if shot.flags is not None:
+                        f.write(f" {shot.flags} ")
+                    if shot.comment is not None:
+                        f.write(f" {shot.comment}")
+                    f.write("\n")
+
+                # End of Section
+                f.write(f"{self.SEPARATOR}\n")  # Form_feed: https://www.ascii-code.com/12
+            f.write(f"{self.END_OF_FILE}\n")    # Substitute: https://www.ascii-code.com/26
 
     # ==================== Public APIs ====================== #
 

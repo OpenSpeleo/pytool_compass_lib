@@ -1,0 +1,54 @@
+[
+    {
+        "cave_name": "Shoveleater",
+        "comment": "team member name contains special character",
+        "correction": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "correction2": [
+            0.0,
+            0.0
+        ],
+        "date": "2008-08-30",
+        "declination": -9.06,
+        "format": "DIDDLRUDLADB",
+        "shots": [
+            {
+                "bearing": 261.0,
+                "comment": "80.00     2.50",
+                "down": 65.0,
+                "flags": null,
+                "from_id": "i18n1",
+                "inclination": -3.0,
+                "left": 3.0,
+                "length": 2.0,
+                "right": 0.0,
+                "to_id": "i18n2",
+                "up": 25.0
+            },
+            {
+                "bearing": 0.0,
+                "comment": "180.00    90.00",
+                "down": 0.0,
+                "flags": null,
+                "from_id": "i18n2",
+                "inclination": -90.0,
+                "left": 1.0,
+                "length": 65.0,
+                "right": 3.0,
+                "to_id": "i18n3",
+                "up": 90.0
+            }
+        ],
+        "survey_name": "i18n",
+        "surveyors": [
+            "Mark Minton",
+            "Yvonne Droms",
+            "James Hunter",
+            "Tommy Shifflett",
+            "Tanya Pietra\u00df"
+        ]
+    }
+]

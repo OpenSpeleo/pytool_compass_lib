@@ -224,6 +224,9 @@ ignore = [
   "DTZ007",  # Checks for uses of datetime.datetime.strptime() that lead to naive datetime objects.
   "N815",    # Checks for class variable names that follow the mixedCase convention.
   "FBT001",  # Checks for the use of boolean positional arguments in function definitions, as determined by the presence of a bool type hint.
+  "C901",    # Checks for functions with a high McCabe complexity.
+  "PLR0915", # Checks for functions or methods with too many statements.
+  "PLR0912", # Checks for functions or methods with too many branches
 ]
 # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]
