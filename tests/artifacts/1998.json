@@ -16,12 +16,14 @@
         "format": null,
         "shots": [
             {
+                "azimuth2": 0.0,
                 "bearing": 0.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "H1",
                 "inclination": -90.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 70.0,
                 "right": -9.9,
@@ -29,12 +31,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 1.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "2",
                 "inclination": 8.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 5.0,
                 "right": -9.9,
@@ -42,12 +46,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 293.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "3",
                 "inclination": -40.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 19.1,
                 "right": -9.9,
@@ -55,12 +61,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 60.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "4",
                 "inclination": 37.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 18.3,
                 "right": -9.9,
@@ -68,12 +76,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 152.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "5",
                 "inclination": 23.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 11.8,
                 "right": -9.9,
@@ -81,12 +91,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 270.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "6",
                 "inclination": 17.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 7.5,
                 "right": -9.9,
@@ -94,12 +106,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 28.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "4",
                 "inclination": -2.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 15.4,
                 "right": -9.9,
@@ -107,12 +121,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 278.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "8",
                 "inclination": 24.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 13.2,
                 "right": -9.9,
@@ -120,12 +136,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 275.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "9",
                 "inclination": -3.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 15.2,
                 "right": -9.9,
@@ -133,12 +151,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 211.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "10",
                 "inclination": -16.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 4.9,
                 "right": -9.9,
@@ -146,12 +166,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 302.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "11",
                 "inclination": -51.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 10.7,
                 "right": -9.9,
@@ -159,12 +181,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 0.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "12",
                 "inclination": -90.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 27.0,
                 "right": -9.9,
@@ -172,12 +196,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 90.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "10",
                 "inclination": -16.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 11.2,
                 "right": -9.9,
@@ -185,12 +211,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 138.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "24",
                 "inclination": -8.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 7.9,
                 "right": -9.9,
@@ -198,12 +226,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 140.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "25",
                 "inclination": 17.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 11.9,
                 "right": -9.9,
@@ -211,12 +241,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 75.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "13",
                 "inclination": -2.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 6.8,
                 "right": -9.9,
@@ -224,12 +256,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 88.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "14",
                 "inclination": -52.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 11.0,
                 "right": -9.9,
@@ -237,12 +271,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 44.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "15",
                 "inclination": 24.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 11.3,
                 "right": -9.9,
@@ -250,12 +286,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 27.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "16",
                 "inclination": 49.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 11.5,
                 "right": -9.9,
@@ -263,12 +301,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 278.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "15",
                 "inclination": -23.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 6.3,
                 "right": -9.9,
@@ -276,12 +316,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 0.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "18",
                 "inclination": -90.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 8.8,
                 "right": -9.9,
@@ -289,12 +331,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 3.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "19",
                 "inclination": -15.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 7.6,
                 "right": -9.9,
@@ -302,12 +346,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 28.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "20",
                 "inclination": -19.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 7.0,
                 "right": -9.9,
@@ -315,12 +361,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 0.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "21",
                 "inclination": -90.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 6.3,
                 "right": -9.9,
@@ -328,12 +376,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 155.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "22",
                 "inclination": -3.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 10.9,
                 "right": -9.9,
@@ -341,12 +391,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 1.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "4",
                 "inclination": -49.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 6.2,
                 "right": -9.9,
@@ -354,12 +406,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 0.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "26",
                 "inclination": -90.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 19.5,
                 "right": -9.9,
@@ -367,12 +421,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 180.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "27",
                 "inclination": -29.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 19.4,
                 "right": -9.9,
@@ -380,12 +436,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 175.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "28",
                 "inclination": 24.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 16.0,
                 "right": -9.9,
@@ -393,12 +451,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 293.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "29",
                 "inclination": 21.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 11.3,
                 "right": -9.9,
@@ -406,12 +466,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 5.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "30",
                 "inclination": -18.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 15.0,
                 "right": -9.9,
@@ -419,12 +481,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 31.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "31",
                 "inclination": 3.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 17.8,
                 "right": -9.9,
@@ -432,12 +496,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 355.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "30",
                 "inclination": 11.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 20.2,
                 "right": -9.9,
@@ -445,12 +511,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 54.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "32",
                 "inclination": -16.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 15.2,
                 "right": -9.9,
@@ -458,12 +526,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 114.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "29",
                 "inclination": -30.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 22.5,
                 "right": -9.9,
@@ -471,12 +541,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 252.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "33",
                 "inclination": 35.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 20.8,
                 "right": -9.9,
@@ -484,12 +556,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 122.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "33",
                 "inclination": -48.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 12.7,
                 "right": -9.9,
@@ -497,12 +571,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 162.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "33",
                 "inclination": 10.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 29.2,
                 "right": -9.9,
@@ -510,12 +586,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 143.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "36",
                 "inclination": -20.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 43.4,
                 "right": -9.9,
@@ -523,12 +601,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 143.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "3",
                 "inclination": -16.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 24.5,
                 "right": -9.9,
@@ -536,12 +616,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 217.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "200",
                 "inclination": -36.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 5.3,
                 "right": -9.9,
@@ -549,12 +631,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 222.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "201",
                 "inclination": -65.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 52.0,
                 "right": -9.9,
@@ -562,12 +646,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 142.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "37",
                 "inclination": -21.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 19.0,
                 "right": -9.9,
@@ -575,12 +661,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 161.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "38",
                 "inclination": -6.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 14.8,
                 "right": -9.9,
@@ -588,12 +676,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 194.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "39",
                 "inclination": -2.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 11.8,
                 "right": -9.9,
@@ -601,12 +691,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 212.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "40",
                 "inclination": 2.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 8.4,
                 "right": -9.9,
@@ -614,12 +706,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 177.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "41",
                 "inclination": -19.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 2.7,
                 "right": -9.9,
@@ -627,12 +721,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 114.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "42",
                 "inclination": -17.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 9.1,
                 "right": -9.9,
@@ -640,12 +736,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 149.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "43",
                 "inclination": -3.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 8.5,
                 "right": -9.9,
@@ -653,12 +751,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 136.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "44",
                 "inclination": -5.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 8.5,
                 "right": -9.9,
@@ -666,12 +766,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 178.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "45",
                 "inclination": -10.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 3.4,
                 "right": -9.9,
@@ -679,12 +781,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 161.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "46",
                 "inclination": 1.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 10.1,
                 "right": -9.9,
@@ -692,12 +796,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 103.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "47",
                 "inclination": -24.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 3.9,
                 "right": -9.9,
@@ -705,12 +811,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 0.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "48",
                 "inclination": -90.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 22.9,
                 "right": -9.9,
@@ -718,12 +826,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 345.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "49",
                 "inclination": 10.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 25.4,
                 "right": -9.9,
@@ -731,12 +841,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 200.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "48",
                 "inclination": 19.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 6.0,
                 "right": -9.9,
@@ -744,12 +856,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 231.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "51",
                 "inclination": -5.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 13.1,
                 "right": -9.9,
@@ -757,12 +871,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 139.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "51",
                 "inclination": 2.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 11.9,
                 "right": -9.9,
@@ -770,12 +886,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 165.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "53",
                 "inclination": -1.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 10.5,
                 "right": -9.9,
@@ -783,12 +901,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 300.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "37",
                 "inclination": 8.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 40.8,
                 "right": -9.9,
@@ -796,12 +916,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 246.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "55",
                 "inclination": -39.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 12.5,
                 "right": -9.9,
@@ -809,12 +931,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 278.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "55",
                 "inclination": -18.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 21.7,
                 "right": -9.9,
@@ -822,12 +946,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 281.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "57",
                 "inclination": 1.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 33.2,
                 "right": -9.9,
@@ -835,12 +961,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 290.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "58",
                 "inclination": -35.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 20.2,
                 "right": -9.9,
@@ -848,12 +976,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 0.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "59",
                 "inclination": -90.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 20.4,
                 "right": -9.9,
@@ -861,12 +991,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 197.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "60",
                 "inclination": 51.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 6.7,
                 "right": -9.9,
@@ -874,12 +1006,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 152.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "61",
                 "inclination": 7.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 10.4,
                 "right": -9.9,
@@ -887,12 +1021,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 213.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "60",
                 "inclination": 28.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 5.7,
                 "right": -9.9,
@@ -900,12 +1036,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 193.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "63",
                 "inclination": -9.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 24.8,
                 "right": -9.9,
@@ -913,12 +1051,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 126.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "64",
                 "inclination": -30.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 17.1,
                 "right": -9.9,
@@ -926,12 +1066,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 201.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "65",
                 "inclination": 4.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 9.0,
                 "right": -9.9,
@@ -939,12 +1081,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 202.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "66",
                 "inclination": 2.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 10.1,
                 "right": -9.9,
@@ -952,12 +1096,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 232.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "67",
                 "inclination": -36.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 8.9,
                 "right": -9.9,
@@ -965,12 +1111,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 166.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "68",
                 "inclination": -24.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 9.8,
                 "right": -9.9,
@@ -978,12 +1126,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 123.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "69",
                 "inclination": -19.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 12.6,
                 "right": -9.9,
@@ -991,12 +1141,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 29.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "69",
                 "inclination": -28.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 16.5,
                 "right": -9.9,
@@ -1004,12 +1156,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 114.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "69",
                 "inclination": -55.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 12.9,
                 "right": -9.9,
@@ -1017,12 +1171,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 274.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "72",
                 "inclination": -4.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 10.0,
                 "right": -9.9,
@@ -1030,12 +1186,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 291.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "73",
                 "inclination": 5.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 10.1,
                 "right": -9.9,
@@ -1043,12 +1201,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 275.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "74",
                 "inclination": 23.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 13.4,
                 "right": -9.9,
@@ -1056,12 +1216,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 242.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "75",
                 "inclination": 3.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 11.4,
                 "right": -9.9,
@@ -1069,12 +1231,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 208.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "76",
                 "inclination": 1.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 12.7,
                 "right": -9.9,
@@ -1082,12 +1246,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 188.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "77",
                 "inclination": -21.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 14.4,
                 "right": -9.9,
@@ -1095,12 +1261,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 264.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "78",
                 "inclination": -14.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 14.8,
                 "right": -9.9,
@@ -1108,12 +1276,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 1.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "75",
                 "inclination": 72.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 3.8,
                 "right": -9.9,
@@ -1121,12 +1291,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 321.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "80",
                 "inclination": 37.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 5.4,
                 "right": -9.9,
@@ -1134,12 +1306,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 0.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "81",
                 "inclination": 90.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 15.4,
                 "right": -9.9,
@@ -1147,12 +1321,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 75.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "82",
                 "inclination": 8.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 16.2,
                 "right": -9.9,
@@ -1160,12 +1336,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 277.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "83",
                 "inclination": -32.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 23.2,
                 "right": -9.9,
@@ -1173,12 +1351,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 311.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "84",
                 "inclination": -38.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 13.6,
                 "right": -9.9,
@@ -1186,12 +1366,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 34.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "85",
                 "inclination": -17.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 7.1,
                 "right": -9.9,
@@ -1199,12 +1381,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 84.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "86",
                 "inclination": 37.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 12.2,
                 "right": -9.9,
@@ -1212,12 +1396,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 0.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "87",
                 "inclination": 90.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 7.5,
                 "right": -9.9,
@@ -1225,12 +1411,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 94.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "88",
                 "inclination": 29.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 10.6,
                 "right": -9.9,
@@ -1238,12 +1426,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 164.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "89",
                 "inclination": 10.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 15.4,
                 "right": -9.9,
@@ -1251,12 +1441,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 20.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "83",
                 "inclination": -6.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 32.3,
                 "right": -9.9,
@@ -1264,12 +1456,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 0.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "83",
                 "inclination": -5.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 41.4,
                 "right": -9.9,
@@ -1277,12 +1471,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 3.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "84A",
                 "inclination": 0.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 8.5,
                 "right": -9.9,
@@ -1290,12 +1486,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 31.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "85A",
                 "inclination": 1.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 7.1,
                 "right": -9.9,
@@ -1303,12 +1501,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 91.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "86A",
                 "inclination": 12.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 13.6,
                 "right": -9.9,
@@ -1316,12 +1516,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 57.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "87A",
                 "inclination": 0.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 4.7,
                 "right": -9.9,
@@ -1329,12 +1531,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 7.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "60",
                 "inclination": 0.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 15.0,
                 "right": -9.9,
@@ -1342,12 +1546,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 302.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "88A",
                 "inclination": 1.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 13.3,
                 "right": -9.9,
@@ -1355,12 +1561,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 351.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "89A",
                 "inclination": 6.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 10.4,
                 "right": -9.9,
@@ -1368,12 +1576,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 324.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "90",
                 "inclination": 10.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 5.7,
                 "right": -9.9,
@@ -1381,12 +1591,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 314.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "91",
                 "inclination": -3.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 15.3,
                 "right": -9.9,
@@ -1394,12 +1606,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 343.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "92",
                 "inclination": 15.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 21.1,
                 "right": -9.9,
@@ -1407,12 +1621,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 326.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "93",
                 "inclination": 2.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 14.4,
                 "right": -9.9,
@@ -1420,12 +1636,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 56.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "94",
                 "inclination": 22.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 7.7,
                 "right": -9.9,
@@ -1456,12 +1674,14 @@
         "format": null,
         "shots": [
             {
+                "azimuth2": 0.0,
                 "bearing": 124.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "C10",
                 "inclination": -51.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 32.2,
                 "right": -9.9,
@@ -1469,12 +1689,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 0.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "C9",
                 "inclination": -90.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 10.0,
                 "right": -9.9,
@@ -1482,12 +1704,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 56.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "C8",
                 "inclination": -55.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 19.6,
                 "right": -9.9,
@@ -1495,12 +1719,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 19.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "C5",
                 "inclination": -10.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 14.4,
                 "right": -9.9,
@@ -1508,12 +1734,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 329.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "C5",
                 "inclination": 30.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 16.2,
                 "right": -9.9,
@@ -1521,12 +1749,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 317.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "C6",
                 "inclination": 0.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 24.0,
                 "right": -9.9,
@@ -1534,12 +1764,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 23.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "C1",
                 "inclination": 16.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 6.8,
                 "right": -9.9,
@@ -1547,12 +1779,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 194.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "C1",
                 "inclination": 2.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 24.5,
                 "right": -9.9,
@@ -1560,12 +1794,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 227.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "C1",
                 "inclination": -15.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 23.7,
                 "right": -9.9,
@@ -1573,12 +1809,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 272.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "C1",
                 "inclination": -11.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 29.4,
                 "right": -9.9,
@@ -1586,12 +1824,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 291.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "D7",
                 "inclination": -38.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 22.0,
                 "right": -9.9,
@@ -1599,12 +1839,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 256.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "D6",
                 "inclination": -19.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 24.8,
                 "right": -9.9,
@@ -1612,12 +1854,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 175.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "D5",
                 "inclination": -31.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 8.1,
                 "right": -9.9,
@@ -1625,12 +1869,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 225.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "D4",
                 "inclination": -18.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 24.1,
                 "right": -9.9,
@@ -1638,12 +1884,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 248.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "D3",
                 "inclination": -12.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 15.9,
                 "right": -9.9,
@@ -1651,12 +1899,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 260.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "D2",
                 "inclination": 2.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 16.8,
                 "right": -9.9,
@@ -1664,12 +1914,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 256.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "D1",
                 "inclination": 32.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 14.7,
                 "right": -9.9,
@@ -1700,12 +1952,14 @@
         "format": null,
         "shots": [
             {
+                "azimuth2": 0.0,
                 "bearing": 84.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "83",
                 "inclination": -9.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 11.1,
                 "right": -9.9,
@@ -1713,12 +1967,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 79.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "E1",
                 "inclination": 53.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 8.1,
                 "right": -9.9,
@@ -1726,12 +1982,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 335.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "E2",
                 "inclination": 23.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 14.1,
                 "right": -9.9,
@@ -1739,12 +1997,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 247.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "E3",
                 "inclination": -3.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 13.6,
                 "right": -9.9,
@@ -1752,12 +2012,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 228.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "E4",
                 "inclination": -29.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 23.8,
                 "right": -9.9,
@@ -1788,12 +2050,14 @@
         "format": null,
         "shots": [
             {
+                "azimuth2": 0.0,
                 "bearing": 144.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "1",
                 "inclination": -7.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 58.0,
                 "right": -9.9,
@@ -1801,12 +2065,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 206.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "2",
                 "inclination": 0.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 86.5,
                 "right": -9.9,
@@ -1814,12 +2080,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 241.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "3",
                 "inclination": 5.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 58.4,
                 "right": -9.9,
@@ -1827,12 +2095,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 145.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "4",
                 "inclination": 15.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 52.5,
                 "right": -9.9,
@@ -1840,12 +2110,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 143.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "5",
                 "inclination": 11.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 100.0,
                 "right": -9.9,
@@ -1853,12 +2125,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 152.5,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "6",
                 "inclination": 16.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 100.0,
                 "right": -9.9,
@@ -1866,12 +2140,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 139.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "7",
                 "inclination": 9.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 100.0,
                 "right": -9.9,
@@ -1879,12 +2155,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 125.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "8",
                 "inclination": 8.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 100.0,
                 "right": -9.9,
@@ -1892,12 +2170,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 117.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "9",
                 "inclination": 6.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 81.2,
                 "right": -9.9,
@@ -1905,12 +2185,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 0.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "10",
                 "inclination": -90.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 3.0,
                 "right": -9.9,
@@ -1918,12 +2200,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 138.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "10",
                 "inclination": 6.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 100.0,
                 "right": -9.9,
@@ -1931,12 +2215,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 147.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "11",
                 "inclination": 5.0,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 100.0,
                 "right": -9.9,
@@ -1944,12 +2230,14 @@
                 "up": -9.9
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 160.0,
                 "comment": null,
                 "down": -9.9,
                 "flags": null,
                 "from_id": "12",
                 "inclination": 7.5,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 28.9,
                 "right": -9.9,

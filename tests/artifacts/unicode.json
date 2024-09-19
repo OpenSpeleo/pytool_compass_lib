@@ -16,12 +16,14 @@
         "format": "DIDDLRUDLADB",
         "shots": [
             {
+                "azimuth2": 0.0,
                 "bearing": 261.0,
                 "comment": "80.00     2.50",
                 "down": 65.0,
                 "flags": null,
                 "from_id": "i18n1",
                 "inclination": -3.0,
+                "inclination2": 0.0,
                 "left": 3.0,
                 "length": 2.0,
                 "right": 0.0,
@@ -29,12 +31,14 @@
                 "up": 25.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 0.0,
                 "comment": "180.00    90.00",
                 "down": 0.0,
                 "flags": null,
                 "from_id": "i18n2",
                 "inclination": -90.0,
+                "inclination2": 0.0,
                 "left": 1.0,
                 "length": 65.0,
                 "right": 3.0,

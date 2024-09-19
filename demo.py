@@ -4,7 +4,7 @@ from compass_lib.parser import CompassParser
 
 if __name__ == "__main__":
     paths = [
-        "tests/artifacts/random.dat",
+        # "tests/artifacts/random.dat",
         "tests/artifacts/fulford.dat",
     ]
 
@@ -36,5 +36,6 @@ if __name__ == "__main__":
         #     print(len(activity))
 
         # print(parser.data)
-        parser.to_json(compass_file.parent / compass_file.name.replace(".dat", ".json"))
+        # parser.to_json(compass_file.parent / compass_file.name.replace(".dat", ".json"))
+        parser.to_dat("test.dat")
         # print(activities[-1])

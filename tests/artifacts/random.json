@@ -16,6 +16,7 @@
         "format": "DDDWLRUDALDN",
         "shots": [
             {
+                "azimuth2": 0.0,
                 "bearing": 350.0,
                 "comment": "Surface shot with GPS - these systems are not connected underwater",
                 "down": 2.0,
@@ -25,6 +26,7 @@
                 ],
                 "from_id": "RANDOM",
                 "inclination": 2.87,
+                "inclination2": 0.0,
                 "left": 4.0,
                 "length": 20.0,
                 "right": 10.0,
@@ -32,12 +34,14 @@
                 "up": 2.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 30.0,
                 "comment": null,
                 "down": 2.0,
                 "flags": null,
                 "from_id": "CMOBC1",
                 "inclination": -0.85,
+                "inclination2": 0.0,
                 "left": 0.0,
                 "length": 135.0,
                 "right": 10.0,
@@ -45,12 +49,14 @@
                 "up": 2.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 40.0,
                 "comment": null,
                 "down": 0.0,
                 "flags": null,
                 "from_id": "CMOBC2",
                 "inclination": -0.54,
+                "inclination2": 0.0,
                 "left": 8.0,
                 "length": 105.0,
                 "right": 10.0,
@@ -58,12 +64,14 @@
                 "up": 6.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 100.0,
                 "comment": "#| #",
                 "down": 0.0,
                 "flags": null,
                 "from_id": "CMOBC3",
                 "inclination": 0.0,
+                "inclination2": 0.0,
                 "left": 4.0,
                 "length": 32.0,
                 "right": 4.0,
@@ -71,12 +79,14 @@
                 "up": 8.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 120.0,
                 "comment": "\"T\" to john's line (new survey)",
                 "down": 2.0,
                 "flags": null,
                 "from_id": "CMOBC3A",
                 "inclination": 4.42,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 13.0,
                 "right": 25.0,
@@ -84,12 +94,14 @@
                 "up": 10.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 130.0,
                 "comment": null,
                 "down": 1.0,
                 "flags": null,
                 "from_id": "CMOBC4",
                 "inclination": 0.85,
+                "inclination2": 0.0,
                 "left": 30.0,
                 "length": 67.0,
                 "right": 20.0,
@@ -97,12 +109,14 @@
                 "up": 15.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 94.0,
                 "comment": null,
                 "down": 0.0,
                 "flags": null,
                 "from_id": "CMOBC5",
                 "inclination": 4.59,
+                "inclination2": 0.0,
                 "left": 20.0,
                 "length": 50.0,
                 "right": 20.0,
@@ -110,12 +124,14 @@
                 "up": 20.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 80.0,
                 "comment": null,
                 "down": 0.0,
                 "flags": null,
                 "from_id": "CMOBC6",
                 "inclination": 3.13,
+                "inclination2": 0.0,
                 "left": 50.0,
                 "length": 55.0,
                 "right": 50.0,
@@ -123,12 +139,14 @@
                 "up": 20.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 110.0,
                 "comment": null,
                 "down": 2.0,
                 "flags": null,
                 "from_id": "CMOBC7",
                 "inclination": 2.87,
+                "inclination2": 0.0,
                 "left": 2.0,
                 "length": 20.0,
                 "right": 10.0,
@@ -136,6 +154,7 @@
                 "up": 2.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 113.0,
                 "comment": null,
                 "down": 4.0,
@@ -144,6 +163,7 @@
                 ],
                 "from_id": "CMOBC8",
                 "inclination": -5.35,
+                "inclination2": 0.0,
                 "left": 0.0,
                 "length": 75.0,
                 "right": 10.0,
@@ -151,12 +171,14 @@
                 "up": 6.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 87.0,
                 "comment": null,
                 "down": 3.0,
                 "flags": null,
                 "from_id": "CMOBC9",
                 "inclination": 0.0,
+                "inclination2": 0.0,
                 "left": 8.0,
                 "length": 30.0,
                 "right": 0.0,
@@ -164,12 +186,14 @@
                 "up": 10.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 110.0,
                 "comment": null,
                 "down": 0.0,
                 "flags": null,
                 "from_id": "CMOBC10",
                 "inclination": 0.0,
+                "inclination2": 0.0,
                 "left": 25.0,
                 "length": 105.0,
                 "right": 15.0,
@@ -177,6 +201,7 @@
                 "up": 4.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 180.0,
                 "comment": null,
                 "down": 0.0,
@@ -187,6 +212,7 @@
                 ],
                 "from_id": "CMOBC11",
                 "inclination": 1.19,
+                "inclination2": 0.0,
                 "left": 25.0,
                 "length": 48.0,
                 "right": 20.0,
@@ -194,12 +220,14 @@
                 "up": 6.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 120.0,
                 "comment": null,
                 "down": 0.0,
                 "flags": null,
                 "from_id": "CMOBC12",
                 "inclination": 5.67,
+                "inclination2": 0.0,
                 "left": 25.0,
                 "length": 91.0,
                 "right": 25.0,
@@ -207,12 +235,14 @@
                 "up": 8.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 120.0,
                 "comment": "#| # this is a big comment",
                 "down": 0.0,
                 "flags": null,
                 "from_id": "CMOBC13",
                 "inclination": 0.0,
+                "inclination2": 0.0,
                 "left": 0.0,
                 "length": 79.0,
                 "right": 0.0,
@@ -220,12 +250,14 @@
                 "up": 0.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 66.0,
                 "comment": null,
                 "down": 2.0,
                 "flags": null,
                 "from_id": "CMOBC14",
                 "inclination": -8.46,
+                "inclination2": 0.0,
                 "left": 20.0,
                 "length": 34.0,
                 "right": 20.0,
@@ -233,12 +265,14 @@
                 "up": 10.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 30.0,
                 "comment": null,
                 "down": 1.0,
                 "flags": null,
                 "from_id": "CMOBC15",
                 "inclination": -4.78,
+                "inclination2": 0.0,
                 "left": 5.0,
                 "length": 12.0,
                 "right": 5.0,
@@ -246,12 +280,14 @@
                 "up": 4.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 358.0,
                 "comment": null,
                 "down": 0.0,
                 "flags": null,
                 "from_id": "CMOBC16",
                 "inclination": 10.16,
+                "inclination2": 0.0,
                 "left": 10.0,
                 "length": 34.0,
                 "right": 0.0,
@@ -259,6 +295,7 @@
                 "up": 5.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 48.0,
                 "comment": null,
                 "down": 0.0,
@@ -267,6 +304,7 @@
                 ],
                 "from_id": "CMOBC17",
                 "inclination": 5.1,
+                "inclination2": 0.0,
                 "left": 0.0,
                 "length": 45.0,
                 "right": 20.0,
@@ -274,12 +312,14 @@
                 "up": 30.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 54.0,
                 "comment": null,
                 "down": 0.0,
                 "flags": null,
                 "from_id": "CMOBC18",
                 "inclination": 27.04,
+                "inclination2": 0.0,
                 "left": 0.0,
                 "length": 33.0,
                 "right": 10.0,
@@ -287,12 +327,14 @@
                 "up": 10.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 104.0,
                 "comment": "Right turn # \"T\" on Lowsilt Line",
                 "down": 4.0,
                 "flags": null,
                 "from_id": "CMOBC19",
                 "inclination": -12.95,
+                "inclination2": 0.0,
                 "left": 3.0,
                 "length": 58.0,
                 "right": 0.0,
@@ -300,12 +342,14 @@
                 "up": 10.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 110.0,
                 "comment": null,
                 "down": 4.0,
                 "flags": null,
                 "from_id": "CMOBC20",
                 "inclination": -4.1,
+                "inclination2": 0.0,
                 "left": 15.0,
                 "length": 14.0,
                 "right": 15.0,
@@ -313,6 +357,7 @@
                 "up": 10.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 120.0,
                 "comment": "Hanging \"T\" - Now a jump",
                 "down": 0.0,
@@ -321,6 +366,7 @@
                 ],
                 "from_id": "CMOBC21",
                 "inclination": 5.74,
+                "inclination2": 0.0,
                 "left": 30.0,
                 "length": 10.0,
                 "right": 30.0,
@@ -328,12 +374,14 @@
                 "up": 20.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 140.0,
                 "comment": null,
                 "down": 10.0,
                 "flags": null,
                 "from_id": "CMOBC22",
                 "inclination": -7.89,
+                "inclination2": 0.0,
                 "left": -9.9,
                 "length": 51.0,
                 "right": 0.0,
@@ -341,12 +389,14 @@
                 "up": 25.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 158.0,
                 "comment": null,
                 "down": 10.0,
                 "flags": null,
                 "from_id": "CMOBC23",
                 "inclination": -11.54,
+                "inclination2": 0.0,
                 "left": 35.0,
                 "length": 65.0,
                 "right": 0.0,
@@ -354,12 +404,14 @@
                 "up": 25.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 120.0,
                 "comment": null,
                 "down": 10.0,
                 "flags": null,
                 "from_id": "CMOBC24",
                 "inclination": 2.91,
+                "inclination2": 0.0,
                 "left": 50.0,
                 "length": 138.0,
                 "right": 50.0,
@@ -367,12 +419,14 @@
                 "up": 10.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 100.0,
                 "comment": null,
                 "down": 20.0,
                 "flags": null,
                 "from_id": "CMOBC25",
                 "inclination": 0.57,
+                "inclination2": 0.0,
                 "left": 50.0,
                 "length": 102.0,
                 "right": 50.0,
@@ -380,12 +434,14 @@
                 "up": 10.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 120.0,
                 "comment": null,
                 "down": 15.0,
                 "flags": null,
                 "from_id": "CMOBC26",
                 "inclination": 3.19,
+                "inclination2": 0.0,
                 "left": 15.0,
                 "length": 126.0,
                 "right": 2.0,
@@ -393,12 +449,14 @@
                 "up": 10.0
             },
             {
+                "azimuth2": 0.0,
                 "bearing": 90.0,
                 "comment": "Cenote RandomAgain",
                 "down": 0.0,
                 "flags": null,
                 "from_id": "CMOBC27",
                 "inclination": 20.37,
+                "inclination2": 0.0,
                 "left": 20.0,
                 "length": 135.0,
                 "right": 20.0,

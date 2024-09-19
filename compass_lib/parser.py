@@ -232,6 +232,9 @@ class CompassParser:
                 from_id, to_id, length, bearing, incl, left, up, down, right = shot_data[:9]  # noqa: E501
 
                 try:
+                    azm2 = 0.0
+                    incl2 = 0.0
+
                     flags_comment = shot_data[9]
 
                     flag_regex = (
@@ -261,6 +264,8 @@ class CompassParser:
                     up=float(up),
                     down=float(down),
                     right=float(right),
+                    azimuth2=float(azm2),
+                    inclination2=float(incl2),
                     flags=sorted(set(flags), key=lambda f: f.value) if flags else None,
                     comment=comment.strip() if comment else None
                 ))
