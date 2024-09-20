@@ -1,10 +1,38 @@
 from enum import Enum
+from enum import IntEnum
+from pathlib import Path
 
 
 class CustomEnum(Enum):
     @classmethod
     def reverse(cls, name):
         return cls._value2member_map_[name]
+
+
+class CompassFileType(IntEnum):
+    DAT = 0
+    MAK = 1
+    PLT = 2
+
+    @classmethod
+    def from_str(cls, value: str):
+        value = value.upper()
+        match value:
+            case "DAT":
+                return cls.DAT
+            case "MAK":
+                return cls.MAK
+            case "PLT":
+                return cls.PLT
+            case _:
+                raise ValueError(f"Unknown extension: `.{value}`")
+
+    @classmethod
+    def from_path(cls, filepath: str | Path):
+        if not isinstance(filepath, Path):
+            filepath = Path(filepath)
+
+        return cls.from_str(filepath.suffix.upper()[1:])  # Remove the leading `.`
 
 # ============================== Azimuth ============================== #
 
@@ -103,11 +131,5 @@ class ShotFlag(CustomEnum):
     TOTAL_EXCLUSION = "X"
     SPLAY = "S"
 
-    __start_token__ = r"#\|"
-    __end_token__ = r"#"
-
-
-
-if __name__ == "__main__":
-    print(StationSide.FROM.value)
-    print(StationSide.reverse("F"))
+    __start_token__ = r"#\|"  # noqa: S105
+    __end_token__ = r"#"  # noqa: S105

@@ -8,92 +8,14 @@ import hashlib
 import json
 import re
 from dataclasses import asdict
-from dataclasses import dataclass
-from enum import IntEnum
 from functools import cached_property
 from pathlib import Path
 
 from compass_lib.encoding import EnhancedJSONEncoder
+from compass_lib.enums import CompassFileType
 from compass_lib.enums import ShotFlag
 from compass_lib.section import SurveySection
 from compass_lib.shot import SurveyShot
-
-# ============================== CompassFileFormat ============================== #
-
-#   _formatFormat(): string {
-#     const {
-#       displayAzimuthUnit,
-#       displayLengthUnit,
-#       displayLrudUnit,
-#       displayInclinationUnit,
-#       lrudOrder,
-#       shotMeasurementOrder,
-#       hasBacksights,
-#       lrudAssociation,
-#     } = this
-#     return `${inverseAzimuthUnits[displayAzimuthUnit]}${
-#       inverseLengthUnits[displayLengthUnit]
-#     }${inverseLengthUnits[displayLrudUnit]}${
-#       inverseInclinationUnits[displayInclinationUnit]
-#     }${lrudOrder
-#       .map(i => inverseLrudItems[i])
-#       .join('')}${shotMeasurementOrder
-#       .map(i => inverseShotMeasurementItems[i])
-#       .join('')}${hasBacksights ? 'B' : 'N'}${
-#       lrudAssociation != null ? inverseStationSides[lrudAssociation] : ''
-#     }`
-#   }
-
-# @dataclass
-# class CompassFileFormat:
-#     displayAzimuthUnit: str
-#     displayLengthUnit: str
-#     displayLrudUnit: str
-#     displayInclinationUnit: str
-#     lrudOrder: str
-#     shotMeasurementOrder: str
-#     hasBacksights: str
-#     lrudAssociation: str
-
-#     @classmethod
-#     def from_str(cls, input):
-#         # TODO
-#         raise NotImplementedError
-#         # return cls(
-#         #     displayAzimuthUnit="",
-#         #     displayLengthUnit="",
-#         #     displayLrudUnit="",
-#         #     displayInclinationUnit="",
-#         #     lrudOrder="",
-#         #     shotMeasurementOrder="",
-#         #     hasBacksights="",
-#         #     lrudAssociation="",
-#         # )
-
-class CompassFileType(IntEnum):
-    DAT = 0
-    MAK = 1
-    PLT = 2
-
-    @classmethod
-    def from_str(cls, value: str):
-        value = value.upper()
-        match value:
-            case "DAT":
-                return cls.DAT
-            case "MAK":
-                return cls.MAK
-            case "PLT":
-                return cls.PLT
-            case _:
-                raise ValueError(f"Unknown value: {value}")
-
-    @classmethod
-    def from_path(cls, filepath: str | Path):
-        if not isinstance(filepath, Path):
-            filepath = Path(filepath)
-
-        return cls.from_str(filepath.suffix.upper()[1:])  # Remove the leading `.`
 
 
 class CompassParser:
