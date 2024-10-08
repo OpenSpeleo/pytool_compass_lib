@@ -37,5 +37,7 @@ if __name__ == "__main__":
 
         # print(parser.data)
         # parser.to_json(compass_file.parent / compass_file.name.replace(".dat", ".json"))
-        parser.to_dat("test.dat")
+        # parser.to_dat("test.dat")
+        from pprint import pprint
+        pprint(parser.survey.model_dump())
         # print(activities[-1])

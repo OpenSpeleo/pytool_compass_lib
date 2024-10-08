@@ -14,8 +14,12 @@ from pathlib import Path
 from compass_lib.encoding import EnhancedJSONEncoder
 from compass_lib.enums import CompassFileType
 from compass_lib.enums import ShotFlag
-from compass_lib.section import SurveySection
-from compass_lib.shot import SurveyShot
+
+# from compass_lib.section import SurveySection
+# from compass_lib.shot import SurveyShot
+from compass_lib.models import Survey
+from compass_lib.models import SurveySection
+from compass_lib.models import SurveyShot
 
 
 class CompassParser:
@@ -30,20 +34,13 @@ class CompassParser:
             raise FileNotFoundError(f"File not found: {filepath}")
 
         # Ensure at least that the file type is valid
-        _ = self._data
-
-    # =================== Data Loading =================== #
-
-    @cached_property
-    def _data(self):
-
         with codecs.open(self.filepath, "rb", "windows-1252") as f:
-            data = f.read()
+            self._file_content = f.read()
 
-        return [
-            activity.strip()
-            for activity in data.split(CompassParser.SEPARATOR)
-            if CompassParser.END_OF_FILE not in activity
+        self._raw_sections = [
+            section.strip()
+            for section in self._file_content.split(CompassParser.SEPARATOR)
+            if CompassParser.END_OF_FILE not in section
         ]
 
     # =================== File Properties =================== #
@@ -53,7 +50,7 @@ class CompassParser:
 
     @cached_property
     def __hash__(self):
-        return hashlib.sha256(b"0").hexdigest()
+        return hashlib.sha256(self._file_content).hexdigest()
 
     @property
     def hash(self):
@@ -88,21 +85,25 @@ class CompassParser:
     # =================== Data  Processing =================== #
 
     @cached_property
-    def data(self):
-        sections = []
-        for activity in self._data:
-            entries = activity.splitlines()
+    def survey(self):
 
-            cave_name = entries[0].strip()
+        survey = Survey(
+            cave_name=self._raw_sections[0].split("\n", maxsplit=1)[0].strip()
+        )
 
-            if "SURVEY NAME: " not in entries[1]:
+        for raw_section in self._raw_sections:
+            section_data = raw_section.splitlines()
+
+            cave_name = section_data[0].strip()
+
+            if "SURVEY NAME: " not in section_data[1]:
                 raise RuntimeError
-            survey_name = entries[1].split(":")[-1].strip()
+            survey_name = section_data[1].split(":")[-1].strip()
 
             try:
-                date_str, comment_str = entries[2].split("  ", maxsplit=1)
+                date_str, comment_str = section_data[2].split("  ", maxsplit=1)
             except ValueError:
-                date_str = entries[2]
+                date_str = section_data[2]
                 comment_str = None
 
             if "SURVEY DATE: " not in date_str:
@@ -123,15 +124,15 @@ class CompassParser:
             else:
                 survey_comment = comment_str.split(":")[-1].strip()
 
-            if entries[3].strip() != "SURVEY TEAM:":
+            if section_data[3].strip() != "SURVEY TEAM:":
                 raise RuntimeError
 
             surveyors = [
-                suveyor.strip() for suveyor in entries[4].split(",")
+                suveyor.strip() for suveyor in section_data[4].split(",")
                 if suveyor.strip() != ""
             ]
 
-            optional_data = entries[5].split()
+            optional_data = section_data[5].split()
             declination_str = format_str = None
 
             correct_A = correct_B = correct_C = \
@@ -148,7 +149,7 @@ class CompassParser:
 
             shots = []
 
-            for shot in entries[9:]:
+            for shot in section_data[9:]:
                 shot_data = shot.split(maxsplit=9)
 
                 from_id, to_id, length, bearing, incl, left, up, down, right = shot_data[:9]  # noqa: E501
@@ -179,34 +180,37 @@ class CompassParser:
                 shots.append(SurveyShot(
                     from_id=from_id,
                     to_id=to_id,
-                    length=float(length),
-                    bearing=float(bearing),
+                    azimuth=float(bearing),
                     inclination=float(incl),
-                    left=float(left),
-                    up=float(up),
-                    down=float(down),
-                    right=float(right),
+                    length=float(length),
+
+                    # Optional Values
+                    comment=comment.strip() if comment else None,
+                    flags=sorted(set(flags), key=lambda f: f.value) if flags else None,
+
                     azimuth2=float(azm2),
                     inclination2=float(incl2),
-                    flags=sorted(set(flags), key=lambda f: f.value) if flags else None,
-                    comment=comment.strip() if comment else None
+
+                    # LRUD
+                    left=float(left),
+                    right=float(right),
+                    up=float(up),
+                    down=float(down)
                 ))
 
-            section = SurveySection(
-                cave_name=cave_name,
-                survey_name=survey_name,
-                date=date,
+            survey.sections.append(SurveySection(
+                name=survey_name,
                 comment=survey_comment,
-                surveyors=surveyors,
-                declination=float(declination_str),
-                format=format_str,
                 correction=(float(correct_A), float(correct_B), float(correct_C)),
                 correction2=(float(correct2_A), float(correct2_B)),
-                shots=shots
-            )
-            sections.append(section)
+                date=date,
+                declination=float(declination_str),
+                format=format_str,
+                shots=shots,
+                surveyors=surveyors,
+            ))
 
-        return sections
+        return survey
 
 
     # =================== Export Formats =================== #
