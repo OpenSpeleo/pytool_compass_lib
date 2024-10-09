@@ -5,7 +5,8 @@ from compass_lib.parser import CompassParser
 if __name__ == "__main__":
     paths = [
         # "tests/artifacts/random.dat",
-        "tests/artifacts/fulford.dat",
+        "tests/artifacts/1998.dat",
+        # "tests/artifacts/fulford.dat",
     ]
 
     for fp in paths:
@@ -38,6 +39,8 @@ if __name__ == "__main__":
         # print(parser.data)
         # parser.to_json(compass_file.parent / compass_file.name.replace(".dat", ".json"))
         # parser.to_dat("test.dat")
-        from pprint import pprint
-        pprint(parser.survey.model_dump())
+        # from pprint import pprint
+        # pprint(parser.data.model_dump())
+        data = parser.to_json(include_depth=True)
+        print(data)
         # print(activities[-1])

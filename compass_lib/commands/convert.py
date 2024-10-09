@@ -56,5 +56,5 @@ def convert(args: list[str]) -> int:
                               "Please pass the flag `--overwrite` to ignore.")
 
     parser = CompassParser(dmp_file)
-    parser.to_json(filepath=output_file)
+    parser.to_json(filepath=output_file, include_depth=True)
     return 0

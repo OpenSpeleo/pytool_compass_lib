@@ -7,7 +7,7 @@ from pydantic import UUID4
 from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field
-from pydantic import field_validator
+from pydantic import field_validator, model_validator
 
 from compass_lib.constants import COMPASS_MAX_NAME_LENGTH
 from compass_lib.generators import UniqueNameGenerator
@@ -18,7 +18,7 @@ class SurveyShot(BaseMixin, BaseModel):
     from_id: str
     to_id: str = Field(
         default_factory=lambda: UniqueNameGenerator.get(str_len=6),
-        min_length=2,
+        min_length=1,
         max_length=COMPASS_MAX_NAME_LENGTH
     )
 
@@ -49,6 +49,11 @@ class SurveyShot(BaseMixin, BaseModel):
     @classmethod
     def validate_lrud(cls, value: float) -> float:
         return value if value > 0 else 0.0
+    
+    # @model_config("azimuth", "azimuth2", mode="before")
+    # @classmethod
+    # def validate_azimuth(cls, value: float) -> float:
+    #     return value if value > 0 else 0.0
 
     # @field_validator("to_id", mode="before")
     # @classmethod
@@ -75,7 +80,6 @@ class SurveyShot(BaseMixin, BaseModel):
     #     return value
 
 
-
 class SurveySection(BaseModel):
     name: str
     comment: str
@@ -83,7 +87,7 @@ class SurveySection(BaseModel):
     correction2: list[float]
     date: datetime.date
     declination: float
-    format: str
+    format: str = "DDDDUDLRLADN"
     shots: list[SurveyShot]
     surveyors: list[str] | None = None
 

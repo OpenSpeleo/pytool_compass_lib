@@ -2,12 +2,12 @@
 
 import codecs
 import contextlib
-import copy
 import datetime
 import hashlib
 import json
+import math
 import re
-from dataclasses import asdict
+from collections import defaultdict
 from functools import cached_property
 from pathlib import Path
 
@@ -20,6 +20,7 @@ from compass_lib.enums import ShotFlag
 from compass_lib.models import Survey
 from compass_lib.models import SurveySection
 from compass_lib.models import SurveyShot
+from compass_lib.utils import OrderedQueue
 
 
 class CompassParser:
@@ -85,7 +86,7 @@ class CompassParser:
     # =================== Data  Processing =================== #
 
     @cached_property
-    def survey(self):
+    def data(self):
 
         survey = Survey(
             cave_name=self._raw_sections[0].split("\n", maxsplit=1)[0].strip()
@@ -94,7 +95,8 @@ class CompassParser:
         for raw_section in self._raw_sections:
             section_data = raw_section.splitlines()
 
-            cave_name = section_data[0].strip()
+            # Note: not used
+            # cave_name = section_data[0].strip()
 
             if "SURVEY NAME: " not in section_data[1]:
                 raise RuntimeError
@@ -205,7 +207,7 @@ class CompassParser:
                 correction2=(float(correct2_A), float(correct2_B)),
                 date=date,
                 declination=float(declination_str),
-                format=format_str,
+                format=format_str if format_str is not None else "DDDDUDLRLADN",
                 shots=shots,
                 surveyors=surveyors,
             ))
@@ -216,31 +218,67 @@ class CompassParser:
     # =================== Export Formats =================== #
 
     def to_json(self, filepath: str | Path | None = None, include_depth: bool = False) -> str:  # noqa: E501
-        data = [asdict(section) for section in self.data]
+        data = self.data.model_dump()
+
+        all_shots = [shot for section in data["sections"] for shot in section["shots"]]
 
         if not include_depth:
-            for section in data:
-                for shot in section["shots"]:
-                    del shot["depth"]
+            for shot in all_shots:
+                del shot["depth"]
+
         else:
-            shots = {
-                shot["to_id"]: copy.deepcopy(shot)
-                for section in data
-                for shot in section["shots"]
-            }
+            # create an index of all the shots by "ID"
+            # use a copy to avoid data corruption.
+            shot_by_origins = defaultdict(list)
+            shot_by_destinations = defaultdict(list)
+            for shot in all_shots:
+                shot_by_origins[shot["from_id"]].append(shot)
+                shot_by_destinations[shot["to_id"]].append(shot)
 
-            import math
-            from functools import lru_cache
+            origin_keys = set(shot_by_origins.keys())
+            destination_keys = set(shot_by_destinations.keys())
 
-            @lru_cache(maxsize=99999)
-            def find_depth_shot(target: str):
-                try:
-                    if shots[target]["depth"] is not None:
-                        return shots[target]["depth"]
-                except KeyError:
+            # Finding the "origin stations" - aka. stations with no incoming
+            # shots. They are assumed at depth 0.0
+            origin_stations = set()
+            for shot_key in origin_keys:
+                if shot_key in destination_keys:
+                    continue
+                origin_stations.add(shot_key)
+
+            processing_queue = OrderedQueue()
+
+            def collect_downstream_stations(target: str) -> list[str]:
+                if target in processing_queue:
+                    return
+                processing_queue.add(target)
+                direct_shots = shot_by_origins[target]
+                for shot in direct_shots:
+                    processing_queue.add(shot["from_id"])
+                    if (next_shot := shot["to_id"]) not in  processing_queue:
+                        collect_downstream_stations(next_shot)
+
+            for station in origin_stations:
+                collect_downstream_stations(station)
+
+            def calculate_depth(
+                target: str, fail_if_unknown: bool = False
+            ) -> float | None:
+                if target in origin_stations:
                     return 0.0
 
-                start_depth = find_depth_shot(target=shots[target]["from_id"])
+                if (depth := processing_queue[target]) is not None:
+                    return depth
+
+                if fail_if_unknown:
+                    return None
+
+                for shot in shot_by_destinations[target]:
+                    start_depth = calculate_depth(shot["from_id"], fail_if_unknown=True)
+                    if start_depth is not None:
+                        break
+                else:
+                    raise RuntimeError("None of the previous shot has a known depth")
 
                 vertical_delta = math.cos(
                     math.radians(90 + float(shot["inclination"]))
@@ -248,9 +286,11 @@ class CompassParser:
 
                 return round(start_depth + vertical_delta, ndigits=4)
 
-            for section in data:
-                for shot in section["shots"]:
-                    shot["depth"] = find_depth_shot(target=shot["to_id"])
+            for shot in processing_queue:
+                processing_queue[shot] = calculate_depth(shot)
+
+        for shot in all_shots:
+            shot["depth"] = round(processing_queue[shot["to_id"]], ndigits=1)
 
         json_str = json.dumps(
             data,
