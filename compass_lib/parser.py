@@ -14,9 +14,6 @@ from pathlib import Path
 from compass_lib.encoding import EnhancedJSONEncoder
 from compass_lib.enums import CompassFileType
 from compass_lib.enums import ShotFlag
-
-# from compass_lib.section import SurveySection
-# from compass_lib.shot import SurveyShot
 from compass_lib.models import Survey
 from compass_lib.models import SurveySection
 from compass_lib.models import SurveyShot
@@ -258,7 +255,7 @@ class CompassParser:
                     if (next_shot := shot["to_id"]) not in  processing_queue:
                         collect_downstream_stations(next_shot)
 
-            for station in origin_stations:
+            for station in sorted(origin_stations):
                 collect_downstream_stations(station)
 
             def calculate_depth(
@@ -289,8 +286,8 @@ class CompassParser:
             for shot in processing_queue:
                 processing_queue[shot] = calculate_depth(shot)
 
-        for shot in all_shots:
-            shot["depth"] = round(processing_queue[shot["to_id"]], ndigits=1)
+            for shot in all_shots:
+                shot["depth"] = round(processing_queue[shot["to_id"]], ndigits=1)
 
         json_str = json.dumps(
             data,

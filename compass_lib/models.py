@@ -3,18 +3,20 @@ import uuid
 from typing import Annotated
 from typing import Any
 
+# from iteration_utilities import duplicates
 from pydantic import UUID4
 from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field
-from pydantic import field_validator, model_validator
+from pydantic import field_validator
 
 from compass_lib.constants import COMPASS_MAX_NAME_LENGTH
+
+# from compass_lib.errors import DuplicateValueError
 from compass_lib.generators import UniqueNameGenerator
-from compass_lib.mixins import BaseMixin
 
 
-class SurveyShot(BaseMixin, BaseModel):
+class SurveyShot(BaseModel):
     from_id: str
     to_id: str = Field(
         default_factory=lambda: UniqueNameGenerator.get(str_len=6),
@@ -49,11 +51,24 @@ class SurveyShot(BaseMixin, BaseModel):
     @classmethod
     def validate_lrud(cls, value: float) -> float:
         return value if value > 0 else 0.0
-    
-    # @model_config("azimuth", "azimuth2", mode="before")
+
+    @field_validator("azimuth", "azimuth2", mode="before")
+    @classmethod
+    def validate_azimuth(cls, value: float) -> float:
+        return value if value > 0 else 0.0
+
+    # ======================== VALIDATOR UTILS ======================== #
+
     # @classmethod
-    # def validate_azimuth(cls, value: float) -> float:
-    #     return value if value > 0 else 0.0
+    # def validate_unique(cls, field: str, values: list) -> list:
+    #     vals2check = [getattr(val, field) for val in values]
+    #     dupl_vals = list(duplicates(vals2check))
+    #     if dupl_vals:
+    #         raise DuplicateValueError(
+    #             f"[{cls.__name__}] Duplicate value found for `{field}`: "
+    #             f"{dupl_vals}"
+    #         )
+    #     return values
 
     # @field_validator("to_id", mode="before")
     # @classmethod

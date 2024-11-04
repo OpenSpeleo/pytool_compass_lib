@@ -1,6 +1,8 @@
 import datetime
 import json
 import uuid
+from dataclasses import asdict
+from dataclasses import is_dataclass
 
 
 class EnhancedJSONEncoder(json.JSONEncoder):
@@ -18,5 +20,8 @@ class EnhancedJSONEncoder(json.JSONEncoder):
 
             case uuid.UUID():
                 return str(obj)
+
+        if is_dataclass(obj):
+            return asdict(obj)
 
         return super().default(obj)

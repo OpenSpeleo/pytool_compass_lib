@@ -84,7 +84,7 @@ test = [
 "Source" = "https://github.com/OpenSpeleo/pytool_compass_lib"
 
 [project.scripts]
-compass_lib = "compass_lib.commands.main:main"
+compass = "compass_lib.commands.main:main"
 
 [project.entry-points."compass.actions"]
 convert = "compass_lib.commands.convert:convert"

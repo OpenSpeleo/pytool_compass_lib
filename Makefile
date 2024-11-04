@@ -48,13 +48,13 @@ test-all: ## run tests on every Python version with tox
 	tox
 
 test-regen-json:  ## rerun the json conversion to JSON of the test artifacts
-	compass_lib convert -i tests/artifacts/1998.dat -o tests/artifacts/1998.json -f json -w
-	compass_lib convert -i tests/artifacts/flags.dat -o tests/artifacts/flags.json -f json -w
-	compass_lib convert -i tests/artifacts/fulford.dat -o tests/artifacts/fulford.json -f json -w
-	compass_lib convert -i tests/artifacts/fulsurf.dat -o tests/artifacts/fulsurf.json -f json -w
-	compass_lib convert -i tests/artifacts/random.dat -o tests/artifacts/random.json -f json -w
-	compass_lib convert -i tests/artifacts/unicode.dat -o tests/artifacts/unicode.json -f json -w
-
+	compass convert -i tests/artifacts/1998.dat -o tests/artifacts/1998.json -f json -w
+	compass convert -i tests/artifacts/flags.dat -o tests/artifacts/flags.json -f json -w
+	compass convert -i tests/artifacts/flags.dat -o tests/artifacts/flags.json -f json -w
+	compass convert -i tests/artifacts/fulford.dat -o tests/artifacts/fulford.json -f json -w
+	compass convert -i tests/artifacts/fulsurf.dat -o tests/artifacts/fulsurf.json -f json -w
+	compass convert -i tests/artifacts/random.dat -o tests/artifacts/random.json -f json -w
+	compass convert -i tests/artifacts/unicode.dat -o tests/artifacts/unicode.json -f json -w
 
 coverage: ## check code coverage quickly with the default Python
 	coverage run --source comp_bench_tools -m pytest

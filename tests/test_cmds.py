@@ -36,7 +36,7 @@ class ConvertCMDTest(CMDUnittest):
 
     @classmethod
     def tearDownClass(cls):
-        cls._temp_dir.__exit__(None, None, None)
+        cls._temp_dir_ctx.__exit__(None, None, None)
 
     def _get_cmd(self, extra=""):
         return self.command_template.format(
