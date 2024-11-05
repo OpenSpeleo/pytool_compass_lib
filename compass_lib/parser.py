@@ -9,8 +9,10 @@ import math
 import os
 import re
 from collections import defaultdict
+from dataclasses import dataclass
 from functools import cached_property
 from pathlib import Path
+from typing import Self
 
 from compass_lib.encoding import EnhancedJSONEncoder
 from compass_lib.enums import CompassFileType
@@ -19,6 +21,80 @@ from compass_lib.models import Survey
 from compass_lib.models import SurveySection
 from compass_lib.models import SurveyShot
 from compass_lib.utils import OrderedQueue
+
+
+@dataclass
+class CompassDataRow:
+    """Basic Dataclass that represent one row of 'data' from the DAT file.
+    This contains no validation logic, the validation is being performed by
+    the PyDantic class: `ShotData`.
+    The sole purpose of this class is to aggregate the parsing logic."""
+
+    from_id: str
+    to_id: str
+    length: float
+    azimuth:float
+    inclination: float
+    left: float
+    up:float
+    down: float
+    right: float
+
+    # optional attributes
+    azimuth2: float = 0.0
+    inclination2: float = 0.0
+    flags: str | None = None
+    comment: str | None = None
+
+    @classmethod
+    def from_str_data(cls, str_data: str, header_row: str) -> Self:
+        shot_data = str_data.split(maxsplit=9)
+
+        instance = cls(*shot_data[:9])
+
+        def split1_str(val: str) -> tuple[str]:
+
+            if val is None:
+                raise ValueError("Received a NoneValue.")
+
+            rslt = val.split(maxsplit=1)
+            if len(rslt) == 1:
+                return rslt[0], None
+            return rslt
+
+        with contextlib.suppress(IndexError):
+            optional_data = shot_data[9]
+
+            if "AZM2" in header_row:
+                instance.azimuth2, optional_data = split1_str(optional_data)
+
+            if "INC2" in header_row:
+                instance.inclination2, optional_data = split1_str(optional_data)
+
+            if (
+                all(x in header_row for x in ["FLAGS", "COMMENTS"])
+                and optional_data is not None
+            ):
+                flags_comment = optional_data
+
+                flag_regex = (
+                    rf"({ShotFlag.__start_token__}"
+                    rf"([{''.join(ShotFlag._value2member_map_.keys())}]*){ShotFlag.__end_token__})*(.*)"  # noqa: SLF001
+                )
+
+                _, flag_str, comment = re.search(flag_regex, flags_comment).groups()
+
+                instance.comment = comment.strip() if comment != "" else None
+
+                instance.flags = (
+                    [ShotFlag._value2member_map_[f] for f in flag_str]  # noqa: SLF001
+                    if flag_str else
+                    None
+                )
+                if instance.flags is not None:
+                    instance.flags = sorted(set(instance.flags), key=lambda f: f.value)
+
+        return instance
 
 
 class CompassParser:
@@ -147,53 +223,31 @@ class CompassParser:
 
             shots = []
 
-            for shot in section_data[9:]:
-                shot_data = shot.split(maxsplit=9)
-
-                from_id, to_id, length, bearing, incl, left, up, down, right = shot_data[:9]  # noqa: E501
-
-                try:
-                    azm2 = 0.0
-                    incl2 = 0.0
-
-                    flags_comment = shot_data[9]
-
-                    flag_regex = (
-                        rf"({ShotFlag.__start_token__}"
-                        rf"([{''.join(ShotFlag._value2member_map_.keys())}]*){ShotFlag.__end_token__})*(.*)"  # noqa: SLF001
-                    )
-
-                    _, flag_str, comment = re.search(flag_regex, flags_comment).groups()
-
-                    flags = (
-                        [ShotFlag._value2member_map_[f] for f in flag_str]  # noqa: SLF001
-                        if flag_str else
-                        None
-                    )
-
-                except IndexError:
-                    flags = None
-                    comment = None
+            for shot_str in section_data[9:]:
+                shot_data = CompassDataRow.from_str_data(
+                    str_data=shot_str,
+                    header_row=section_data[7]
+                )
 
                 shots.append(SurveyShot(
-                    from_id=from_id,
-                    to_id=to_id,
-                    azimuth=float(bearing),
-                    inclination=float(incl),
-                    length=float(length),
+                    from_id=shot_data.from_id,
+                    to_id=shot_data.to_id,
+                    azimuth=float(shot_data.azimuth),
+                    inclination=float(shot_data.inclination),
+                    length=float(shot_data.length),
 
                     # Optional Values
-                    comment=comment.strip() if comment else None,
-                    flags=sorted(set(flags), key=lambda f: f.value) if flags else None,
+                    comment=shot_data.comment,
+                    flags=shot_data.flags,
 
-                    azimuth2=float(azm2),
-                    inclination2=float(incl2),
+                    azimuth2=float(shot_data.azimuth2),
+                    inclination2=float(shot_data.inclination2),
 
                     # LRUD
-                    left=float(left),
-                    right=float(right),
-                    up=float(up),
-                    down=float(down)
+                    left=float(shot_data.left),
+                    right=float(shot_data.right),
+                    up=float(shot_data.up),
+                    down=float(shot_data.down)
                 ))
 
             survey.sections.append(SurveySection(
@@ -250,7 +304,7 @@ class CompassParser:
 
                 processing_queue.add(target, value=None, fail_if_present=True)
                 direct_shots = shot_by_origins[target]
-                
+
                 for shot in direct_shots:
                     processing_queue.add(
                         shot["from_id"],
@@ -322,10 +376,11 @@ class CompassParser:
                             f"Expected: `{CompassFileType.DAT.name}`")
 
         with codecs.open(filepath, "wb", "windows-1252") as f:
-            for section in self.data:
+            survey = self.data
+            for section in survey.sections:
                 # Section Header
-                f.write(f"{section.cave_name}\n")
-                f.write(f"SURVEY NAME: {section.survey_name}\n")
+                f.write(f"{survey.cave_name}\n")
+                f.write(f"SURVEY NAME: {section.name}\n")
                 f.write(f"SURVEY DATE: {section.date.strftime('%m %-d %Y')}  ")
                 f.write(f"COMMENT:{section.comment}\n")
                 f.write("SURVEY TEAM:\n")
@@ -345,7 +400,7 @@ class CompassParser:
                     f.write(f"{shot.from_id: >12} ")
                     f.write(f"{shot.to_id: >12} ")
                     f.write(f"{shot.length:8.2f} ")
-                    f.write(f"{shot.bearing:8.2f} ")
+                    f.write(f"{shot.azimuth:8.2f} ")
                     f.write(f"{shot.inclination:8.2f} ")
                     f.write(f"{shot.left:8.2f} ")
                     f.write(f"{shot.up:8.2f} ")
@@ -354,7 +409,9 @@ class CompassParser:
                     f.write(f"{shot.azimuth2:8.2f} ")
                     f.write(f"{shot.inclination2:8.2f}")
                     if shot.flags is not None:
-                        f.write(f" {shot.flags} ")
+                        f.write(f" {str(ShotFlag.__start_token__).replace('\\', '')}")
+                        f.write("".join([flag.value for flag in shot.flags]))
+                        f.write(ShotFlag.__end_token__)
                     if shot.comment is not None:
                         f.write(f" {shot.comment}")
                     f.write("\n")

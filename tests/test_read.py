@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import json
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -19,6 +20,13 @@ from compass_lib.parser import CompassParser
         ("./tests/artifacts/fulsurf.dat",),
         ("./tests/artifacts/random.dat",),
         ("./tests/artifacts/unicode.dat",)
+        # ================================== #
+        # ("./artifacts/1998.dat",),
+        # ("./artifacts/flags.dat",),
+        # ("./artifacts/fulford.dat",),
+        # ("./artifacts/fulsurf.dat",),
+        # ("./artifacts/random.dat",),
+        # ("./artifacts/unicode.dat",)
     ]
 )
 class ReadCompassDATFileTest(unittest.TestCase):
@@ -60,6 +68,23 @@ class ReadCompassDATFileTest(unittest.TestCase):
             f.write(json.dumps(json_target, sort_keys=True, indent=4))
 
         assert reloaded_json == json_target
+
+    def test_compass_roundtrip(self):
+        json_str = self._parser.to_json(include_depth=False)
+        original_json = json.loads(json_str)
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            dat_file = Path(tmpdir) / "export.dat"
+            self._parser.to_dat(dat_file)
+
+            parser = CompassParser(dat_file)
+            json_str = parser.to_json(include_depth=False)
+            roundtrip_json = json.loads(json_str)
+
+        del original_json["speleodb_id"]
+        del roundtrip_json["speleodb_id"]
+
+        assert original_json == roundtrip_json
 
     # def test_export_to_dat(self):
     #     if self._parser is None:

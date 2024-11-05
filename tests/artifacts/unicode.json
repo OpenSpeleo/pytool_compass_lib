@@ -20,14 +20,14 @@
             "shots": [
                 {
                     "azimuth": 261.0,
-                    "azimuth2": 0.0,
-                    "comment": "80.00     2.50",
+                    "azimuth2": 80.0,
+                    "comment": null,
                     "depth": 0.1,
                     "down": 65.0,
                     "flags": null,
                     "from_id": "i18n1",
                     "inclination": -3.0,
-                    "inclination2": 0.0,
+                    "inclination2": 2.5,
                     "left": 3.0,
                     "length": 2.0,
                     "right": 0.0,
@@ -36,14 +36,14 @@
                 },
                 {
                     "azimuth": 0.0,
-                    "azimuth2": 0.0,
-                    "comment": "180.00    90.00",
+                    "azimuth2": 180.0,
+                    "comment": null,
                     "depth": 65.1,
                     "down": 0.0,
                     "flags": null,
                     "from_id": "i18n2",
                     "inclination": -90.0,
-                    "inclination2": 0.0,
+                    "inclination2": 90.0,
                     "left": 1.0,
                     "length": 65.0,
                     "right": 3.0,
@@ -60,5 +60,5 @@
             ]
         }
     ],
-    "speleodb_id": "242533f2-f44d-4e8d-b232-e6f9389fe76d"
+    "speleodb_id": "0433c935-5865-404a-8ad6-5e7444078167"
 }

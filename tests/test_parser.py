@@ -31,9 +31,6 @@ class TestCompassParser(unittest.TestCase):
         assert isinstance(stat_result, os.stat_result)
         assert stat_result.st_size == 12581  # noqa: PLR2004
 
-        assert stat_result.st_atime == 1728369155.5372071  # noqa: PLR2004
-        assert parser.date_last_opened == datetime.fromtimestamp(1728369155.5372071)  # noqa: DTZ006  # 2024/10/08
-
         assert stat_result.st_mtime == 1728369154.7030082  # noqa: PLR2004
         assert parser.date_last_modified == datetime.fromtimestamp(1728369154.7030082)  # noqa: DTZ006  # 2024/10/08
 

@@ -57,6 +57,11 @@ class SurveyShot(BaseModel):
     def validate_azimuth(cls, value: float) -> float:
         return value if value > 0 else 0.0
 
+    @field_validator("inclination2", mode="before")
+    @classmethod
+    def validate_inclination2(cls, value: float) -> float:
+        return value if -90 <= value <= 90 else 0.0  # noqa: PLR2004
+
     # ======================== VALIDATOR UTILS ======================== #
 
     # @classmethod
