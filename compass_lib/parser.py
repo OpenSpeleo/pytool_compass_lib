@@ -6,6 +6,7 @@ import datetime
 import hashlib
 import json
 import math
+import os
 import re
 from collections import defaultdict
 from functools import cached_property
@@ -46,39 +47,35 @@ class CompassParser:
     def __repr__(self) -> str:
         return f"[CompassSurveyFile {self.filetype.upper()}] `{self.filepath}`:"
 
-    @cached_property
-    def __hash__(self):
-        return hashlib.sha256(self._file_content).hexdigest()
-
-    @property
-    def hash(self):
-        return self.__hash__
+    def __hash__(self) -> int:
+        sha256_hash = hashlib.sha256(self._file_content.encode("utf-8")).hexdigest()
+        return int(sha256_hash, 16)
 
     # =============== Descriptive Properties =============== #
 
     @property
-    def filepath(self):
+    def filepath(self) -> Path:
         return self._filepath
 
     @property
-    def filetype(self):
+    def filetype(self) -> str:
         return self.filepath.suffix[1:]
 
     @property
-    def lstat(self):
+    def lstat(self) -> os.stat_result:
         return self.filepath.lstat()
 
     @property
-    def date_created(self):
-        return self.lstat.st_ctime
+    def date_created(self) -> datetime.datetime:
+        return datetime.datetime.fromtimestamp(self.lstat.st_ctime)  # noqa: DTZ006
 
     @property
-    def date_last_modified(self):
-        return self.lstat.st_mtime
+    def date_last_modified(self) -> datetime.datetime:
+        return datetime.datetime.fromtimestamp(self.lstat.st_mtime)  # noqa: DTZ006
 
     @property
-    def date_last_opened(self):
-        return self.lstat.st_atime
+    def date_last_opened(self) -> datetime.datetime:
+        return datetime.datetime.fromtimestamp(self.lstat.st_atime)  # noqa: DTZ006
 
     # =================== Data  Processing =================== #
 
@@ -97,6 +94,7 @@ class CompassParser:
 
             if "SURVEY NAME: " not in section_data[1]:
                 raise RuntimeError
+
             survey_name = section_data[1].split(":")[-1].strip()
 
             try:
@@ -107,6 +105,7 @@ class CompassParser:
 
             if "SURVEY DATE: " not in date_str:
                 raise RuntimeError
+
             date = date_str.split(":")[-1].strip()
 
             for date_format in ["%m %d %Y", "%m %d %y"]:
@@ -248,10 +247,16 @@ class CompassParser:
             def collect_downstream_stations(target: str) -> list[str]:
                 if target in processing_queue:
                     return
-                processing_queue.add(target)
+
+                processing_queue.add(target, value=None, fail_if_present=True)
                 direct_shots = shot_by_origins[target]
+                
                 for shot in direct_shots:
-                    processing_queue.add(shot["from_id"])
+                    processing_queue.add(
+                        shot["from_id"],
+                        value=None,
+                        fail_if_present=False
+                    )
                     if (next_shot := shot["to_id"]) not in  processing_queue:
                         collect_downstream_stations(next_shot)
 

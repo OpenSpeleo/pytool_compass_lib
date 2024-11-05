@@ -16,6 +16,7 @@ from compass_lib.parser import CompassParser
         ("./tests/artifacts/1998.dat",),
         ("./tests/artifacts/flags.dat",),
         ("./tests/artifacts/fulford.dat",),
+        ("./tests/artifacts/fulsurf.dat",),
         ("./tests/artifacts/random.dat",),
         ("./tests/artifacts/unicode.dat",)
     ]

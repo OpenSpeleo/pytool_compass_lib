@@ -26,7 +26,6 @@ if __name__ == "__main__":
         # print(f"{parser.date_created=}")
         # print(f"{parser.date_last_modified=}")
         # print(f"{parser.date_last_opened=}")
-        # print(f"{parser.hash=}")
         # print(f"{parser.__hash__=}")
         # print(sections.to_json(filepath=fp[:-3] + "json"))
         # print("--------------")
