@@ -19,7 +19,7 @@ from compass_lib.parser import CompassParser
         ("./tests/artifacts/fulford.dat",),
         ("./tests/artifacts/fulsurf.dat",),
         ("./tests/artifacts/random.dat",),
-        ("./tests/artifacts/unicode.dat",)
+        ("./tests/artifacts/unicode.dat",),
         # ================================== #
         # ("./artifacts/1998.dat",),
         # ("./artifacts/flags.dat",),
@@ -27,10 +27,9 @@ from compass_lib.parser import CompassParser
         # ("./artifacts/fulsurf.dat",),
         # ("./artifacts/random.dat",),
         # ("./artifacts/unicode.dat",)
-    ]
+    ],
 )
 class ReadCompassDATFileTest(unittest.TestCase):
-
     @classmethod
     def setUpClass(cls) -> None:
         cls._file = Path(cls.filepath)

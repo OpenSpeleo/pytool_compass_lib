@@ -54,6 +54,7 @@ class TestEnhancedJSONEncoder(unittest.TestCase):
 
     def test_unsupported_type_encoding(self):
         """Test that unsupported types raise a TypeError as expected."""
+
         class UnsupportedType:
             pass
 

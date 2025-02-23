@@ -33,10 +33,10 @@ class CompassDataRow:
     from_id: str
     to_id: str
     length: float
-    azimuth:float
+    azimuth: float
     inclination: float
     left: float
-    up:float
+    up: float
     down: float
     right: float
 
@@ -53,7 +53,6 @@ class CompassDataRow:
         instance = cls(*shot_data[:9])
 
         def split1_str(val: str) -> tuple[str]:
-
             if val is None:
                 raise ValueError("Received a NoneValue.")
 
@@ -79,7 +78,7 @@ class CompassDataRow:
 
                 flag_regex = (
                     rf"({ShotFlag.__start_token__}"
-                    rf"([{''.join(ShotFlag._value2member_map_.keys())}]*){ShotFlag.__end_token__})*(.*)"  # noqa: SLF001
+                    rf"([{''.join(ShotFlag._value2member_map_.keys())}]*){ShotFlag.__end_token__})*(.*)"
                 )
 
                 _, flag_str, comment = re.search(flag_regex, flags_comment).groups()
@@ -87,9 +86,9 @@ class CompassDataRow:
                 instance.comment = comment.strip() if comment != "" else None
 
                 instance.flags = (
-                    [ShotFlag._value2member_map_[f] for f in flag_str]  # noqa: SLF001
-                    if flag_str else
-                    None
+                    [ShotFlag._value2member_map_[f] for f in flag_str]
+                    if flag_str
+                    else None
                 )
                 if instance.flags is not None:
                     instance.flags = sorted(set(instance.flags), key=lambda f: f.value)
@@ -99,10 +98,9 @@ class CompassDataRow:
 
 class CompassParser:
     SEPARATOR = "\f"  # Form_feed: https://www.ascii-code.com/12
-    END_OF_FILE = "\x1A"  # Substitute: https://www.ascii-code.com/26
+    END_OF_FILE = "\x1a"  # Substitute: https://www.ascii-code.com/26
 
     def __init__(self, filepath: str) -> None:
-
         self._filepath = Path(filepath)
 
         if not self.filepath.is_file():
@@ -156,8 +154,7 @@ class CompassParser:
     # =================== Data  Processing =================== #
 
     @cached_property
-    def data(self):
-
+    def data(self):  # noqa: C901
         survey = Survey(
             cave_name=self._raw_sections[0].split("\n", maxsplit=1)[0].strip()
         )
@@ -202,15 +199,15 @@ class CompassParser:
                 raise RuntimeError
 
             surveyors = [
-                suveyor.strip() for suveyor in section_data[4].split(",")
+                suveyor.strip()
+                for suveyor in section_data[4].split(",")
                 if suveyor.strip() != ""
             ]
 
             optional_data = section_data[5].split()
             declination_str = format_str = None
 
-            correct_A = correct_B = correct_C = \
-            correct2_A = correct2_B = 0.0
+            correct_A = correct_B = correct_C = correct2_A = correct2_B = 0.0
 
             with contextlib.suppress(IndexError, ValueError):
                 header, declination_str = optional_data[0:2]
@@ -225,49 +222,50 @@ class CompassParser:
 
             for shot_str in section_data[9:]:
                 shot_data = CompassDataRow.from_str_data(
-                    str_data=shot_str,
-                    header_row=section_data[7]
+                    str_data=shot_str, header_row=section_data[7]
                 )
 
-                shots.append(SurveyShot(
-                    from_id=shot_data.from_id,
-                    to_id=shot_data.to_id,
-                    azimuth=float(shot_data.azimuth),
-                    inclination=float(shot_data.inclination),
-                    length=float(shot_data.length),
+                shots.append(
+                    SurveyShot(
+                        from_id=shot_data.from_id,
+                        to_id=shot_data.to_id,
+                        azimuth=float(shot_data.azimuth),
+                        inclination=float(shot_data.inclination),
+                        length=float(shot_data.length),
+                        # Optional Values
+                        comment=shot_data.comment,
+                        flags=shot_data.flags,
+                        azimuth2=float(shot_data.azimuth2),
+                        inclination2=float(shot_data.inclination2),
+                        # LRUD
+                        left=float(shot_data.left),
+                        right=float(shot_data.right),
+                        up=float(shot_data.up),
+                        down=float(shot_data.down),
+                    )
+                )
 
-                    # Optional Values
-                    comment=shot_data.comment,
-                    flags=shot_data.flags,
-
-                    azimuth2=float(shot_data.azimuth2),
-                    inclination2=float(shot_data.inclination2),
-
-                    # LRUD
-                    left=float(shot_data.left),
-                    right=float(shot_data.right),
-                    up=float(shot_data.up),
-                    down=float(shot_data.down)
-                ))
-
-            survey.sections.append(SurveySection(
-                name=survey_name,
-                comment=survey_comment,
-                correction=(float(correct_A), float(correct_B), float(correct_C)),
-                correction2=(float(correct2_A), float(correct2_B)),
-                date=date,
-                declination=float(declination_str),
-                format=format_str if format_str is not None else "DDDDUDLRLADN",
-                shots=shots,
-                surveyors=surveyors,
-            ))
+            survey.sections.append(
+                SurveySection(
+                    name=survey_name,
+                    comment=survey_comment,
+                    correction=(float(correct_A), float(correct_B), float(correct_C)),
+                    correction2=(float(correct2_A), float(correct2_B)),
+                    date=date,
+                    declination=float(declination_str),
+                    format=format_str if format_str is not None else "DDDDUDLRLADN",
+                    shots=shots,
+                    surveyors=surveyors,
+                )
+            )
 
         return survey
 
-
     # =================== Export Formats =================== #
 
-    def to_json(self, filepath: str | Path | None = None, include_depth: bool = False) -> str:  # noqa: E501
+    def to_json(  # noqa: C901
+        self, filepath: str | Path | None = None, include_depth: bool = False
+    ) -> str:
         data = self.data.model_dump()
 
         all_shots = [shot for section in data["sections"] for shot in section["shots"]]
@@ -307,11 +305,9 @@ class CompassParser:
 
                 for shot in direct_shots:
                     processing_queue.add(
-                        shot["from_id"],
-                        value=None,
-                        fail_if_present=False
+                        shot["from_id"], value=None, fail_if_present=False
                     )
-                    if (next_shot := shot["to_id"]) not in  processing_queue:
+                    if (next_shot := shot["to_id"]) not in processing_queue:
                         collect_downstream_stations(next_shot)
 
             for station in sorted(origin_stations):
@@ -348,15 +344,9 @@ class CompassParser:
             for shot in all_shots:
                 shot["depth"] = round(processing_queue[shot["to_id"]], ndigits=1)
 
-        json_str = json.dumps(
-            data,
-            indent=4,
-            sort_keys=True,
-            cls=EnhancedJSONEncoder
-        )
+        json_str = json.dumps(data, indent=4, sort_keys=True, cls=EnhancedJSONEncoder)
 
         if filepath is not None:
-
             if not isinstance(filepath, Path):
                 filepath = Path(filepath)
 
@@ -372,8 +362,10 @@ class CompassParser:
         filetype = CompassFileType.from_path(filepath)
 
         if filetype != CompassFileType.DAT:
-            raise TypeError(f"Unsupported fileformat: `{filetype.name}`. "
-                            f"Expected: `{CompassFileType.DAT.name}`")
+            raise TypeError(
+                f"Unsupported fileformat: `{filetype.name}`. "
+                f"Expected: `{CompassFileType.DAT.name}`"
+            )
 
         with codecs.open(filepath, "wb", "windows-1252") as f:
             survey = self.data
@@ -387,8 +379,12 @@ class CompassParser:
                 f.write(f"{','.join(section.surveyors)}\n")
                 f.write(f"DECLINATION: {section.declination: >7}  ")
                 f.write(f"FORMAT: {section.format}  ")
-                f.write(f"CORRECTIONS: {" ".join(f'{nbr:.02f}' for nbr in section.correction)}  ")  # noqa: E501
-                f.write(f"CORRECTIONS2: {" ".join(f'{nbr:.02f}' for nbr in section.correction2)}\n\n")  # noqa: E501
+                f.write(
+                    f"CORRECTIONS: {' '.join(f'{nbr:.02f}' for nbr in section.correction)}  "  # noqa: E501
+                )
+                f.write(
+                    f"CORRECTIONS2: {' '.join(f'{nbr:.02f}' for nbr in section.correction2)}\n\n"  # noqa: E501
+                )
 
                 # Shots - Header
                 f.write("        FROM           TO   LENGTH  BEARING      INC")
@@ -417,8 +413,12 @@ class CompassParser:
                     f.write("\n")
 
                 # End of Section
-                f.write(f"{self.SEPARATOR}\n")  # Form_feed: https://www.ascii-code.com/12
-            f.write(f"{self.END_OF_FILE}\n")    # Substitute: https://www.ascii-code.com/26
+                f.write(
+                    f"{self.SEPARATOR}\n"
+                )  # Form_feed: https://www.ascii-code.com/12
+            f.write(
+                f"{self.END_OF_FILE}\n"
+            )  # Substitute: https://www.ascii-code.com/26
 
     # ==================== Public APIs ====================== #
 

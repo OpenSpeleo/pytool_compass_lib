@@ -7,11 +7,9 @@ from dataclasses import is_dataclass
 
 class EnhancedJSONEncoder(json.JSONEncoder):
     def default(self, obj):
-
         from compass_lib.parser import ShotFlag
 
         match obj:
-
             case datetime.date():
                 return obj.isoformat()
 

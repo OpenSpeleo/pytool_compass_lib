@@ -15,7 +15,7 @@ def convert(args: list[str]) -> int:
         type=str,
         default=None,
         required=True,
-        help="Compass Survey Source File."
+        help="Compass Survey Source File.",
     )
 
     parser.add_argument(
@@ -24,7 +24,7 @@ def convert(args: list[str]) -> int:
         type=str,
         default=None,
         required=True,
-        help="Path to save the converted file at."
+        help="Path to save the converted file at.",
     )
 
     parser.add_argument(
@@ -41,7 +41,7 @@ def convert(args: list[str]) -> int:
         type=str,
         choices=["json"],
         required=True,
-        help="Conversion format used."
+        help="Conversion format used.",
     )
 
     parsed_args = parser.parse_args(args)
@@ -52,8 +52,10 @@ def convert(args: list[str]) -> int:
 
     output_file = Path(parsed_args.output_file)
     if output_file.exists() and not parsed_args.overwrite:
-        raise FileExistsError(f"The file {output_file} already existing. "
-                              "Please pass the flag `--overwrite` to ignore.")
+        raise FileExistsError(
+            f"The file {output_file} already existing. "
+            "Please pass the flag `--overwrite` to ignore."
+        )
 
     parser = CompassParser(dmp_file)
     parser.to_json(filepath=output_file, include_depth=True)

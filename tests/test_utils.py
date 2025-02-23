@@ -17,7 +17,7 @@ class TestOrderedQueue(unittest.TestCase):
         """
         self.ordered_queue.add("new_key", value=123)
         assert "new_key" in self.ordered_queue
-        assert self.ordered_queue["new_key"] == 123  # noqa: PLR2004
+        assert self.ordered_queue["new_key"] == 123
 
     def test_add_duplicate_key(self):
         """
@@ -30,7 +30,7 @@ class TestOrderedQueue(unittest.TestCase):
             self.ordered_queue.add("existing_key", value=2, fail_if_present=True)
 
         self.ordered_queue.add("existing_key", value=2, fail_if_present=False)
-        assert self.ordered_queue["existing_key"] == 2  # noqa: PLR2004
+        assert self.ordered_queue["existing_key"] == 2
 
     def test_remove_key(self):
         """
@@ -66,7 +66,7 @@ class TestOrderedQueue(unittest.TestCase):
         """
         for i in range(5):
             self.ordered_queue.add(f"key_{i}", value=None)
-        assert len(self.ordered_queue) == 5  # noqa: PLR2004
+        assert len(self.ordered_queue) == 5
 
 
 if __name__ == "__main__":

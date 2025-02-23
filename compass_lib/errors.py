@@ -1,4 +1,3 @@
-
 class DuplicateValueError(ValueError):
     pass
 

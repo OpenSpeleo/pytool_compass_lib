@@ -1,4 +1,3 @@
-
 # Maximum Length for the field `name` used by compass
 COMPASS_MAX_NAME_LENGTH = 20
 

@@ -14,7 +14,6 @@ LOOP_MAX = 100
 
 
 class TestUniqueNameGenerator(unittest.TestCase):
-
     def setUp(self):
         # Clear used names before each test
         self._reset_used_values()
@@ -37,8 +36,7 @@ class TestUniqueNameGenerator(unittest.TestCase):
         assert name in UniqueNameGenerator._used_values  # noqa: SLF001
 
         with pytest.raises(
-            DuplicateValueError,
-            match=f"Value `{name}` has already been registred."
+            DuplicateValueError, match=f"Value `{name}` has already been registred."
         ):
             UniqueNameGenerator.register(name)
 
@@ -52,10 +50,9 @@ class TestUniqueNameGenerator(unittest.TestCase):
         with pytest.raises(
             ValueError,
             match=f"Maximum length allowed: {COMPASS_MAX_NAME_LENGTH}, "
-                  f"received: {COMPASS_MAX_NAME_LENGTH + 1}"
+            f"received: {COMPASS_MAX_NAME_LENGTH + 1}",
         ):
             _ = UniqueNameGenerator.get(str_len=COMPASS_MAX_NAME_LENGTH + 1)
-
 
     def test_generate_name_with_different_length(self):
         for length in range(1, COMPASS_MAX_NAME_LENGTH + 1):
@@ -75,7 +72,6 @@ class TestUniqueNameGenerator(unittest.TestCase):
 
 
 class TestUniqueIDGenerator(unittest.TestCase):
-
     def setUp(self):
         # Clear used names before each test
         UniqueIDGenerator._used_values.clear()  # noqa: SLF001
@@ -94,8 +90,7 @@ class TestUniqueIDGenerator(unittest.TestCase):
         assert id_val in UniqueIDGenerator._used_values  # noqa: SLF001
 
         with pytest.raises(
-            DuplicateValueError,
-            match=f"Value `{id_val}` has already been registred."
+            DuplicateValueError, match=f"Value `{id_val}` has already been registred."
         ):
             UniqueIDGenerator.register(id_val)
 
@@ -107,14 +102,12 @@ class TestUniqueIDGenerator(unittest.TestCase):
 
 
 class StartAt1IDGenerator(_BaseUniqueValueGenerator):
-
     @classmethod
     def generate(cls, retry_step: int) -> str:
         return retry_step
 
 
 class TestStartAt1IDGenerator(unittest.TestCase):
-
     def setUp(self):
         # Clear used names before each test
         UniqueIDGenerator._used_values.clear()  # noqa: SLF001
@@ -126,13 +119,12 @@ class TestStartAt1IDGenerator(unittest.TestCase):
         with pytest.raises(
             MaxRetriesError,
             match="Impossible to find an available value to use. Max retry attempts "
-                  f"reached: {OSPL_MAX_RETRY_ATTEMPTS}"
+            f"reached: {OSPL_MAX_RETRY_ATTEMPTS}",
         ):
             _ = StartAt1IDGenerator.get()
 
 
 class TestBaseUniqueValueGenerator(unittest.TestCase):
-
     def test_unimplemented_abstract_get(self):
         with pytest.raises(NotImplementedError, match=""):
             _ = _BaseUniqueValueGenerator.generate(retry_step=1)

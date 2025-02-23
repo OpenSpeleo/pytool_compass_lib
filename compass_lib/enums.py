@@ -34,6 +34,7 @@ class CompassFileType(IntEnum):
 
         return cls.from_str(filepath.suffix.upper()[1:])  # Remove the leading `.`
 
+
 # ============================== Azimuth ============================== #
 
 # export const azimuthUnits: { [string]: DisplayAzimuthUnit } = {
@@ -42,10 +43,12 @@ class CompassFileType(IntEnum):
 #   G: 'gradians',
 # }
 
+
 class AzimuthUnits(CustomEnum):
     DEGREES = "D"
     QUADS = "Q"
     GRADIANS = "G"
+
 
 # ============================== Inclination Unit ============================== #
 
@@ -57,12 +60,14 @@ class AzimuthUnits(CustomEnum):
 #   W: 'depthGauge',
 # }
 
+
 class InclinationUnits(CustomEnum):
     DEGREES = "D"
     PERCENT_GRADE = "G"
     DEGREES_AND_MINUTES = "M"
     GRADIANS = "R"
     DEPTH_GAUGE = "W"
+
 
 # ============================== Length Unit ============================== #
 
@@ -73,10 +78,12 @@ class InclinationUnits(CustomEnum):
 #   M: 'meters',
 # }
 
+
 class LengthUnits(CustomEnum):
     DECIMAL_FEET = "D"
     FEET_AND_INCHES = "I"
     METERS = "M"
+
 
 # ============================== LRUD ============================== #
 
@@ -87,11 +94,13 @@ class LengthUnits(CustomEnum):
 #   D: 'down',
 # }
 
+
 class LRUD(CustomEnum):
     LEFT = "L"
     RIGHT = "R"
     UP = "U"
     DOWN = "D"
+
 
 # ============================== ShotItem ============================== #
 
@@ -103,12 +112,14 @@ class LRUD(CustomEnum):
 #   d: 'backsightInclination',
 # }
 
+
 class ShotItem(CustomEnum):
     LENGTH = "L"
     FRONTSIGHT_AZIMUTH = "A"
     FRONTSIGHT_INCLINATION = "D"
     BACKSIGHT_AZIMUTH = "a"
     BACKSIGHT_INCLINATION = "d"
+
 
 # ============================== StationSide ============================== #
 
@@ -117,12 +128,14 @@ class ShotItem(CustomEnum):
 #   T: 'to',
 # }
 
+
 class StationSide(CustomEnum):
     FROM = "F"
     TO = "T"
 
 
 # ============================== ShotFlag ============================== #
+
 
 class ShotFlag(CustomEnum):
     EXCLUDE_PLOTING = "P"

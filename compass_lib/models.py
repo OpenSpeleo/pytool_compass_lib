@@ -21,7 +21,7 @@ class SurveyShot(BaseModel):
     to_id: str = Field(
         default_factory=lambda: UniqueNameGenerator.get(str_len=6),
         min_length=1,
-        max_length=COMPASS_MAX_NAME_LENGTH
+        max_length=COMPASS_MAX_NAME_LENGTH,
     )
 
     azimuth: Annotated[float, Field(ge=0, lt=360)]
@@ -60,7 +60,7 @@ class SurveyShot(BaseModel):
     @field_validator("inclination2", mode="before")
     @classmethod
     def validate_inclination2(cls, value: float) -> float:
-        return value if -90 <= value <= 90 else 0.0  # noqa: PLR2004
+        return value if -90 <= value <= 90 else 0.0
 
     # ======================== VALIDATOR UTILS ======================== #
 
@@ -122,4 +122,3 @@ class Survey(BaseModel):
     sections: list[SurveySection] = []
 
     model_config = ConfigDict(extra="forbid")
-

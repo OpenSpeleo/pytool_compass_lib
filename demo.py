@@ -2,6 +2,8 @@ from pathlib import Path
 
 from compass_lib.parser import CompassParser
 
+# flake8: noqa
+
 if __name__ == "__main__":
     paths = [
         "./tests/artifacts/1998.dat",
@@ -14,7 +16,9 @@ if __name__ == "__main__":
 
     for fp in paths:
         compass_file = Path(fp)
-        print(f"--------------------------- {compass_file} ----------------------------")
+        print(
+            f"--------------------------- {compass_file} ----------------------------"
+        )
         parser = CompassParser(compass_file)
 
         # print(parser)
@@ -47,7 +51,6 @@ if __name__ == "__main__":
         # print(data)
         # print(activities[-1])
         data = parser.to_dat(filepath="export.dat")
-
 
         parser = CompassParser("export.dat")
         data = parser.to_dat(filepath="export2.dat")

@@ -23,19 +23,21 @@ class TestCompassParser(unittest.TestCase):
 
     def test_hash(self):
         parser = CompassParser(filepath="tests/artifacts/1998.dat")
-        assert hash(parser) == 1669966191239739783  # noqa: PLR2004
+        assert hash(parser) == 1669966191239739783
 
     def test_lstat(self):
         parser = CompassParser(filepath="tests/artifacts/1998.dat")
         stat_result = parser.lstat
         assert isinstance(stat_result, os.stat_result)
-        assert stat_result.st_size == 12581  # noqa: PLR2004
+        assert stat_result.st_size == 12581
 
-        assert stat_result.st_mtime == 1728369154.7030082  # noqa: PLR2004
-        assert parser.date_last_modified == datetime.fromtimestamp(1728369154.7030082)  # noqa: DTZ006  # 2024/10/08
+        # MTIME & CTIME are influenced by when the project was downloaded/forked.
+        # The date should always be after `2024/10/08`.
+        assert stat_result.st_mtime >= 1728369154.7030082
+        assert parser.date_last_modified >= datetime.fromtimestamp(1728369154.7030082)  # noqa: DTZ006  # 2024/10/08
 
-        assert stat_result.st_ctime == 1728369154.7030082  # noqa: PLR2004
-        assert parser.date_created == datetime.fromtimestamp(1728369154.7030082)  # noqa: DTZ006  # 2024/10/08
+        assert stat_result.st_ctime >= 1728369154.7030082
+        assert parser.date_created >= datetime.fromtimestamp(1728369154.7030082)  # noqa: DTZ006  # 2024/10/08
 
 
 if __name__ == "__main__":
