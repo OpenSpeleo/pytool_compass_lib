@@ -57,7 +57,7 @@ dependencies = ["pydantic>=2.10,<2.11", "iteration_utilities>=0.12,<0.14"]
 dev = [
   "check-manifest",
   # Pre Commit Hooks
-  "pre-commit>=3.6.0,<4.1",
+  "pre-commit>=3.6.0,<4.2",
   # Linting
   "ruff>=0.3,<0.10",
 ]
