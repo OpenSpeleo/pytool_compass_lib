@@ -344,7 +344,7 @@ class CompassParser:
             for shot in all_shots:
                 shot["depth"] = round(processing_queue[shot["to_id"]], ndigits=1)
 
-        json_str = json.dumps(data, indent=4, sort_keys=True, cls=EnhancedJSONEncoder)
+        json_str = json.dumps(data, indent=2, sort_keys=True, cls=EnhancedJSONEncoder)
 
         if filepath is not None:
             if not isinstance(filepath, Path):

@@ -5,6 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import orjson
 from parameterized import parameterized
 from parameterized import parameterized_class
 
@@ -61,10 +62,22 @@ class ReadCompassDATFileTest(unittest.TestCase):
         del json_target["speleodb_id"]
 
         with Path("converted.json").open(mode="w") as f:
-            f.write(json.dumps(reloaded_json, sort_keys=True, indent=4))
+            f.write(
+                orjson.dumps(
+                    reloaded_json,
+                    None,
+                    option=(orjson.OPT_INDENT_2 | orjson.OPT_SORT_KEYS),
+                ).decode("utf-8")
+            )
 
         with Path("target.json").open(mode="w") as f:
-            f.write(json.dumps(json_target, sort_keys=True, indent=4))
+            f.write(
+                orjson.dumps(
+                    json_target,
+                    None,
+                    option=(orjson.OPT_INDENT_2 | orjson.OPT_SORT_KEYS),
+                ).decode("utf-8")
+            )
 
         assert reloaded_json == json_target
 
