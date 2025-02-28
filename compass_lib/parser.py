@@ -53,6 +53,18 @@ class CompassDataRow:
         instance = cls(*shot_data[:9])
 
         def split1_str(val: str) -> tuple[str]:
+            """
+            Splits the input string into at most two parts.
+
+            Args:
+                val (str): The string to be split.
+
+            Returns:
+                tuple[str]: A tuple containing the first part of the split string and the second part if it exists, otherwise None.
+
+            Raises:
+                ValueError: If the input string is None.
+            """
             if val is None:
                 raise ValueError("Received a NoneValue.")
 

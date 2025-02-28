@@ -51,11 +51,7 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3 :: Only",
 ]
-dependencies = [
-  "orjson>=3.10,<3.11",
-  "pydantic>=2.10,<2.11",
-  "iteration_utilities>=0.12,<0.14",
-]
+dependencies = ["orjson>=3.10,<3.11", "pydantic>=2.10,<2.11"]
 
 [project.optional-dependencies]
 dev = [
