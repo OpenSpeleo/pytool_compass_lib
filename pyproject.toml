@@ -57,7 +57,7 @@ dependencies = ["orjson>=3.10,<3.11", "pydantic>=2.10,<2.11"]
 dev = [
   "check-manifest",
   # Pre Commit Hooks
-  "pre-commit>=3.6.0,<4.2",
+  "pre-commit>=4.1,<4.2",
   # Linting
   "ruff>=0.3,<0.10",
 ]
