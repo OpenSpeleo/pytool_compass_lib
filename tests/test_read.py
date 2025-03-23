@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import glob
 import json
 import tempfile
 import unittest
@@ -53,10 +52,6 @@ class ReadCompassDATFileTest(unittest.TestCase):
             #         for shot in section["shots"]:
             #             del shot["depth"]
 
-        # SpeleoDB-ID is randomly generated on imports - always different.
-        del reloaded_json["speleodb_id"]
-        del json_target["speleodb_id"]
-
         with Path("converted.json").open(mode="w") as f:
             f.write(
                 orjson.dumps(
@@ -89,12 +84,6 @@ class ReadCompassDATFileTest(unittest.TestCase):
             parser = CompassParser(dat_file)
             json_str = parser.to_json(include_depth=False)
             roundtrip_json = json.loads(json_str)
-
-            with self._file.with_suffix(".round.json").open(mode="w") as fp:
-                json.dump(roundtrip_json, fp, indent=4, sort_keys=True)
-
-        del original_json["speleodb_id"]
-        del roundtrip_json["speleodb_id"]
 
         diff = DeepDiff(original_json, roundtrip_json, ignore_order=True)
         assert diff == {}, f"Identity Check failed: {diff}"

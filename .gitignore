@@ -169,6 +169,6 @@ cython_debug/
 /*.json
 /main.py
 
-# Private test files
-tests/artifacts/*.enc.dat
-tests/artifacts/*.enc.json
+# Decrypted test artifacts files
+tests/artifacts/*.clear.dat
+tests/artifacts/*.clear.json

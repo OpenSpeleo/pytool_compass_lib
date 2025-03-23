@@ -108,6 +108,13 @@ class CompassDataRow:
                 if instance.flags is not None:
                     instance.flags = sorted(set(instance.flags), key=lambda f: f.value)
 
+        # Input Normalization
+        instance.azimuth = float(instance.azimuth)
+        instance.azimuth = instance.azimuth % 360.0 if instance.azimuth >= 0 else 0.0
+
+        instance.azimuth2 = float(instance.azimuth2)
+        instance.azimuth2 = instance.azimuth2 % 360.0 if instance.azimuth2 >= 0 else 0.0
+
         return instance
 
 

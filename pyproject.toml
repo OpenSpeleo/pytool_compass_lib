@@ -60,8 +60,15 @@ dev = [
   "pre-commit>=4.1,<4.2",
   # Linting
   "ruff>=0.3,<0.12",
+  # File encryption/decryption
+  "python-dotenv>=1.0.0,<2.0.0",
+  "cryptography>=44.0.0,<45.0.0",
 ]
 test = [
+  # File encryption/decryption
+  "cryptography>=44.0.0,<45.0.0",
+  "python-dotenv>=1.0.0,<2.0.0",
+  # Testing
   "deepdiff>=7.0,<9.0",
   "pytest>=8.0.0,<9.0.0",
   "pytest-cov>=5.0.0,<7.0.0",
@@ -82,8 +89,10 @@ compass = "compass_lib.commands.main:main"
 
 [project.entry-points."compass.actions"]
 convert = "compass_lib.commands.convert:convert"
+encrypt = "compass_lib.commands.encrypt:encrypt"
 
 [tool.pytest.ini_options]
+env_files = [".env"]
 testpaths = ["tests/"]
 addopts = "-vvv --cov=compass_lib --cov-report=term-missing"
 # addopts = "-vvv --cov=compass_lib --cov-report=term-missing --capture=no"

@@ -104,7 +104,6 @@ class SurveySection(BaseModel):
 
 
 class Survey(BaseModel):
-    speleodb_id: UUID4 = Field(default_factory=uuid.uuid4)
     cave_name: str
     description: str = ""
 
