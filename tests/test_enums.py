@@ -36,7 +36,7 @@ class TestCompassFileType(unittest.TestCase):
         result = CompassFileType.from_str("PLT")
         assert result == CompassFileType.PLT
 
-        with pytest.raises(ValueError, match="Unknown extension: `.UNKNOWN`"):
+        with pytest.raises(ValueError, match="Unknown value: UNKNOWN"):
             CompassFileType.from_str("unknown")
 
     def test_from_path(self):
@@ -47,7 +47,7 @@ class TestCompassFileType(unittest.TestCase):
         result = CompassFileType.from_path(Path("survey.mak"))
         assert result == CompassFileType.MAK
 
-        with pytest.raises(ValueError, match="Unknown extension: `.FILE`"):
+        with pytest.raises(ValueError, match="Unknown value: FILE"):
             CompassFileType.from_path("invalid.file")
 
 

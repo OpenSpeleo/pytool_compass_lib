@@ -1,6 +1,7 @@
 from enum import Enum
 from enum import IntEnum
 from pathlib import Path
+from typing import Self
 
 
 class CustomEnum(Enum):
@@ -15,17 +16,11 @@ class CompassFileType(IntEnum):
     PLT = 2
 
     @classmethod
-    def from_str(cls, value: str):
-        value = value.upper()
-        match value:
-            case "DAT":
-                return cls.DAT
-            case "MAK":
-                return cls.MAK
-            case "PLT":
-                return cls.PLT
-            case _:
-                raise ValueError(f"Unknown extension: `.{value}`")
+    def from_str(cls, value: str) -> Self:
+        try:
+            return cls[value.upper()]
+        except KeyError as e:
+            raise ValueError(f"Unknown value: {value.upper()}") from e
 
     @classmethod
     def from_path(cls, filepath: str | Path):

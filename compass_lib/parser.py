@@ -14,6 +14,11 @@ from functools import cached_property
 from pathlib import Path
 from typing import Self
 
+from compass_lib.constants import COMPASS_DATE_COMMENT_RE
+from compass_lib.constants import COMPASS_END_OF_FILE
+from compass_lib.constants import COMPASS_SECTION_NAME_RE
+from compass_lib.constants import COMPASS_SECTION_SEPARATOR
+from compass_lib.constants import COMPASS_SHOT_FLAGS_RE
 from compass_lib.encoding import EnhancedJSONEncoder
 from compass_lib.enums import CompassFileType
 from compass_lib.enums import ShotFlag
@@ -60,7 +65,8 @@ class CompassDataRow:
                 val (str): The string to be split.
 
             Returns:
-                tuple[str]: A tuple containing the first part of the split string and the second part if it exists, otherwise None.
+                tuple[str]: A tuple containing the first part of the split string and
+                            the second part if it exists, otherwise None.
 
             Raises:
                 ValueError: If the input string is None.
@@ -88,12 +94,9 @@ class CompassDataRow:
             ):
                 flags_comment = optional_data
 
-                flag_regex = (
-                    rf"({ShotFlag.__start_token__}"
-                    rf"([{''.join(ShotFlag._value2member_map_.keys())}]*){ShotFlag.__end_token__})*(.*)"
-                )
-
-                _, flag_str, comment = re.search(flag_regex, flags_comment).groups()
+                _, flag_str, comment = re.search(
+                    COMPASS_SHOT_FLAGS_RE, flags_comment
+                ).groups()
 
                 instance.comment = comment.strip() if comment != "" else None
 
@@ -109,9 +112,6 @@ class CompassDataRow:
 
 
 class CompassParser:
-    SEPARATOR = "\f"  # Form_feed: https://www.ascii-code.com/12
-    END_OF_FILE = "\x1a"  # Substitute: https://www.ascii-code.com/26
-
     def __init__(self, filepath: str) -> None:
         self._filepath = Path(filepath)
 
@@ -124,8 +124,8 @@ class CompassParser:
 
         self._raw_sections = [
             section.strip()
-            for section in self._file_content.split(CompassParser.SEPARATOR)
-            if CompassParser.END_OF_FILE not in section
+            for section in self._file_content.split(COMPASS_SECTION_SEPARATOR)
+            if COMPASS_END_OF_FILE not in section
         ]
 
     # =================== File Properties =================== #
@@ -166,57 +166,54 @@ class CompassParser:
     # =================== Data  Processing =================== #
 
     @cached_property
-    def data(self):  # noqa: C901
+    def data(self):
         survey = Survey(
             cave_name=self._raw_sections[0].split("\n", maxsplit=1)[0].strip()
         )
 
         for raw_section in self._raw_sections:
-            section_data = raw_section.splitlines()
+            section_data_iter = iter(raw_section.splitlines())
 
             # Note: not used
-            # cave_name = section_data[0].strip()
+            # cave_name = next(section_data_iter)
+            _ = next(section_data_iter)
 
-            if "SURVEY NAME: " not in section_data[1]:
-                raise RuntimeError
+            # -------------- Survey Name -------------- #
+            input_str = next(section_data_iter)
+            if (match := COMPASS_SECTION_NAME_RE.match(input_str)) is None:
+                raise ValueError("Compass section name not found: `%s`", input_str)
 
-            survey_name = section_data[1].split(":")[-1].strip()
+            survey_name = match.group("section_name").strip()
 
-            try:
-                date_str, comment_str = section_data[2].split("  ", maxsplit=1)
-            except ValueError:
-                date_str = section_data[2]
-                comment_str = None
+            # -------------- Survey Date & Comment -------------- #
+            input_str = next(section_data_iter)
+            if (match := COMPASS_DATE_COMMENT_RE.match(input_str)) is None:
+                raise ValueError(
+                    "Compass date and comment name not found: `%s`", input_str
+                )
 
-            if "SURVEY DATE: " not in date_str:
-                raise RuntimeError
-
-            date = date_str.split(":")[-1].strip()
+            date_str = match.group("date")
+            section_comment = (
+                match.group("comment").strip() if match.group("comment") else ""
+            )
 
             for date_format in ["%m %d %Y", "%m %d %y"]:
                 try:
-                    date = datetime.datetime.strptime(date, date_format).date()
+                    date = datetime.datetime.strptime(date_str, date_format).date()
                     break
                 except ValueError:
                     continue
-
-            if comment_str is None:
-                survey_comment = ""
-            elif "COMMENT:" not in comment_str:
-                raise ValueError(f"Improper Comment Format: `{survey_comment}`")
             else:
-                survey_comment = comment_str.split(":")[-1].strip()
+                raise ValueError("Unknown date format: `%s`", date_str)
 
-            if section_data[3].strip() != "SURVEY TEAM:":
-                raise RuntimeError
+            # -------------- Surveyors -------------- #
+            if (surveyor_header := next(section_data_iter).strip()) != "SURVEY TEAM:":
+                raise ValueError("Unknown surveyor string: `%s`", surveyor_header)
+            surveyors = next(section_data_iter).rstrip(";, ").rstrip()
 
-            surveyors = [
-                suveyor.strip()
-                for suveyor in section_data[4].split(",")
-                if suveyor.strip() != ""
-            ]
+            # -------------- Optional Data -------------- #
 
-            optional_data = section_data[5].split()
+            optional_data = next(section_data_iter).split()
             declination_str = format_str = None
 
             correct_A = correct_B = correct_C = correct2_A = correct2_B = 0.0
@@ -230,37 +227,45 @@ class CompassParser:
                 header, correct2_A = optional_data[10:12]
                 header, correct2_B = optional_data[12:14]
 
+            # -------------- Skip Rows -------------- #
+            _ = next(section_data_iter)  # empty row
+            header_row = next(section_data_iter)
+            _ = next(section_data_iter)  # empty row
+
+            # -------------- Section Shots -------------- #
+
             shots = []
 
-            for shot_str in section_data[9:]:
-                shot_data = CompassDataRow.from_str_data(
-                    str_data=shot_str, header_row=section_data[7]
-                )
-
-                shots.append(
-                    SurveyShot(
-                        from_id=shot_data.from_id,
-                        to_id=shot_data.to_id,
-                        azimuth=float(shot_data.azimuth),
-                        inclination=float(shot_data.inclination),
-                        length=float(shot_data.length),
-                        # Optional Values
-                        comment=shot_data.comment,
-                        flags=shot_data.flags,
-                        azimuth2=float(shot_data.azimuth2),
-                        inclination2=float(shot_data.inclination2),
-                        # LRUD
-                        left=float(shot_data.left),
-                        right=float(shot_data.right),
-                        up=float(shot_data.up),
-                        down=float(shot_data.down),
+            with contextlib.suppress(StopIteration):
+                while shot_str := next(section_data_iter):
+                    shot_data = CompassDataRow.from_str_data(
+                        str_data=shot_str, header_row=header_row
                     )
-                )
+
+                    shots.append(
+                        SurveyShot(
+                            from_id=shot_data.from_id,
+                            to_id=shot_data.to_id,
+                            azimuth=float(shot_data.azimuth),
+                            inclination=float(shot_data.inclination),
+                            length=float(shot_data.length),
+                            # Optional Values
+                            comment=shot_data.comment,
+                            flags=shot_data.flags,
+                            azimuth2=float(shot_data.azimuth2),
+                            inclination2=float(shot_data.inclination2),
+                            # LRUD
+                            left=float(shot_data.left),
+                            right=float(shot_data.right),
+                            up=float(shot_data.up),
+                            down=float(shot_data.down),
+                        )
+                    )
 
             survey.sections.append(
                 SurveySection(
                     name=survey_name,
-                    comment=survey_comment,
+                    comment=section_comment,
                     correction=(float(correct_A), float(correct_B), float(correct_C)),
                     correction2=(float(correct2_A), float(correct2_B)),
                     date=date,
@@ -275,88 +280,88 @@ class CompassParser:
 
     # =================== Export Formats =================== #
 
-    def to_json(  # noqa: C901
+    def to_json(
         self, filepath: str | Path | None = None, include_depth: bool = False
     ) -> str:
         data = self.data.model_dump()
 
-        all_shots = [shot for section in data["sections"] for shot in section["shots"]]
+        # all_shots = [shot for section in data["sections"] for shot in section["shots"]]
 
-        if not include_depth:
-            for shot in all_shots:
-                del shot["depth"]
+        # if not include_depth:
+        #     for shot in all_shots:
+        #         del shot["depth"]
 
-        else:
-            # create an index of all the shots by "ID"
-            # use a copy to avoid data corruption.
-            shot_by_origins = defaultdict(list)
-            shot_by_destinations = defaultdict(list)
-            for shot in all_shots:
-                shot_by_origins[shot["from_id"]].append(shot)
-                shot_by_destinations[shot["to_id"]].append(shot)
+        # else:
+        #     # create an index of all the shots by "ID"
+        #     # use a copy to avoid data corruption.
+        #     shot_by_origins = defaultdict(list)
+        #     shot_by_destinations = defaultdict(list)
+        #     for shot in all_shots:
+        #         shot_by_origins[shot["from_id"]].append(shot)
+        #         shot_by_destinations[shot["to_id"]].append(shot)
 
-            origin_keys = set(shot_by_origins.keys())
-            destination_keys = set(shot_by_destinations.keys())
+        #     origin_keys = set(shot_by_origins.keys())
+        #     destination_keys = set(shot_by_destinations.keys())
 
-            # Finding the "origin stations" - aka. stations with no incoming
-            # shots. They are assumed at depth 0.0
-            origin_stations = set()
-            for shot_key in origin_keys:
-                if shot_key in destination_keys:
-                    continue
-                origin_stations.add(shot_key)
+        #     # Finding the "origin stations" - aka. stations with no incoming
+        #     # shots. They are assumed at depth 0.0
+        #     origin_stations = set()
+        #     for shot_key in origin_keys:
+        #         if shot_key in destination_keys:
+        #             continue
+        #         origin_stations.add(shot_key)
 
-            processing_queue = OrderedQueue()
+        #     processing_queue = OrderedQueue()
 
-            def collect_downstream_stations(target: str) -> list[str]:
-                if target in processing_queue:
-                    return
+        #     def collect_downstream_stations(target: str) -> list[str]:
+        #         if target in processing_queue:
+        #             return
 
-                processing_queue.add(target, value=None, fail_if_present=True)
-                direct_shots = shot_by_origins[target]
+        #         processing_queue.add(target, value=None, fail_if_present=True)
+        #         direct_shots = shot_by_origins[target]
 
-                for shot in direct_shots:
-                    processing_queue.add(
-                        shot["from_id"], value=None, fail_if_present=False
-                    )
-                    if (next_shot := shot["to_id"]) not in processing_queue:
-                        collect_downstream_stations(next_shot)
+        #         for shot in direct_shots:
+        #             processing_queue.add(
+        #                 shot["from_id"], value=None, fail_if_present=False
+        #             )
+        #             if (next_shot := shot["to_id"]) not in processing_queue:
+        #                 collect_downstream_stations(next_shot)
 
-            for station in sorted(origin_stations):
-                collect_downstream_stations(station)
+        #     for station in sorted(origin_stations):
+        #         collect_downstream_stations(station)
 
-            def calculate_depth(
-                target: str, fail_if_unknown: bool = False
-            ) -> float | None:
-                if target in origin_stations:
-                    return 0.0
+        #     def calculate_depth(
+        #         target: str, fail_if_unknown: bool = False
+        #     ) -> float | None:
+        #         if target in origin_stations:
+        #             return 0.0
 
-                if (depth := processing_queue[target]) is not None:
-                    return depth
+        #         if (depth := processing_queue[target]) is not None:
+        #             return depth
 
-                if fail_if_unknown:
-                    return None
+        #         if fail_if_unknown:
+        #             return None
 
-                for shot in shot_by_destinations[target]:
-                    start_depth = calculate_depth(shot["from_id"], fail_if_unknown=True)
-                    if start_depth is not None:
-                        break
-                else:
-                    raise RuntimeError("None of the previous shot has a known depth")
+        #         for shot in shot_by_destinations[target]:
+        #             start_depth = calculate_depth(shot["from_id"], fail_if_unknown=True)
+        #             if start_depth is not None:
+        #                 break
+        #         else:
+        #             raise RuntimeError("None of the previous shot has a known depth")
 
-                vertical_delta = math.cos(
-                    math.radians(90 + float(shot["inclination"]))
-                ) * float(shot["length"])
+        #         vertical_delta = math.cos(
+        #             math.radians(90 + float(shot["inclination"]))
+        #         ) * float(shot["length"])
 
-                return round(start_depth + vertical_delta, ndigits=4)
+        #         return round(start_depth + vertical_delta, ndigits=4)
 
-            for shot in processing_queue:
-                processing_queue[shot] = calculate_depth(shot)
+        #     for shot in processing_queue:
+        #         processing_queue[shot] = calculate_depth(shot)
 
-            for shot in all_shots:
-                shot["depth"] = round(processing_queue[shot["to_id"]], ndigits=1)
+        #     for shot in all_shots:
+        #         shot["depth"] = round(processing_queue[shot["to_id"]], ndigits=1)
 
-        json_str = json.dumps(data, indent=2, sort_keys=True, cls=EnhancedJSONEncoder)
+        json_str = json.dumps(data, indent=4, sort_keys=True, cls=EnhancedJSONEncoder)
 
         if filepath is not None:
             if not isinstance(filepath, Path):
@@ -387,15 +392,14 @@ class CompassParser:
                 f.write(f"SURVEY NAME: {section.name}\n")
                 f.write(f"SURVEY DATE: {section.date.strftime('%m %-d %Y')}  ")
                 f.write(f"COMMENT:{section.comment}\n")
-                f.write("SURVEY TEAM:\n")
-                f.write(f"{','.join(section.surveyors)}\n")
-                f.write(f"DECLINATION: {section.declination: >7}  ")
+                f.write(f"SURVEY TEAM:\n{section.surveyors}\n")
+                f.write(f"DECLINATION: {section.declination:>7.02f}  ")
                 f.write(f"FORMAT: {section.format}  ")
                 f.write(
-                    f"CORRECTIONS: {' '.join(f'{nbr:.02f}' for nbr in section.correction)}  "  # noqa: E501
+                    f"CORRECTIONS:  {' '.join(f'{nbr:.02f}' for nbr in section.correction)}  "  # noqa: E501
                 )
                 f.write(
-                    f"CORRECTIONS2: {' '.join(f'{nbr:.02f}' for nbr in section.correction2)}\n\n"  # noqa: E501
+                    f"CORRECTIONS2:  {' '.join(f'{nbr:.02f}' for nbr in section.correction2)}\n\n"  # noqa: E501
                 )
 
                 # Shots - Header
@@ -409,13 +413,13 @@ class CompassParser:
                     f.write(f"{shot.to_id: >12} ")
                     f.write(f"{shot.length:8.2f} ")
                     f.write(f"{shot.azimuth:8.2f} ")
-                    f.write(f"{shot.inclination:8.2f} ")
+                    f.write(f"{shot.inclination:8.3f} ")
                     f.write(f"{shot.left:8.2f} ")
                     f.write(f"{shot.up:8.2f} ")
                     f.write(f"{shot.down:8.2f} ")
                     f.write(f"{shot.right:8.2f} ")
                     f.write(f"{shot.azimuth2:8.2f} ")
-                    f.write(f"{shot.inclination2:8.2f}")
+                    f.write(f"{shot.inclination2:8.3f}")
                     if shot.flags is not None:
                         f.write(f" {str(ShotFlag.__start_token__).replace('\\', '')}")
                         f.write("".join([flag.value for flag in shot.flags]))
@@ -424,13 +428,11 @@ class CompassParser:
                         f.write(f" {shot.comment}")
                     f.write("\n")
 
-                # End of Section
-                f.write(
-                    f"{self.SEPARATOR}\n"
-                )  # Form_feed: https://www.ascii-code.com/12
-            f.write(
-                f"{self.END_OF_FILE}\n"
-            )  # Substitute: https://www.ascii-code.com/26
+                # End of Section - Form_feed: https://www.ascii-code.com/12
+                f.write(f"{COMPASS_SECTION_SEPARATOR}\n")
+
+            # End of File - Substitute: https://www.ascii-code.com/26
+            f.write(f"{COMPASS_END_OF_FILE}\n")
 
     # ==================== Public APIs ====================== #
 

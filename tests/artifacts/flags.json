@@ -22,7 +22,6 @@
                     "azimuth": 71.0,
                     "azimuth2": 253.0,
                     "comment": null,
-                    "depth": -5.0,
                     "down": 0.0,
                     "flags": null,
                     "from_id": "z23",
@@ -38,7 +37,6 @@
                     "azimuth": 0.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": -19.1,
                     "down": 0.0,
                     "flags": null,
                     "from_id": "toc0",
@@ -54,7 +52,6 @@
                     "azimuth": 131.0,
                     "azimuth2": 312.0,
                     "comment": null,
-                    "depth": -19.3,
                     "down": 0.0,
                     "flags": null,
                     "from_id": "toc1",
@@ -70,7 +67,6 @@
                     "azimuth": 197.0,
                     "azimuth2": 17.0,
                     "comment": null,
-                    "depth": -19.5,
                     "down": 0.0,
                     "flags": null,
                     "from_id": "toc2",
@@ -86,7 +82,6 @@
                     "azimuth": 163.0,
                     "azimuth2": 345.0,
                     "comment": null,
-                    "depth": -30.9,
                     "down": 0.0,
                     "flags": null,
                     "from_id": "toc3",
@@ -102,7 +97,6 @@
                     "azimuth": 132.0,
                     "azimuth2": 310.0,
                     "comment": null,
-                    "depth": -33.4,
                     "down": 0.0,
                     "flags": null,
                     "from_id": "toc4",
@@ -118,7 +112,6 @@
                     "azimuth": 31.5,
                     "azimuth2": 210.0,
                     "comment": null,
-                    "depth": -32.7,
                     "down": 0.0,
                     "flags": null,
                     "from_id": "toc5",
@@ -134,7 +127,6 @@
                     "azimuth": 74.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": -33.6,
                     "down": 0.0,
                     "flags": null,
                     "from_id": "toc6",
@@ -150,7 +142,6 @@
                     "azimuth": 0.0,
                     "azimuth2": 0.0,
                     "comment": "Disto shot up 70' dome",
-                    "depth": -98.6,
                     "down": 0.0,
                     "flags": [
                         "L"
@@ -168,7 +159,6 @@
                     "azimuth": 83.0,
                     "azimuth2": 0.0,
                     "comment": "PUD; flowstone choke",
-                    "depth": -43.3,
                     "down": 0.0,
                     "flags": null,
                     "from_id": "toc5",
@@ -184,7 +174,6 @@
                     "azimuth": 170.0,
                     "azimuth2": 351.0,
                     "comment": null,
-                    "depth": -40.2,
                     "down": 0.0,
                     "flags": null,
                     "from_id": "toc5",
@@ -200,7 +189,6 @@
                     "azimuth": 217.0,
                     "azimuth2": 35.5,
                     "comment": null,
-                    "depth": -45.2,
                     "down": 0.0,
                     "flags": null,
                     "from_id": "toc9",
@@ -216,7 +204,6 @@
                     "azimuth": 98.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": -43.2,
                     "down": 0.0,
                     "flags": [
                         "L"
@@ -234,7 +221,6 @@
                     "azimuth": 0.0,
                     "azimuth2": 0.0,
                     "comment": "Disto shot up 165+' dome (superceded by wcd survey)",
-                    "depth": -208.2,
                     "down": 0.0,
                     "flags": [
                         "X"
@@ -252,7 +238,6 @@
                     "azimuth": 304.0,
                     "azimuth2": 125.0,
                     "comment": null,
-                    "depth": -45.4,
                     "down": 0.0,
                     "flags": null,
                     "from_id": "toc10",
@@ -268,7 +253,6 @@
                     "azimuth": 234.0,
                     "azimuth2": 53.0,
                     "comment": null,
-                    "depth": -46.0,
                     "down": 0.0,
                     "flags": null,
                     "from_id": "toc12",
@@ -284,7 +268,6 @@
                     "azimuth": 260.0,
                     "azimuth2": 0.0,
                     "comment": "PUD; flowstone choke",
-                    "depth": -49.8,
                     "down": 0.0,
                     "flags": null,
                     "from_id": "toc13",
@@ -297,12 +280,8 @@
                     "up": 0.0
                 }
             ],
-            "surveyors": [
-                "John Harman",
-                "Brian Masney",
-                "David Riggs"
-            ]
+            "surveyors": "John Harman, Brian Masney, David Riggs"
         }
     ],
-    "speleodb_id": "53a3afad-f920-4aa1-a17a-6a232ab67a46"
+    "speleodb_id": "37af5a28-70cb-475f-8119-b21eae674ad5"
 }

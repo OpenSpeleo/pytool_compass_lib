@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 
+import glob
 import json
 import tempfile
 import unittest
 from pathlib import Path
 
 import orjson
+from deepdiff import DeepDiff
 from parameterized import parameterized
 from parameterized import parameterized_class
 
@@ -14,21 +16,15 @@ from compass_lib.parser import CompassParser
 
 @parameterized_class(
     ("filepath"),
-    [
-        ("./tests/artifacts/1998.dat",),
-        ("./tests/artifacts/flags.dat",),
-        ("./tests/artifacts/fulford.dat",),
-        ("./tests/artifacts/fulsurf.dat",),
-        ("./tests/artifacts/random.dat",),
-        ("./tests/artifacts/unicode.dat",),
-        # ================================== #
-        # ("./artifacts/1998.dat",),
-        # ("./artifacts/flags.dat",),
-        # ("./artifacts/fulford.dat",),
-        # ("./artifacts/fulsurf.dat",),
-        # ("./artifacts/random.dat",),
-        # ("./artifacts/unicode.dat",)
-    ],
+    [(p,) for p in Path("tests/artifacts").glob(pattern="*.dat")],
+    # [
+    #     ("./tests/artifacts/1998.dat",),
+    #     ("./tests/artifacts/flags.dat",),
+    #     ("./tests/artifacts/fulford.dat",),
+    #     ("./tests/artifacts/fulsurf.dat",),
+    #     ("./tests/artifacts/random.dat",),
+    #     ("./tests/artifacts/unicode.dat",),
+    # ],
 )
 class ReadCompassDATFileTest(unittest.TestCase):
     @classmethod
@@ -48,14 +44,14 @@ class ReadCompassDATFileTest(unittest.TestCase):
         json_str = self._parser.to_json(include_depth=include_depth)
         reloaded_json = json.loads(json_str)
 
-        with Path(str(self._file)[:-3] + "json").open() as f:
+        with self._file.with_suffix(".json").open() as f:
             json_target = json.load(f)
 
-            if not include_depth:
-                # Remove all depth information
-                for section in json_target["sections"]:
-                    for shot in section["shots"]:
-                        del shot["depth"]
+            # if not include_depth:
+            #     # Remove all depth information
+            #     for section in json_target["sections"]:
+            #         for shot in section["shots"]:
+            #             del shot["depth"]
 
         # SpeleoDB-ID is randomly generated on imports - always different.
         del reloaded_json["speleodb_id"]
@@ -79,7 +75,8 @@ class ReadCompassDATFileTest(unittest.TestCase):
                 ).decode("utf-8")
             )
 
-        assert reloaded_json == json_target
+        diff = DeepDiff(reloaded_json, json_target, ignore_order=True)
+        assert diff == {}, f"Identity Check failed: {diff}"
 
     def test_compass_roundtrip(self):
         json_str = self._parser.to_json(include_depth=False)
@@ -93,10 +90,14 @@ class ReadCompassDATFileTest(unittest.TestCase):
             json_str = parser.to_json(include_depth=False)
             roundtrip_json = json.loads(json_str)
 
+            with self._file.with_suffix(".round.json").open(mode="w") as fp:
+                json.dump(roundtrip_json, fp, indent=4, sort_keys=True)
+
         del original_json["speleodb_id"]
         del roundtrip_json["speleodb_id"]
 
-        assert original_json == roundtrip_json
+        diff = DeepDiff(original_json, roundtrip_json, ignore_order=True)
+        assert diff == {}, f"Identity Check failed: {diff}"
 
     # def test_export_to_dat(self):
     #     if self._parser is None:

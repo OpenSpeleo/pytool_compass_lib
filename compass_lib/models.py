@@ -9,19 +9,12 @@ from pydantic import ConfigDict
 from pydantic import Field
 from pydantic import field_validator
 
-from compass_lib.constants import COMPASS_MAX_NAME_LENGTH
-
 # from compass_lib.errors import DuplicateValueError
-from compass_lib.generators import UniqueNameGenerator
 
 
 class SurveyShot(BaseModel):
     from_id: str
-    to_id: str = Field(
-        default_factory=lambda: UniqueNameGenerator.get(str_len=6),
-        min_length=1,
-        max_length=COMPASS_MAX_NAME_LENGTH,
-    )
+    to_id: str
 
     azimuth: Annotated[float, Field(ge=0, lt=360)]
 
@@ -34,9 +27,6 @@ class SurveyShot(BaseModel):
 
     azimuth2: Annotated[float, Field(ge=0, lt=360)] | None = None
     inclination2: Annotated[float, Field(ge=-90, le=90)] | None = None
-
-    # calculated
-    depth: Annotated[float, Field(ge=0)] | None = None
 
     # LRUD
     left: Annotated[float, Field(ge=0)] = 0.0
@@ -108,7 +98,7 @@ class SurveySection(BaseModel):
     declination: float
     format: str = "DDDDUDLRLADN"
     shots: list[SurveyShot]
-    surveyors: list[str] | None = None
+    surveyors: str | None = None
 
     model_config = ConfigDict(extra="forbid")
 

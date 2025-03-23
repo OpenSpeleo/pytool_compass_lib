@@ -168,3 +168,7 @@ cython_debug/
 /*.txt
 /*.json
 /main.py
+
+# Private test files
+tests/artifacts/*.enc.dat
+tests/artifacts/*.enc.json

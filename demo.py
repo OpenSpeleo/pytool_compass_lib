@@ -1,25 +1,27 @@
 from pathlib import Path
-
+from pprint import pprint
 from compass_lib.parser import CompassParser
+import json
 
 # flake8: noqa
 
 if __name__ == "__main__":
-    paths = [
-        "./tests/artifacts/1998.dat",
-        "./tests/artifacts/flags.dat",
-        "./tests/artifacts/fulford.dat",
-        "./tests/artifacts/fulsurf.dat",
-        "./tests/artifacts/random.dat",
-        "./tests/artifacts/unicode.dat",
-    ]
+    # paths = [
+    #     "./tests/artifacts/1998.dat",
+    #     "./tests/artifacts/flags.dat",
+    #     "./tests/artifacts/fulford.dat",
+    #     "./tests/artifacts/fulsurf.dat",
+    #     "./tests/artifacts/random.dat",
+    #     "./tests/artifacts/unicode.dat",
+    # ]
+    paths = Path("tests/artifacts").glob(pattern="*.dat")
 
     for fp in paths:
         compass_file = Path(fp)
-        print(
-            f"--------------------------- {compass_file} ----------------------------"
-        )
+        print(f"# ------------------------ {compass_file} ------------------------#")
         parser = CompassParser(compass_file)
+
+        parser.to_json(filepath=compass_file.with_suffix(".json"), include_depth=False)
 
         # print(parser)
         # print(f"{parser.shots=}")
@@ -27,7 +29,7 @@ if __name__ == "__main__":
         # print(f"{parser.filepath=}")
         # print(f"{parser.filetype=}")
         # print(f"{parser.to_json()=}")
-        # print(f"{parser.data=}")
+        # pprint(parser.data.model_dump())
         # print(f"{parser._data=}")
         # print(f"{parser.lstat=}")
         # print(f"{parser.date_created=}")
@@ -50,9 +52,9 @@ if __name__ == "__main__":
         # data = parser.to_json(include_depth=True)
         # print(data)
         # print(activities[-1])
-        data = parser.to_dat(filepath="export.dat")
+        # data = parser.to_dat(filepath="export.dat")
 
-        parser = CompassParser("export.dat")
-        data = parser.to_dat(filepath="export2.dat")
+        # parser = CompassParser("export.dat")
+        # data = parser.to_dat(filepath="export2.dat")
 
-        input("awaiting ...")
+        # input("awaiting ...")

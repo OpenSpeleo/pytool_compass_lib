@@ -22,7 +22,6 @@
                     "azimuth": 104.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": -35.6,
                     "down": 0.0,
                     "flags": [
                         "P"
@@ -40,7 +39,6 @@
                     "azimuth": 120.5,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": -48.9,
                     "down": 0.0,
                     "flags": [
                         "P"
@@ -58,7 +56,6 @@
                     "azimuth": 150.5,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": -53.5,
                     "down": 0.0,
                     "flags": [
                         "P"
@@ -76,7 +73,6 @@
                     "azimuth": 117.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": -86.6,
                     "down": 0.0,
                     "flags": [
                         "P"
@@ -94,7 +90,6 @@
                     "azimuth": 123.5,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": -103.1,
                     "down": 0.0,
                     "flags": [
                         "P"
@@ -112,7 +107,6 @@
                     "azimuth": 112.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": -113.5,
                     "down": 0.0,
                     "flags": [
                         "P"
@@ -130,7 +124,6 @@
                     "azimuth": 89.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": -126.6,
                     "down": 0.0,
                     "flags": null,
                     "from_id": "SS6",
@@ -146,7 +139,6 @@
                     "azimuth": 333.5,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": -111.7,
                     "down": 0.0,
                     "flags": null,
                     "from_id": "SS6",
@@ -159,11 +151,7 @@
                     "up": 0.0
                 }
             ],
-            "surveyors": [
-                "Mike Roberts",
-                "Ken Kreager",
-                "Rick Rhinehart"
-            ]
+            "surveyors": "Mike Roberts,Ken Kreager,Rick Rhinehart"
         },
         {
             "comment": "Surface to Centipede",
@@ -185,7 +173,6 @@
                     "azimuth": 93.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": -0.3,
                     "down": 0.0,
                     "flags": [
                         "P"
@@ -203,7 +190,6 @@
                     "azimuth": 332.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": 21.9,
                     "down": 0.0,
                     "flags": [
                         "P"
@@ -221,7 +207,6 @@
                     "azimuth": 321.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": 61.1,
                     "down": 0.0,
                     "flags": [
                         "P"
@@ -239,7 +224,6 @@
                     "azimuth": 9.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": 69.1,
                     "down": 0.0,
                     "flags": null,
                     "from_id": "SC3",
@@ -255,7 +239,6 @@
                     "azimuth": 0.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": 69.1,
                     "down": 0.0,
                     "flags": null,
                     "from_id": "Z1",
@@ -268,10 +251,7 @@
                     "up": 0.0
                 }
             ],
-            "surveyors": [
-                "Paul Burger",
-                "Fred Luiszer"
-            ]
+            "surveyors": "Paul Burger,Fred Luiszer"
         },
         {
             "comment": "Centipede",
@@ -293,7 +273,6 @@
                     "azimuth": 138.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": 70.5,
                     "down": 2.5,
                     "flags": null,
                     "from_id": "Z1",
@@ -309,7 +288,6 @@
                     "azimuth": 87.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": 67.1,
                     "down": 1.0,
                     "flags": null,
                     "from_id": "Z2",
@@ -325,7 +303,6 @@
                     "azimuth": 22.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": 67.4,
                     "down": 4.0,
                     "flags": null,
                     "from_id": "Z3",
@@ -341,7 +318,6 @@
                     "azimuth": 31.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": 67.4,
                     "down": 2.0,
                     "flags": null,
                     "from_id": "Z3A",
@@ -357,7 +333,6 @@
                     "azimuth": 126.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": 74.6,
                     "down": 4.0,
                     "flags": null,
                     "from_id": "Z3",
@@ -373,7 +348,6 @@
                     "azimuth": 33.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": 80.9,
                     "down": 0.5,
                     "flags": null,
                     "from_id": "Z4",
@@ -386,10 +360,7 @@
                     "up": 1.5
                 }
             ],
-            "surveyors": [
-                "F.LUISZER",
-                "P.BURGER"
-            ]
+            "surveyors": "F.LUISZER,P.BURGER"
         },
         {
             "comment": "Centiipede +",
@@ -411,7 +382,6 @@
                     "azimuth": 114.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": 86.9,
                     "down": 1.0,
                     "flags": null,
                     "from_id": "Z5",
@@ -427,7 +397,6 @@
                     "azimuth": 43.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": 86.6,
                     "down": 2.5,
                     "flags": null,
                     "from_id": "Z6",
@@ -443,7 +412,6 @@
                     "azimuth": 9.45,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": 85.0,
                     "down": 1.0,
                     "flags": null,
                     "from_id": "Z7",
@@ -459,7 +427,6 @@
                     "azimuth": 16.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": 82.3,
                     "down": 5.0,
                     "flags": null,
                     "from_id": "Z8",
@@ -475,7 +442,6 @@
                     "azimuth": 242.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": 92.3,
                     "down": 0.5,
                     "flags": null,
                     "from_id": "Z6",
@@ -491,7 +457,6 @@
                     "azimuth": 46.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": 95.1,
                     "down": 2.5,
                     "flags": null,
                     "from_id": "Z10",
@@ -507,7 +472,6 @@
                     "azimuth": 337.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": 101.4,
                     "down": 2.5,
                     "flags": null,
                     "from_id": "Z11",
@@ -523,7 +487,6 @@
                     "azimuth": 320.0,
                     "azimuth2": 0.0,
                     "comment": null,
-                    "depth": 101.6,
                     "down": 0.5,
                     "flags": null,
                     "from_id": "Z12",
@@ -536,12 +499,8 @@
                     "up": 4.0
                 }
             ],
-            "surveyors": [
-                "F.LUISZER",
-                "T.LAPPIN",
-                "P.BURGER"
-            ]
+            "surveyors": "F.LUISZER,T.LAPPIN,P.BURGER"
         }
     ],
-    "speleodb_id": "e9a826d8-7e10-4042-bcd8-0148bd14af58"
+    "speleodb_id": "8e65f168-9152-47b3-806e-74ba24cad0c8"
 }

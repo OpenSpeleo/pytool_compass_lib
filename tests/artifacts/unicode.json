@@ -22,7 +22,6 @@
                     "azimuth": 261.0,
                     "azimuth2": 80.0,
                     "comment": null,
-                    "depth": 0.1,
                     "down": 65.0,
                     "flags": null,
                     "from_id": "i18n1",
@@ -38,7 +37,6 @@
                     "azimuth": 0.0,
                     "azimuth2": 180.0,
                     "comment": null,
-                    "depth": 65.1,
                     "down": 0.0,
                     "flags": null,
                     "from_id": "i18n2",
@@ -51,14 +49,8 @@
                     "up": 90.0
                 }
             ],
-            "surveyors": [
-                "Mark Minton",
-                "Yvonne Droms",
-                "James Hunter",
-                "Tommy Shifflett",
-                "Tanya Pietra\u00df"
-            ]
+            "surveyors": "Mark Minton, Yvonne Droms, James Hunter, Tommy Shifflett, Tanya Pietra\u00df"
         }
     ],
-    "speleodb_id": "0433c935-5865-404a-8ad6-5e7444078167"
+    "speleodb_id": "8e074895-8ba2-47ba-89cd-653e84edf4ca"
 }
