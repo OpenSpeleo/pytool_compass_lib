@@ -1,0 +1,41 @@
+{
+    "cave_name": "[489] Q1 A3-2",
+    "description": "",
+    "sections": [
+        {
+            "comment": "TODO strzal szacunowy",
+            "correction": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "correction2": [
+                0.0,
+                0.0
+            ],
+            "declination": 0.0,
+            "discovery_date": "1900-01-01",
+            "format": "DMMDLRUDLADN",
+            "name": "Q1",
+            "shots": [
+                {
+                    "azimuth": 0.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "Q1",
+                    "inclination": -90.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 131.23,
+                    "right": 0.0,
+                    "to_id": "Q1.1",
+                    "up": 0.0
+                }
+            ],
+            "survey_date": "1900-01-01",
+            "surveyors": ""
+        }
+    ]
+}

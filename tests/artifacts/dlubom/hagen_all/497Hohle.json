@@ -1,0 +1,41 @@
+{
+    "cave_name": "[497] Hohle mit Oliphant",
+    "description": "",
+    "sections": [
+        {
+            "comment": "TODO fikcyjny strzal",
+            "correction": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "correction2": [
+                0.0,
+                0.0
+            ],
+            "declination": 0.0,
+            "discovery_date": "1900-01-01",
+            "format": "DMMDLRUDLADN",
+            "name": "497",
+            "shots": [
+                {
+                    "azimuth": 0.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a497",
+                    "inclination": -90.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 98.43,
+                    "right": 0.0,
+                    "to_id": "a497.1",
+                    "up": 0.0
+                }
+            ],
+            "survey_date": "1900-01-01",
+            "surveyors": ""
+        }
+    ]
+}

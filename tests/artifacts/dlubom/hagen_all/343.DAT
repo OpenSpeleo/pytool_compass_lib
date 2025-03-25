@@ -1,0 +1,14 @@
+343
+SURVEY NAME: 343
+SURVEY DATE: 7 28 2010  COMMENT:   Adam Mioduszewski - rysowanie, Radoslaw Paternoga - DistoX
+SURVEY TEAM:
+
+DECLINATION:     2.51  FORMAT: DMMDLRUDLADN  CORRECTIONS:  0.00 0.00 0.00
+
+    FROM      TO   LENGTH  BEARING      DIP     LEFT       UP     DOWN    RIGHT
+
+G:343        G:1             52.13   211.00   -82.70     0.00     0.00     0.00     0.00
+G:1          G:2             44.59   176.00   -78.70     0.00     0.00     0.00     0.00
+G:2          G:3              6.56   340.80   -82.50     0.00     0.00     0.00     0.00
+
+

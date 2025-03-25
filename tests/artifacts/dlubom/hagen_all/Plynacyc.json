@@ -1,0 +1,161 @@
+{
+    "cave_name": "Plynacych Kamieni",
+    "description": "",
+    "sections": [
+        {
+            "comment": "TODO nie wpisana do katastra",
+            "correction": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "correction2": [
+                0.0,
+                0.0
+            ],
+            "declination": 2.18,
+            "discovery_date": "2007-08-20",
+            "format": "DMMDLRUDLADN",
+            "name": "PLYNACYCH",
+            "shots": [
+                {
+                    "azimuth": 170.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "I:pk01",
+                    "inclination": -67.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 24.84,
+                    "right": 0.0,
+                    "to_id": "I:pk02",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 75.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "I:pk02",
+                    "inclination": -68.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 7.64,
+                    "right": 0.0,
+                    "to_id": "I:pk03",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 290.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "I:pk03",
+                    "inclination": -85.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 25.66,
+                    "right": 0.0,
+                    "to_id": "I:pk04",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 115.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "I:pk04",
+                    "inclination": -51.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 15.94,
+                    "right": 0.0,
+                    "to_id": "I:pk05",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 165.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "I:pk05",
+                    "inclination": -70.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 23.95,
+                    "right": 0.0,
+                    "to_id": "I:pk06",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 204.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "I:pk06",
+                    "inclination": -57.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 6.56,
+                    "right": 0.0,
+                    "to_id": "I:pk07",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 175.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "I:pk07",
+                    "inclination": -75.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 58.07,
+                    "right": 0.0,
+                    "to_id": "I:pk08",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 315.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "I:pk08",
+                    "inclination": -40.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 18.11,
+                    "right": 0.0,
+                    "to_id": "I:pk09",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 0.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "I:pk09",
+                    "inclination": -90.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 1.64,
+                    "right": 0.0,
+                    "to_id": "I:pk10",
+                    "up": 0.0
+                }
+            ],
+            "survey_date": "2007-08-20",
+            "surveyors": ""
+        }
+    ]
+}

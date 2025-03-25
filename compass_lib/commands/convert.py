@@ -57,6 +57,6 @@ def convert(args: list[str]) -> int:
             "Please pass the flag `--overwrite` to ignore."
         )
 
-    parser = CompassParser(dmp_file)
-    parser.to_json(filepath=output_file, include_depth=True)
+    survey = CompassParser.load_dat_file(dmp_file)
+    survey.to_json(filepath=output_file)
     return 0

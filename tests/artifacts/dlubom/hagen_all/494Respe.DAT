@@ -1,0 +1,98 @@
+[494] Respektschacht
+SURVEY NAME: OBOK_MYSIEJ_D
+SURVEY DATE: 8 8 2008  COMMENT:   Mirek Kopertowski, Oliwia Rysnik, Radoslaw Paternoga
+SURVEY TEAM:
+
+DECLINATION:     2.28  FORMAT: DMMDLRUDLADN  CORRECTIONS:  0.00 0.00 0.00
+
+    FROM      TO   LENGTH  BEARING      DIP     LEFT       UP     DOWN    RIGHT
+
+RC18         RC181           44.36   179.00    81.00     0.00     0.00     0.00     0.00
+RC181        RC182           16.01   192.00   -36.00     0.00     0.00     0.00     0.00
+RC182        RC183           30.31     0.00   -90.00     0.00     0.00     0.00     0.00
+RC183        RC184            9.32   201.00    -1.00     0.00     0.00     0.00     0.00
+RC184        RC185           28.71     0.00   -90.00     0.00     0.00     0.00     0.00
+RC185        RC186           14.83   166.00    24.00     0.00     0.00     0.00     0.00
+RC186        RC187           13.32   279.00   -16.00     0.00     0.00     0.00     0.00
+
+[494] Respektschacht
+SURVEY NAME: OBOK_MYSIEJ_G
+SURVEY DATE: 8 6 2008  COMMENT:   Mirek Kopertowski, Oliwia Rysnik, Radoslaw Paternoga
+SURVEY TEAM:
+
+DECLINATION:     2.28  FORMAT: DMMDLRUDLADN  CORRECTIONS:  0.00 0.00 0.00
+
+    FROM      TO   LENGTH  BEARING      DIP     LEFT       UP     DOWN    RIGHT
+
+RC17         RC171           62.86     0.00   -90.00     0.00     0.00     0.00     0.00
+RC171        RC172            6.92   170.00    -4.00     0.00     0.00     0.00     0.00
+RC172        RC173           43.27     0.00   -90.00     0.00     0.00     0.00     0.00
+RC173        RC174            5.91    61.00     9.00     0.00     0.00     0.00     0.00
+RC174        RC175           24.38     0.00   -90.00     0.00     0.00     0.00     0.00
+RC175        RC176            7.94   326.00     9.00     0.00     0.00     0.00     0.00
+
+[494] Respektschacht
+SURVEY NAME: PONIZEJ_STUDNI
+SURVEY DATE: 8 1 2008  COMMENT:  ;#SEGMENT /Ponizej studni
+SURVEY TEAM:
+
+DECLINATION:     2.28  FORMAT: DMMDLRUDLADN  CORRECTIONS:  0.00 0.00 0.00
+
+    FROM      TO   LENGTH  BEARING      DIP     LEFT       UP     DOWN    RIGHT
+
+RC18         RC19            14.44   297.00    -4.00     0.00     0.00     0.00     0.00
+RC19         RC20            11.32   346.00   -27.00     0.00     0.00     0.00     0.00
+RC20         RC21            12.40   310.00   -39.00     0.00     0.00     0.00     0.00
+RC21         RC22            12.66   199.00     2.00     0.00     0.00     0.00     0.00
+RC22         RC23            23.85   318.00   -47.00     0.00     0.00     0.00     0.00
+RC23         RC24             7.05   311.00   -15.00     0.00     0.00     0.00     0.00
+RC24         RC25            91.21     0.00   -90.00     0.00     0.00     0.00     0.00
+RC25         RC26            25.20   303.00   -18.00     0.00     0.00     0.00     0.00
+RC26         RC27            33.46     0.00   -90.00     0.00     0.00     0.00     0.00
+RC27         RC28            30.81   360.00   -12.00     0.00     0.00     0.00     0.00
+RC28         RC29            24.28     0.00   -90.00     0.00     0.00     0.00     0.00
+RC29         RC30            10.66   347.00   -22.00     0.00     0.00     0.00     0.00
+RC30         RC31            11.75   280.00    -5.00     0.00     0.00     0.00     0.00
+RC31         RC32             3.31   349.00   -21.00     0.00     0.00     0.00     0.00
+RC32         RC33             7.22    42.00     1.00     0.00     0.00     0.00     0.00
+RC33         RC34            12.14     0.00   -90.00     0.00     0.00     0.00     0.00
+RC34         RC35             9.09    26.00   -28.00     0.00     0.00     0.00     0.00
+RC35         RC36            17.29   304.00    24.00     0.00     0.00     0.00     0.00
+
+[494] Respektschacht
+SURVEY NAME: STUDNIA
+SURVEY DATE: 8 1 2008  COMMENT:  ;#SEGMENT /Studnia
+SURVEY TEAM:
+
+DECLINATION:     2.28  FORMAT: DMMDLRUDLADN  CORRECTIONS:  0.00 0.00 0.00
+
+    FROM      TO   LENGTH  BEARING      DIP     LEFT       UP     DOWN    RIGHT
+
+RC15         RC16            30.54    79.00   -69.00     0.00     0.00     0.00     0.00
+RC16         RC17           104.92    61.00   -84.00     0.00     0.00     0.00     0.00
+RC17         RC18           175.20     0.00   -90.00     0.00     0.00     0.00     0.00
+
+[494] Respektschacht
+SURVEY NAME: CIAG GLOWNY
+SURVEY DATE: 8 20 2007  COMMENT:   Dariusz Bartoszewski, Krzysztof Jablonski, Marcin Kosecki
+SURVEY TEAM:
+
+DECLINATION:     2.18  FORMAT: DMMDLRUDLADN  CORRECTIONS:  0.00 0.00 0.00
+
+    FROM      TO   LENGTH  BEARING      DIP     LEFT       UP     DOWN    RIGHT
+
+RC1          RC2             16.24   245.00   -46.00     0.00     0.00     0.00     0.00
+RC2          RC4            186.02     0.00   -90.00     0.00     0.00     0.00     0.00
+RC4          RC5             10.10   340.00   -20.00     0.00     0.00     0.00     0.00
+RC5          RC6             14.70     0.00   -70.00     0.00     0.00     0.00     0.00
+RC6          RC7             10.79   303.00   -47.00     0.00     0.00     0.00     0.00
+RC7          RC8              4.56   225.00   -13.00     0.00     0.00     0.00     0.00
+RC8          RC9             38.91     0.00   -90.00     0.00     0.00     0.00     0.00
+RC9          RC10             4.07     0.00   -90.00     0.00     0.00     0.00     0.00
+RC9          RC11            17.22   310.00     0.00     0.00     0.00     0.00     0.00
+RC11         RC12            57.22     0.00   -90.00     0.00     0.00     0.00     0.00
+RC12         RC13            23.85   264.00     4.00     0.00     0.00     0.00     0.00
+RC13         RC14             6.99   320.00    25.00     0.00     0.00     0.00     0.00
+RC14         RC15             3.51   220.00    10.00     0.00     0.00     0.00     0.00
+
+

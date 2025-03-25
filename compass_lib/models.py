@@ -1,13 +1,15 @@
 import datetime
-import uuid
+import json
+from pathlib import Path
 from typing import Annotated
 from typing import Any
 
-from pydantic import UUID4
 from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field
 from pydantic import field_validator
+
+from compass_lib.encoding import EnhancedJSONEncoder
 
 # from compass_lib.errors import DuplicateValueError
 
@@ -94,7 +96,8 @@ class SurveySection(BaseModel):
     comment: str
     correction: list[float]
     correction2: list[float]
-    date: datetime.date
+    survey_date: datetime.date | None = None
+    discovery_date: datetime.date | None = None
     declination: float
     format: str = "DDDDUDLRLADN"
     shots: list[SurveyShot]
@@ -110,3 +113,15 @@ class Survey(BaseModel):
     sections: list[SurveySection] = []
 
     model_config = ConfigDict(extra="forbid")
+
+    def to_json(self, filepath: str | Path | None = None) -> str:
+        filepath = Path(filepath) if filepath else None
+        data = self.model_dump()
+
+        json_str = json.dumps(data, indent=4, sort_keys=True, cls=EnhancedJSONEncoder)
+
+        if filepath is not None:
+            with filepath.open(mode="w") as file:
+                file.write(json_str)
+
+        return json_str

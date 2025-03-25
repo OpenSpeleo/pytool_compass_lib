@@ -1,12 +1,18 @@
 from pathlib import Path
-from pprint import pprint
+
 from compass_lib.parser import CompassParser
-import json
 
 # flake8: noqa
 
 if __name__ == "__main__":
-    # paths = [
+    paths = [
+        # "tests/artifacts/synthese-psm_larra/gouffre_z510/Z510_2024_12_31.dat",
+        # "tests/artifacts/fountainware/unicode.dat",
+        # "tests/artifacts/dlubom/ciekawa/495Cieka.DAT",
+        # "tests/artifacts/fountainware/1998.dat"
+        # "tests/artifacts/synthese-psm_larra/database_criou/database_criou.dat"
+        "tests/artifacts/synthese_clot_daspres/2soeurs_mtc.dat"
+    ]
     #     "./tests/artifacts/1998.dat",
     #     "./tests/artifacts/flags.dat",
     #     "./tests/artifacts/fulford.dat",
@@ -14,14 +20,17 @@ if __name__ == "__main__":
     #     "./tests/artifacts/random.dat",
     #     "./tests/artifacts/unicode.dat",
     # ]
-    paths = Path("tests/artifacts").glob(pattern="*.dat")
 
-    for fp in paths:
+    for fp in sorted(paths):
+        _fp = Path(fp)
+        if Path("tests/artifacts/invalid_files").resolve() in _fp.resolve().parents:
+            continue
+
         compass_file = Path(fp)
-        print(f"# ------------------------ {compass_file} ------------------------#")
-        parser = CompassParser(compass_file)
+        print(f"# ------------------------ {compass_file} ------------------------#")  # noqa: T201
+        survey = CompassParser.load_dat_file(compass_file)
 
-        parser.to_json(filepath=compass_file.with_suffix(".json"), include_depth=False)
+        survey.to_json(filepath=compass_file.with_suffix(".json"))
 
         # print(parser)
         # print(f"{parser.shots=}")

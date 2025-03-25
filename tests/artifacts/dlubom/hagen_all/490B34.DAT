@@ -1,0 +1,12 @@
+[490] B3-4
+SURVEY NAME: 490
+SURVEY DATE: 1 1 1900  COMMENT:   TODO strzal fikcyjny
+SURVEY TEAM:
+
+DECLINATION:     0.00  FORMAT: DMMDLRUDLADN  CORRECTIONS:  0.00 0.00 0.00
+
+    FROM      TO   LENGTH  BEARING      DIP     LEFT       UP     DOWN    RIGHT
+
+a490         a490.1          98.43     0.00   -90.00     0.00     0.00     0.00     0.00
+
+

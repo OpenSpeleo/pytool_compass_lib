@@ -1,0 +1,71 @@
+{
+    "cave_name": "A4-1",
+    "description": "",
+    "sections": [
+        {
+            "comment": "nie wpisana do katastra",
+            "correction": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "correction2": [
+                0.0,
+                0.0
+            ],
+            "declination": 2.36,
+            "discovery_date": "2009-05-09",
+            "format": "DMMDLRUDLADN",
+            "name": "A4-1",
+            "shots": [
+                {
+                    "azimuth": 243.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a401-0",
+                    "inclination": -44.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 16.17,
+                    "right": 0.0,
+                    "to_id": "a401-1",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 258.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a401-1",
+                    "inclination": -86.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 16.9,
+                    "right": 0.0,
+                    "to_id": "a401-2",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 184.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a401-2",
+                    "inclination": -28.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 9.19,
+                    "right": 0.0,
+                    "to_id": "a401-3",
+                    "up": 0.0
+                }
+            ],
+            "survey_date": "2009-05-09",
+            "surveyors": ""
+        }
+    ]
+}

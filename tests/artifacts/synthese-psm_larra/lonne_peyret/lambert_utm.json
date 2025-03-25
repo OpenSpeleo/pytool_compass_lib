@@ -1,0 +1,692 @@
+{
+    "cave_name": "LAMBERT_Square",
+    "description": "",
+    "sections": [
+        {
+            "comment": "Alex",
+            "correction": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "correction2": [
+                0.0,
+                0.0
+            ],
+            "declination": -3.68,
+            "discovery_date": "2009-09-12",
+            "format": "DMMDUDRLLADN",
+            "name": "Lambert_Square",
+            "shots": [
+                {
+                    "azimuth": 270.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT345_79",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 65.62,
+                    "right": 0.0,
+                    "to_id": "LT345_79G",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 90.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT345_79",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 65.62,
+                    "right": 0.0,
+                    "to_id": "LT345_79D",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 0.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT345_79",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 65.62,
+                    "right": 0.0,
+                    "to_id": "LT345_79H",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 180.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT345_79",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 65.62,
+                    "right": 0.0,
+                    "to_id": "LT345_79B",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 0.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT345_79",
+                    "inclination": -90.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 65.62,
+                    "right": 0.0,
+                    "to_id": "LT345_79HH",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 0.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT345_79",
+                    "inclination": 90.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 65.62,
+                    "right": 0.0,
+                    "to_id": "LT345_79DD",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 270.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT346_80",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT346_80G",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 90.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT346_80",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT346_80D",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 0.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT346_80",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT346_80H",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 180.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT346_80",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT346_80B",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 0.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT346_80",
+                    "inclination": -90.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT346_80UH",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 0.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT346_80",
+                    "inclination": 90.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT346_80UD",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 270.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT344_80",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT344_80G",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 90.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT344_80",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT344_80D",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 0.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT344_80",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT344_80H",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 180.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT344_80",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT344_80B",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 0.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT344_80",
+                    "inclination": -90.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT344_80UH",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 0.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT344_80",
+                    "inclination": 90.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT344_80UD",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 270.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT346_78",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT346_78G",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 90.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT346_78",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT346_78D",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 0.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT346_78",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT346_78H",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 180.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT346_78",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT346_78B",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 0.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT346_78",
+                    "inclination": -90.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT346_78UH",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 0.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT346_78",
+                    "inclination": 90.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT346_78UD",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 270.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT344_78",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT344_78G",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 90.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT344_78",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT344_78D",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 0.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT344_78",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT344_78H",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 180.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT344_78",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT344_78B",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 0.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT344_78",
+                    "inclination": -90.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT344_78UH",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 0.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "LT344_78",
+                    "inclination": 90.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "LT344_78UD",
+                    "up": 0.0
+                }
+            ],
+            "survey_date": "2009-09-12",
+            "surveyors": "Alex"
+        },
+        {
+            "comment": "PdB",
+            "correction": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "correction2": [
+                0.0,
+                0.0
+            ],
+            "declination": 0.0,
+            "discovery_date": "2009-09-12",
+            "format": "DMDDUDRLLAaDdNF",
+            "name": "UTM_Square",
+            "shots": [
+                {
+                    "azimuth": 90.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "UT683_4757",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "UT683_4757R",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 0.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "UT683_4757",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "UT683_4757U",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 0.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "UT684_4757",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "UT684_4757U",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 270.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "UT684_4757",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "UT684_4757L",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 270.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "UT684_4758",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "UT684_4758L",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 180.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "UT684_4758",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "UT684_4758D",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 90.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "UT683_4758",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "UT683_4758R",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 180.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": [
+                        "L"
+                    ],
+                    "from_id": "UT683_4758",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.81,
+                    "right": 0.0,
+                    "to_id": "UT683_4758D",
+                    "up": 0.0
+                }
+            ],
+            "survey_date": "2009-09-12",
+            "surveyors": "PdB"
+        }
+    ]
+}

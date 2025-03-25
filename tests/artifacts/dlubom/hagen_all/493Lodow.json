@@ -1,0 +1,101 @@
+{
+    "cave_name": "[493] Lodowka Eisschrank A3-86",
+    "description": "",
+    "sections": [
+        {
+            "comment": ";dm",
+            "correction": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "correction2": [
+                0.0,
+                0.0
+            ],
+            "declination": 2.07,
+            "discovery_date": "2006-08-21",
+            "format": "DMMDLRUDLADN",
+            "name": "LODOWKA",
+            "shots": [
+                {
+                    "azimuth": 50.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "ld0",
+                    "inclination": -22.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 40.16,
+                    "right": 0.0,
+                    "to_id": "l2",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 125.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "l2",
+                    "inclination": -15.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 21.82,
+                    "right": 0.0,
+                    "to_id": "l3",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 0.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "l3",
+                    "inclination": -90.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 4.59,
+                    "right": 0.0,
+                    "to_id": "l4",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 130.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "l4",
+                    "inclination": -12.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 13.45,
+                    "right": 0.0,
+                    "to_id": "l5",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 183.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "l5",
+                    "inclination": -20.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 23.62,
+                    "right": 0.0,
+                    "to_id": "l6",
+                    "up": 0.0
+                }
+            ],
+            "survey_date": "2006-08-21",
+            "surveyors": ""
+        }
+    ]
+}

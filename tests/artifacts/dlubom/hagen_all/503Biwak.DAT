@@ -1,0 +1,16 @@
+[503] Biwakko
+SURVEY NAME: 2014-08-13 - BIWAKKO
+SURVEY DATE: 8 13 2014  COMMENT:   delta Disto = 0.0
+SURVEY TEAM:
+
+DECLINATION:     3.03  FORMAT: DMMDLRUDLADN  CORRECTIONS:  0.00 0.00 0.00
+
+    FROM      TO   LENGTH  BEARING      DIP     LEFT       UP     DOWN    RIGHT
+
+BI:biwakko   BI:1.2          40.65   320.10   -15.30     0.00     0.00     0.00     0.00
+BI:1.2       BI:1.22         13.94    26.81     7.20     0.00     0.00     0.00     0.00
+BI:1.2       BI:1.23         17.78   325.70     7.40     0.00     0.00     0.00     0.00
+BI:1.23      BI:1.231        18.21   334.50    62.79     0.00     0.00     0.00     0.00
+BI:1.2       BI:1.3          31.50   237.90     8.20     0.00     0.00     0.00     0.00
+
+

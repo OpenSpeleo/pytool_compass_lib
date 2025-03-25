@@ -1,0 +1,44 @@
+[499] Wysoka Z27 Hoher Schacht
+SURVEY NAME: WYSDOL
+SURVEY DATE: 8 28 2009  COMMENT:   Rafal Mateja, Oliwia Rysnik
+SURVEY TEAM:
+
+DECLINATION:     2.39  FORMAT: DMMDLRUDLADN  CORRECTIONS:  0.00 0.00 0.00
+
+    FROM      TO   LENGTH  BEARING      DIP     LEFT       UP     DOWN    RIGHT
+
+wys1         wys2            36.25   306.20    55.80     0.00     0.00     0.00     0.00
+wys2         wys3             7.25    21.70    21.80     0.00     0.00     0.00     0.00
+wys3         wys1.9           3.25   349.00    60.60     0.00     0.00     0.00     0.00
+wys12        wys13            9.35   299.30    40.30     0.00     0.00     0.00     0.00
+wys13        wys14            8.79   252.30    34.70     0.00     0.00     0.00     0.00
+wys14        wys15            6.40   336.00    47.30     0.00     0.00     0.00     0.00
+wys15        wys16           33.30   307.00    54.50     0.00     0.00     0.00     0.00
+wys16        wys17           19.06   302.00    57.20     0.00     0.00     0.00     0.00
+wys17        wys1.9          10.07   254.00    16.40     0.00     0.00     0.00     0.00
+
+[499] Wysoka Z27 Hoher Schacht
+SURVEY NAME: WYSOKA
+SURVEY DATE: 8 15 2009  COMMENT:   Rafal Mateja, Oliwia Rysnik
+SURVEY TEAM:
+
+DECLINATION:     2.39  FORMAT: DMMDLRUDLADN  CORRECTIONS:  0.00 0.00 0.00
+
+    FROM      TO   LENGTH  BEARING      DIP     LEFT       UP     DOWN    RIGHT
+
+wys1.0       wys1.1           5.25   343.33     1.50     0.00     0.00     0.00     0.00
+wys1.1       wys1.2          15.42   102.34   -72.97     0.00     0.00     0.00     0.00
+wys1.2       wys1.3          71.33    19.31   -85.16     0.00     0.00     0.00     0.00
+wys1.3       wys1.4           3.74    64.01    -4.86     0.00     0.00     0.00     0.00
+wys1.4       wys1.5          12.17   351.18   -27.95     0.00     0.00     0.00     0.00
+wys1.5       wys1.6          51.97   320.89   -81.61     0.00     0.00     0.00     0.00
+wys1.6       wys2.1          15.55    59.84    50.06     0.00     0.00     0.00     0.00
+wys2.1       wys2.2           6.96   125.65    13.74     0.00     0.00     0.00     0.00
+wys2.2       wys2.3           6.53    93.09    27.58     0.00     0.00     0.00     0.00
+wys1.6       wys3.1           9.25    88.17    -2.63     0.00     0.00     0.00     0.00
+wys3.1       wys3.2          18.34   111.24   -49.61     0.00     0.00     0.00     0.00
+wys1.6       wys1.7          20.60   162.79   -36.27     0.00     0.00     0.00     0.00
+wys1.7       wys1.8           9.65    54.40   -10.97     0.00     0.00     0.00     0.00
+wys1.8       wys1.9          18.11   155.62   -60.89     0.00     0.00     0.00     0.00
+
+

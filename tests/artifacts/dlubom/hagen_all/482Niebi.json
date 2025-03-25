@@ -1,0 +1,41 @@
+{
+    "cave_name": "[482] Niebieskich Mgie\u00b3 Hohle der blaunen Nebel",
+    "description": "",
+    "sections": [
+        {
+            "comment": ";dm",
+            "correction": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "correction2": [
+                0.0,
+                0.0
+            ],
+            "declination": 0.0,
+            "discovery_date": "1900-01-01",
+            "format": "DMMDLRUDLADN",
+            "name": "482",
+            "shots": [
+                {
+                    "azimuth": 0.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "L:482",
+                    "inclination": -90.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 147.64,
+                    "right": 0.0,
+                    "to_id": "L:482.1",
+                    "up": 0.0
+                }
+            ],
+            "survey_date": "1900-01-01",
+            "surveyors": ""
+        }
+    ]
+}

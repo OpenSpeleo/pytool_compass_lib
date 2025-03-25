@@ -1,0 +1,161 @@
+{
+    "cave_name": "[488] A4-40",
+    "description": "",
+    "sections": [
+        {
+            "comment": ";dm",
+            "correction": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "correction2": [
+                0.0,
+                0.0
+            ],
+            "declination": 1.85,
+            "discovery_date": "2004-08-21",
+            "format": "DMMDLRUDLADN",
+            "name": "A4-40",
+            "shots": [
+                {
+                    "azimuth": 95.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a440-0",
+                    "inclination": -54.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 11.35,
+                    "right": 0.0,
+                    "to_id": "a440-1",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 291.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a440-1",
+                    "inclination": -56.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 13.02,
+                    "right": 0.0,
+                    "to_id": "a440-2",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 194.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a440-2",
+                    "inclination": -33.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 8.66,
+                    "right": 0.0,
+                    "to_id": "a440-3",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 197.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a440-3",
+                    "inclination": -36.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 7.87,
+                    "right": 0.0,
+                    "to_id": "a440-31",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 171.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a440-3",
+                    "inclination": 14.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 15.42,
+                    "right": 0.0,
+                    "to_id": "a440-4",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 188.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a440-4",
+                    "inclination": 13.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 16.7,
+                    "right": 0.0,
+                    "to_id": "a440-5",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 335.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a440-5",
+                    "inclination": 46.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 4.36,
+                    "right": 0.0,
+                    "to_id": "a440-6",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 226.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a440-6",
+                    "inclination": -47.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 9.28,
+                    "right": 0.0,
+                    "to_id": "a440-7",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 179.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a440-7",
+                    "inclination": 2.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 16.7,
+                    "right": 0.0,
+                    "to_id": "a440-8",
+                    "up": 0.0
+                }
+            ],
+            "survey_date": "2004-08-21",
+            "surveyors": ""
+        }
+    ]
+}

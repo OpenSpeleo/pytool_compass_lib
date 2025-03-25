@@ -1,0 +1,116 @@
+{
+    "cave_name": "[485] A4-3",
+    "description": "",
+    "sections": [
+        {
+            "comment": ";dm",
+            "correction": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "correction2": [
+                0.0,
+                0.0
+            ],
+            "declination": 1.85,
+            "discovery_date": "2004-08-21",
+            "format": "DMMDLRUDLADN",
+            "name": "A4-3",
+            "shots": [
+                {
+                    "azimuth": 355.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a403-0",
+                    "inclination": -69.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 13.65,
+                    "right": 0.0,
+                    "to_id": "a403-1",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 294.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a403-1",
+                    "inclination": -45.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 17.09,
+                    "right": 0.0,
+                    "to_id": "a403-2",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 314.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a403-2",
+                    "inclination": -44.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 10.99,
+                    "right": 0.0,
+                    "to_id": "a403-3",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 321.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a403-3",
+                    "inclination": -49.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 6.36,
+                    "right": 0.0,
+                    "to_id": "a403-4",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 296.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a403-4",
+                    "inclination": -41.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 20.67,
+                    "right": 0.0,
+                    "to_id": "a403-5",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 353.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a403-5",
+                    "inclination": -28.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 3.41,
+                    "right": 0.0,
+                    "to_id": "a403-6",
+                    "up": 0.0
+                }
+            ],
+            "survey_date": "2004-08-21",
+            "surveyors": ""
+        }
+    ]
+}

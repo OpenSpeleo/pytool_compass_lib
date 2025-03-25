@@ -8,6 +8,8 @@ from pathlib import Path
 
 from parameterized import parameterized_class
 
+from tests.utils import BASE_ARTIFACTS_PATH
+
 
 class CMDUnittest(unittest.TestCase):
     command_template = (
@@ -26,7 +28,12 @@ class CMDUnittest(unittest.TestCase):
 
 @parameterized_class(
     ("input_file"),
-    [("./tests/artifacts/random.dat",), ("./tests/artifacts/fulford.dat",)],
+    [
+        (p,)
+        for p in (BASE_ARTIFACTS_PATH / "fountainware").rglob(
+            pattern="*.dat", case_sensitive=False
+        )
+    ],
 )
 class ConvertCMDTest(CMDUnittest):
     @classmethod

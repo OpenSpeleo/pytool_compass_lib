@@ -7,15 +7,15 @@ from pathlib import Path
 
 import orjson
 from deepdiff import DeepDiff
-from parameterized import parameterized
 from parameterized import parameterized_class
 
 from compass_lib.parser import CompassParser
+from tests.utils import get_valid_dat_artifacts
 
 
 @parameterized_class(
     ("filepath"),
-    [(p,) for p in Path("tests/artifacts").glob(pattern="*.dat")],
+    [(p,) for p in get_valid_dat_artifacts()],
     # [
     #     ("./tests/artifacts/1998.dat",),
     #     ("./tests/artifacts/flags.dat",),
@@ -33,24 +33,14 @@ class ReadCompassDATFileTest(unittest.TestCase):
             raise FileNotFoundError(f"File not found: `{cls._file}`")
 
     def setUp(self) -> None:
-        self._parser = CompassParser(self._file)
+        self._survey = CompassParser.load_dat_file(self._file)
 
-    @parameterized.expand([True, False])
-    def test_export_to_json(self, include_depth: bool = True):
-        if self._parser is None:
-            raise ValueError("the Compass Parser has not been setup.")
-
-        json_str = self._parser.to_json(include_depth=include_depth)
+    def test_export_to_json(self):
+        json_str = self._survey.to_json()
         reloaded_json = json.loads(json_str)
 
         with self._file.with_suffix(".json").open() as f:
             json_target = json.load(f)
-
-            # if not include_depth:
-            #     # Remove all depth information
-            #     for section in json_target["sections"]:
-            #         for shot in section["shots"]:
-            #             del shot["depth"]
 
         with Path("converted.json").open(mode="w") as f:
             f.write(
@@ -74,16 +64,15 @@ class ReadCompassDATFileTest(unittest.TestCase):
         assert diff == {}, f"Identity Check failed: {diff}"
 
     def test_compass_roundtrip(self):
-        json_str = self._parser.to_json(include_depth=False)
+        json_str = self._survey.to_json()
         original_json = json.loads(json_str)
 
         with tempfile.TemporaryDirectory() as tmpdir:
             dat_file = Path(tmpdir) / "export.dat"
-            self._parser.to_dat(dat_file)
+            CompassParser.export_to_dat(self._survey, dat_file)
 
-            parser = CompassParser(dat_file)
-            json_str = parser.to_json(include_depth=False)
-            roundtrip_json = json.loads(json_str)
+            survey = CompassParser.load_dat_file(dat_file)
+            roundtrip_json = json.loads(survey.to_json())
 
         diff = DeepDiff(original_json, roundtrip_json, ignore_order=True)
         assert diff == {}, f"Identity Check failed: {diff}"

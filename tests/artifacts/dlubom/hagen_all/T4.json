@@ -1,0 +1,56 @@
+{
+    "cave_name": "T4",
+    "description": "",
+    "sections": [
+        {
+            "comment": "team Filip Filar(Telefon), Marek Wierzbowski, Dariusz Lubomski",
+            "correction": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "correction2": [
+                0.0,
+                0.0
+            ],
+            "declination": 3.55,
+            "discovery_date": "2018-08-15",
+            "format": "DMMDLRUDLADN",
+            "name": "T4",
+            "shots": [
+                {
+                    "azimuth": 196.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "B:0",
+                    "inclination": -61.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 85.3,
+                    "right": 0.0,
+                    "to_id": "B:1",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 0.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "B:1",
+                    "inclination": -90.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 68.9,
+                    "right": 0.0,
+                    "to_id": "B:2",
+                    "up": 0.0
+                }
+            ],
+            "survey_date": "2018-08-15",
+            "surveyors": ""
+        }
+    ]
+}

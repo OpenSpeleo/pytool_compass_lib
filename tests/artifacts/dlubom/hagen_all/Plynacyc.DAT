@@ -1,0 +1,20 @@
+Plynacych Kamieni
+SURVEY NAME: PLYNACYCH KAMIENI
+SURVEY DATE: 8 20 2007  COMMENT:   TODO nie wpisana do katastra
+SURVEY TEAM:
+
+DECLINATION:     2.18  FORMAT: DMMDLRUDLADN  CORRECTIONS:  0.00 0.00 0.00
+
+    FROM      TO   LENGTH  BEARING      DIP     LEFT       UP     DOWN    RIGHT
+
+I:pk01       I:pk02          24.84   170.00   -67.00     0.00     0.00     0.00     0.00
+I:pk02       I:pk03           7.64    75.00   -68.00     0.00     0.00     0.00     0.00
+I:pk03       I:pk04          25.66   290.00   -85.00     0.00     0.00     0.00     0.00
+I:pk04       I:pk05          15.94   115.00   -51.00     0.00     0.00     0.00     0.00
+I:pk05       I:pk06          23.95   165.00   -70.00     0.00     0.00     0.00     0.00
+I:pk06       I:pk07           6.56   204.00   -57.00     0.00     0.00     0.00     0.00
+I:pk07       I:pk08          58.07   175.00   -75.00     0.00     0.00     0.00     0.00
+I:pk08       I:pk09          18.11   315.00   -40.00     0.00     0.00     0.00     0.00
+I:pk09       I:pk10           1.64     0.00   -90.00     0.00     0.00     0.00     0.00
+
+

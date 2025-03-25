@@ -1,0 +1,161 @@
+{
+    "cave_name": "[486] A4-10",
+    "description": "",
+    "sections": [
+        {
+            "comment": "TODO data jest bledna",
+            "correction": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "correction2": [
+                0.0,
+                0.0
+            ],
+            "declination": 2.36,
+            "discovery_date": "2009-05-09",
+            "format": "DMMDLRUDLADN",
+            "name": "A4-10",
+            "shots": [
+                {
+                    "azimuth": 214.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a4010-0",
+                    "inclination": -51.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 49.67,
+                    "right": 0.0,
+                    "to_id": "a4010-1",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 212.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a4010-1",
+                    "inclination": -53.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 59.02,
+                    "right": 0.0,
+                    "to_id": "a4010-2",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 26.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a4010-2",
+                    "inclination": -59.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 8.14,
+                    "right": 0.0,
+                    "to_id": "a4010-3",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 166.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a4010-3",
+                    "inclination": 24.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 18.86,
+                    "right": 0.0,
+                    "to_id": "a4010-4",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 107.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a4010-4",
+                    "inclination": -61.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 16.67,
+                    "right": 0.0,
+                    "to_id": "a4010-5",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 100.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a4010-4",
+                    "inclination": 36.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 25.52,
+                    "right": 0.0,
+                    "to_id": "a4010-41",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 327.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a4010-3",
+                    "inclination": -26.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 19.0,
+                    "right": 0.0,
+                    "to_id": "a4010-31",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 11.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a4010-31",
+                    "inclination": 26.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 10.27,
+                    "right": 0.0,
+                    "to_id": "a4010-32",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 350.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "a4010-32",
+                    "inclination": -64.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 11.06,
+                    "right": 0.0,
+                    "to_id": "a4010-33",
+                    "up": 0.0
+                }
+            ],
+            "survey_date": "2009-05-09",
+            "surveyors": ""
+        }
+    ]
+}

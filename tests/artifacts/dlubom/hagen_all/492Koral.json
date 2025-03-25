@@ -1,0 +1,216 @@
+{
+    "cave_name": "[492] Koralowa Korallenhohle A3-8 P04",
+    "description": "",
+    "sections": [
+        {
+            "comment": ";#FLAG p04_11",
+            "correction": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "correction2": [
+                0.0,
+                0.0
+            ],
+            "declination": 2.07,
+            "discovery_date": "2006-08-21",
+            "format": "DMMDLRUDLADN",
+            "name": "P04A",
+            "shots": [
+                {
+                    "azimuth": 160.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "p04_9",
+                    "inclination": -30.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 21.19,
+                    "right": 0.0,
+                    "to_id": "p04_10",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 130.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "p04_10",
+                    "inclination": 32.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 22.47,
+                    "right": 0.0,
+                    "to_id": "p04_11",
+                    "up": 0.0
+                }
+            ],
+            "survey_date": "2006-08-21",
+            "surveyors": ""
+        },
+        {
+            "comment": ";#DATE 2006-08-21",
+            "correction": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "correction2": [
+                0.0,
+                0.0
+            ],
+            "declination": 2.07,
+            "discovery_date": "2006-08-21",
+            "format": "DMMDLRUDLADN",
+            "name": "POW",
+            "shots": [
+                {
+                    "azimuth": 80.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "p04_7",
+                    "inclination": -4.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 10.5,
+                    "right": 0.0,
+                    "to_id": "p04_8",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 158.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "p04_8",
+                    "inclination": 0.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 35.6,
+                    "right": 0.0,
+                    "to_id": "p04_9",
+                    "up": 0.0
+                }
+            ],
+            "survey_date": "2006-08-21",
+            "surveyors": ""
+        },
+        {
+            "comment": ";dm",
+            "correction": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "correction2": [
+                0.0,
+                0.0
+            ],
+            "declination": 2.07,
+            "discovery_date": "2006-08-21",
+            "format": "DMMDLRUDLADN",
+            "name": "P04",
+            "shots": [
+                {
+                    "azimuth": 92.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "p04_1",
+                    "inclination": -21.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 24.77,
+                    "right": 0.0,
+                    "to_id": "p04_2",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 103.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "p04_2",
+                    "inclination": -55.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 9.35,
+                    "right": 0.0,
+                    "to_id": "p04_3",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 45.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "p04_3",
+                    "inclination": -25.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 34.35,
+                    "right": 0.0,
+                    "to_id": "p04_4",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 134.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "p04_4",
+                    "inclination": 22.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 23.82,
+                    "right": 0.0,
+                    "to_id": "p04_5",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 104.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "p04_5",
+                    "inclination": 26.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 61.84,
+                    "right": 0.0,
+                    "to_id": "p04_6",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 98.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "p04_6",
+                    "inclination": 41.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 19.13,
+                    "right": 0.0,
+                    "to_id": "p04_7",
+                    "up": 0.0
+                }
+            ],
+            "survey_date": "2006-08-21",
+            "surveyors": ""
+        }
+    ]
+}

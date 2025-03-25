@@ -1,0 +1,48 @@
+[496] Kraina Deszczowcow Land der Regenmenschacht
+SURVEY NAME: DESZCZ2009
+SURVEY DATE: 8 7 2009  COMMENT:   Rafal Mateja, Oliwia Rysnik, Lukasz Kralczynski
+SURVEY TEAM:
+
+DECLINATION:     2.39  FORMAT: DMMDLRUDLADN  CORRECTIONS:  0.00 0.00 0.00
+
+    FROM      TO   LENGTH  BEARING      DIP     LEFT       UP     DOWN    RIGHT
+
+de1          de1.1            2.76   131.38   -43.62     0.00     0.00     0.00     0.00
+de1.1        de1.2            8.17    25.57   -17.97     0.00     0.00     0.00     0.00
+de1.2        de1.3            9.15    35.76   -34.14     0.00     0.00     0.00     0.00
+de1.3        de1.4           38.62   224.68   -79.88     0.00     0.00     0.00     0.00
+de1.4        de1.4.1         12.43   270.55   -87.16     0.00     0.00     0.00     0.00
+de1.4        de1.5           16.01    41.01    21.46     0.00     0.00     0.00     0.00
+de1.5        de1.6           30.61    62.55   -49.03     0.00     0.00     0.00     0.00
+de1.6        de1.7          103.77    38.97   -85.33     0.00     0.00     0.00     0.00
+de1.7        de1.8           98.59   340.64   -86.09     0.00     0.00     0.00     0.00
+de1.8        de1.9           12.30   154.53     7.64     0.00     0.00     0.00     0.00
+de1.9        de1.10           9.94   141.07   -34.35     0.00     0.00     0.00     0.00
+de1.9        de1.9.1          9.15   131.46    84.55     0.00     0.00     0.00     0.00
+de1.9.1      de1.9.2         14.44   157.91   -16.19     0.00     0.00     0.00     0.00
+de1.9.2      de1.9.3         17.39   119.59   -41.84     0.00     0.00     0.00     0.00
+de1.9.3      de1.9.4          6.89    25.32   -17.78     0.00     0.00     0.00     0.00
+de1.9.3      de1.9.5          8.79   166.77    25.46     0.00     0.00     0.00     0.00
+
+[496] Kraina Deszczowcow Land der Regenmenschacht
+SURVEY NAME: DESZCZ
+SURVEY DATE: 8 16 2003  COMMENT:   TODO data jest bledna
+SURVEY TEAM:
+
+DECLINATION:     1.76  FORMAT: DMMDLRUDLADN  CORRECTIONS:  0.00 0.00 0.00
+
+    FROM      TO   LENGTH  BEARING      DIP     LEFT       UP     DOWN    RIGHT
+
+de1          de2             26.67   230.00    70.00     0.00     0.00     0.00     0.00
+de2          de3              9.91   212.00    55.00     0.00     0.00     0.00     0.00
+de3          de4             25.59   215.00    55.00     0.00     0.00     0.00     0.00
+de4          de5             20.80   200.00    15.00     0.00     0.00     0.00     0.00
+de5          de6             28.41   280.00    80.00     0.00     0.00     0.00     0.00
+de6          de7             10.89   300.00    25.00     0.00     0.00     0.00     0.00
+de7          de7'            11.71   185.00    10.00     0.00     0.00     0.00     0.00
+de7          de8              5.12    60.00    15.00     0.00     0.00     0.00     0.00
+de8          de9             29.53   235.00    87.00     0.00     0.00     0.00     0.00
+de9          de1a            11.88   200.00    10.00     0.00     0.00     0.00     0.00
+de1a         Deszcz          29.04    10.00    65.00     0.00     0.00     0.00     0.00
+
+

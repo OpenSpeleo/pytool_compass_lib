@@ -1,0 +1,131 @@
+{
+    "cave_name": "[429] Grenzlandruine",
+    "description": "",
+    "sections": [
+        {
+            "comment": ";dm",
+            "correction": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "correction2": [
+                0.0,
+                0.0
+            ],
+            "declination": 0.77,
+            "discovery_date": "1992-08-15",
+            "format": "DMMDLRUDLADN",
+            "name": "GRENZLANDRUINE",
+            "shots": [
+                {
+                    "azimuth": 245.7,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "K:0",
+                    "inclination": -18.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 57.41,
+                    "right": 0.0,
+                    "to_id": "K:1",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 165.6,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "K:1",
+                    "inclination": 23.4,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 20.01,
+                    "right": 0.0,
+                    "to_id": "K:2",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 173.7,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "K:2",
+                    "inclination": 38.7,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 13.78,
+                    "right": 0.0,
+                    "to_id": "K:3",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 233.1,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "K:1",
+                    "inclination": 19.8,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.15,
+                    "right": 0.0,
+                    "to_id": "K:4",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 214.2,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "K:4",
+                    "inclination": 10.8,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.15,
+                    "right": 0.0,
+                    "to_id": "K:5",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 322.2,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "K:1",
+                    "inclination": 16.2,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 39.04,
+                    "right": 0.0,
+                    "to_id": "K:6",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 337.5,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "K:6",
+                    "inclination": 31.5,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 27.23,
+                    "right": 0.0,
+                    "to_id": "K:7",
+                    "up": 0.0
+                }
+            ],
+            "survey_date": "1992-08-15",
+            "surveyors": ""
+        }
+    ]
+}

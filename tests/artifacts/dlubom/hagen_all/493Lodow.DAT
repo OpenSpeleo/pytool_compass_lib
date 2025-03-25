@@ -1,0 +1,16 @@
+[493] Lodowka Eisschrank A3-86
+SURVEY NAME: LODOWKA
+SURVEY DATE: 8 21 2006  COMMENT:  ;dm
+SURVEY TEAM:
+
+DECLINATION:     2.07  FORMAT: DMMDLRUDLADN  CORRECTIONS:  0.00 0.00 0.00
+
+    FROM      TO   LENGTH  BEARING      DIP     LEFT       UP     DOWN    RIGHT
+
+ld0          l2              40.16    50.00   -22.00     0.00     0.00     0.00     0.00
+l2           l3              21.82   125.00   -15.00     0.00     0.00     0.00     0.00
+l3           l4               4.59     0.00   -90.00     0.00     0.00     0.00     0.00
+l4           l5              13.45   130.00   -12.00     0.00     0.00     0.00     0.00
+l5           l6              23.62   183.00   -20.00     0.00     0.00     0.00     0.00
+
+

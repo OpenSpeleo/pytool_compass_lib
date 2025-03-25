@@ -1,0 +1,18 @@
+[429] Grenzlandruine
+SURVEY NAME: GRENZLANDRUINE
+SURVEY DATE: 8 15 1992  COMMENT:  ;dm
+SURVEY TEAM:
+
+DECLINATION:     0.77  FORMAT: DMMDLRUDLADN  CORRECTIONS:  0.00 0.00 0.00
+
+    FROM      TO   LENGTH  BEARING      DIP     LEFT       UP     DOWN    RIGHT
+
+K:0          K:1             57.41   245.70   -18.00     0.00     0.00     0.00     0.00
+K:1          K:2             20.01   165.60    23.40     0.00     0.00     0.00     0.00
+K:2          K:3             13.78   173.70    38.70     0.00     0.00     0.00     0.00
+K:1          K:4             32.15   233.10    19.80     0.00     0.00     0.00     0.00
+K:4          K:5             32.15   214.20    10.80     0.00     0.00     0.00     0.00
+K:1          K:6             39.04   322.20    16.20     0.00     0.00     0.00     0.00
+K:6          K:7             27.23   337.50    31.50     0.00     0.00     0.00     0.00
+
+

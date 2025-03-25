@@ -1,0 +1,41 @@
+[492] Koralowa Korallenhohle A3-8 P04
+SURVEY NAME: P04A
+SURVEY DATE: 8 21 2006  COMMENT:  ;#FLAG p04_11
+SURVEY TEAM:
+
+DECLINATION:     2.07  FORMAT: DMMDLRUDLADN  CORRECTIONS:  0.00 0.00 0.00
+
+    FROM      TO   LENGTH  BEARING      DIP     LEFT       UP     DOWN    RIGHT
+
+p04_9        p04_10          21.19   160.00   -30.00     0.00     0.00     0.00     0.00
+p04_10       p04_11          22.47   130.00    32.00     0.00     0.00     0.00     0.00
+
+[492] Koralowa Korallenhohle A3-8 P04
+SURVEY NAME: POW
+SURVEY DATE: 8 21 2006  COMMENT:  ;#DATE 2006-08-21
+SURVEY TEAM:
+
+DECLINATION:     2.07  FORMAT: DMMDLRUDLADN  CORRECTIONS:  0.00 0.00 0.00
+
+    FROM      TO   LENGTH  BEARING      DIP     LEFT       UP     DOWN    RIGHT
+
+p04_7        p04_8           10.50    80.00    -4.00     0.00     0.00     0.00     0.00
+p04_8        p04_9           35.60   158.00     0.00     0.00     0.00     0.00     0.00
+
+[492] Koralowa Korallenhohle A3-8 P04
+SURVEY NAME: P04
+SURVEY DATE: 8 21 2006  COMMENT:  ;dm
+SURVEY TEAM:
+
+DECLINATION:     2.07  FORMAT: DMMDLRUDLADN  CORRECTIONS:  0.00 0.00 0.00
+
+    FROM      TO   LENGTH  BEARING      DIP     LEFT       UP     DOWN    RIGHT
+
+p04_1        p04_2           24.77    92.00   -21.00     0.00     0.00     0.00     0.00
+p04_2        p04_3            9.35   103.00   -55.00     0.00     0.00     0.00     0.00
+p04_3        p04_4           34.35    45.00   -25.00     0.00     0.00     0.00     0.00
+p04_4        p04_5           23.82   134.00    22.00     0.00     0.00     0.00     0.00
+p04_5        p04_6           61.84   104.00    26.00     0.00     0.00     0.00     0.00
+p04_6        p04_7           19.13    98.00    41.00     0.00     0.00     0.00     0.00
+
+

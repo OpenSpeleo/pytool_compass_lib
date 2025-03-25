@@ -170,5 +170,5 @@ cython_debug/
 /main.py
 
 # Decrypted test artifacts files
-tests/artifacts/*.clear.dat
-tests/artifacts/*.clear.json
+tests/artifacts/**/*.clear.dat
+tests/artifacts/**/*.clear.json

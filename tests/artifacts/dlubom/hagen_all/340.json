@@ -1,0 +1,101 @@
+{
+    "cave_name": "340",
+    "description": "",
+    "sections": [
+        {
+            "comment": "Adam Mioduszewski - rysowanie, Rados\u00b3aw Paternoga - DistoX",
+            "correction": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "correction2": [
+                0.0,
+                0.0
+            ],
+            "declination": 2.51,
+            "discovery_date": "2010-07-28",
+            "format": "DMMDLRUDLADN",
+            "name": "340",
+            "shots": [
+                {
+                    "azimuth": 234.6,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "F:340",
+                    "inclination": -57.2,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 32.97,
+                    "right": 0.0,
+                    "to_id": "F:1.1",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 334.6,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "F:1.1",
+                    "inclination": -25.3,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 16.08,
+                    "right": 0.0,
+                    "to_id": "F:1.2",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 41.3,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "F:1.2",
+                    "inclination": -40.5,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 9.58,
+                    "right": 0.0,
+                    "to_id": "F:1.3",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 289.5,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "F:1.3",
+                    "inclination": -39.0,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 9.48,
+                    "right": 0.0,
+                    "to_id": "F:1.4",
+                    "up": 0.0
+                },
+                {
+                    "azimuth": 344.0,
+                    "azimuth2": 0.0,
+                    "comment": null,
+                    "down": 0.0,
+                    "flags": null,
+                    "from_id": "F:1.4",
+                    "inclination": -28.3,
+                    "inclination2": 0.0,
+                    "left": 0.0,
+                    "length": 8.83,
+                    "right": 0.0,
+                    "to_id": "F:1.5",
+                    "up": 0.0
+                }
+            ],
+            "survey_date": "2010-07-28",
+            "surveyors": ""
+        }
+    ]
+}

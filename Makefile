@@ -81,3 +81,17 @@ publish: build
 
 install: clean ## install the package to the active Python's site-packages
 	pip install -e ".[dev,test]"
+
+# ============================================================================ #
+# Encryption
+# ============================================================================ #
+
+ENCRYPTED_FILES_DIR := tests/artifacts/private
+
+encrypt:
+	@for file in ${ENCRYPTED_FILES_DIR}/*.clear.dat ${ENCRYPTED_FILES_DIR}/*.clear.json; do \
+		if [ -f "$$file" ]; then \
+			echo "Encrypting $$file -> $$file.encrypted"; \
+			compass encrypt -i "$$file" -o "$$file.encrypted" -e .env -w; \
+		fi; \
+	done

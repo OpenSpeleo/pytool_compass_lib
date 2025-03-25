@@ -3,14 +3,8 @@
 import codecs
 import contextlib
 import datetime
-import hashlib
-import json
-import math
-import os
 import re
-from collections import defaultdict
 from dataclasses import dataclass
-from functools import cached_property
 from pathlib import Path
 from typing import Self
 
@@ -18,14 +12,13 @@ from compass_lib.constants import COMPASS_DATE_COMMENT_RE
 from compass_lib.constants import COMPASS_END_OF_FILE
 from compass_lib.constants import COMPASS_SECTION_NAME_RE
 from compass_lib.constants import COMPASS_SECTION_SEPARATOR
+from compass_lib.constants import COMPASS_SECTION_SPLIT_RE
 from compass_lib.constants import COMPASS_SHOT_FLAGS_RE
-from compass_lib.encoding import EnhancedJSONEncoder
 from compass_lib.enums import CompassFileType
 from compass_lib.enums import ShotFlag
 from compass_lib.models import Survey
 from compass_lib.models import SurveySection
 from compass_lib.models import SurveyShot
-from compass_lib.utils import OrderedQueue
 
 
 @dataclass
@@ -119,66 +112,51 @@ class CompassDataRow:
 
 
 class CompassParser:
-    def __init__(self, filepath: str) -> None:
-        self._filepath = Path(filepath)
+    def __init__(self, *args, **kwargs) -> None:
+        raise NotImplementedError(
+            "This class is not meant to be instantiated directly."
+        )
 
-        if not self.filepath.is_file():
+    @classmethod
+    def load_dat_file(cls, filepath: str) -> Survey:
+        filepath = Path(filepath)
+
+        if not filepath.is_file():
             raise FileNotFoundError(f"File not found: {filepath}")
 
         # Ensure at least that the file type is valid
-        with codecs.open(self.filepath, "rb", "windows-1252") as f:
-            self._file_content = f.read()
+        with codecs.open(filepath, "rb", "windows-1252") as f:
+            # Skip all the comments
+            file_content = "".join(
+                [line for line in f.readlines() if not line.startswith("/")]
+            )
 
-        self._raw_sections = [
-            section.strip()
-            for section in self._file_content.split(COMPASS_SECTION_SEPARATOR)
-            if COMPASS_END_OF_FILE not in section
+        file_content = file_content.split(COMPASS_END_OF_FILE, maxsplit=1)[0]
+        raw_sections = [
+            section.rstrip()
+            for section in re.split(COMPASS_SECTION_SPLIT_RE, file_content)
+            if section.rstrip() != ""
         ]
 
-    # =================== File Properties =================== #
+        try:
+            return cls._parse_dat_file(raw_sections)
+        except (UnicodeDecodeError, ValueError, IndexError, TypeError) as e:
+            raise ValueError(f"Failed to parse file: `{filepath}`") from e
 
-    def __repr__(self) -> str:
-        return f"[CompassSurveyFile {self.filetype.upper()}] `{self.filepath}`:"
+    @classmethod
+    def _parse_date(cls, date_str: str) -> datetime.date:
+        for date_format in ["%m %d %Y", "%m %d %y", "%d %m %Y", "%d %m %y"]:
+            try:
+                return datetime.datetime.strptime(date_str, date_format).date()
+            except ValueError:
+                continue
+        raise ValueError("Unknown date format: `%s`", date_str)
 
-    def __hash__(self) -> int:
-        sha256_hash = hashlib.sha256(self._file_content.encode("utf-8")).hexdigest()
-        return int(sha256_hash, 16)
+    @classmethod
+    def _parse_dat_file(cls, raw_sections: list[str]) -> Survey:
+        survey = Survey(cave_name=raw_sections[0].split("\n", maxsplit=1)[0].strip())
 
-    # =============== Descriptive Properties =============== #
-
-    @property
-    def filepath(self) -> Path:
-        return self._filepath
-
-    @property
-    def filetype(self) -> str:
-        return self.filepath.suffix[1:]
-
-    @property
-    def lstat(self) -> os.stat_result:
-        return self.filepath.lstat()
-
-    @property
-    def date_created(self) -> datetime.datetime:
-        return datetime.datetime.fromtimestamp(self.lstat.st_ctime)  # noqa: DTZ006
-
-    @property
-    def date_last_modified(self) -> datetime.datetime:
-        return datetime.datetime.fromtimestamp(self.lstat.st_mtime)  # noqa: DTZ006
-
-    @property
-    def date_last_opened(self) -> datetime.datetime:
-        return datetime.datetime.fromtimestamp(self.lstat.st_atime)  # noqa: DTZ006
-
-    # =================== Data  Processing =================== #
-
-    @cached_property
-    def data(self):
-        survey = Survey(
-            cave_name=self._raw_sections[0].split("\n", maxsplit=1)[0].strip()
-        )
-
-        for raw_section in self._raw_sections:
+        for raw_section in raw_sections:
             section_data_iter = iter(raw_section.splitlines())
 
             # Note: not used
@@ -193,25 +171,20 @@ class CompassParser:
             survey_name = match.group("section_name").strip()
 
             # -------------- Survey Date & Comment -------------- #
-            input_str = next(section_data_iter)
+            input_str = next(section_data_iter).replace("\t", " ")
             if (match := COMPASS_DATE_COMMENT_RE.match(input_str)) is None:
                 raise ValueError(
                     "Compass date and comment name not found: `%s`", input_str
                 )
 
-            date_str = match.group("date")
+            survey_date = (
+                cls._parse_date(match.group("date"))
+                if match.group("date") != "None"
+                else None
+            )
             section_comment = (
                 match.group("comment").strip() if match.group("comment") else ""
             )
-
-            for date_format in ["%m %d %Y", "%m %d %y"]:
-                try:
-                    date = datetime.datetime.strptime(date_str, date_format).date()
-                    break
-                except ValueError:
-                    continue
-            else:
-                raise ValueError("Unknown date format: `%s`", date_str)
 
             # -------------- Surveyors -------------- #
             if (surveyor_header := next(section_data_iter).strip()) != "SURVEY TEAM:":
@@ -224,15 +197,15 @@ class CompassParser:
             declination_str = format_str = None
 
             correct_A = correct_B = correct_C = correct2_A = correct2_B = 0.0
+            discovery_date = survey_date
 
             with contextlib.suppress(IndexError, ValueError):
                 header, declination_str = optional_data[0:2]
                 header, format_str = optional_data[2:4]
-                header, correct_A = optional_data[4:6]
-                header, correct_B = optional_data[6:8]
-                header, correct_C = optional_data[8:10]
-                header, correct2_A = optional_data[10:12]
-                header, correct2_B = optional_data[12:14]
+                header, correct_A, correct_B, correct_C = optional_data[4:8]
+                header, correct2_A, correct2_B = optional_data[8:11]
+                header, d_month, d_day, d_year = optional_data[11:15]
+                discovery_date = cls._parse_date(f"{d_month} {d_day} {d_year}")
 
             # -------------- Skip Rows -------------- #
             _ = next(section_data_iter)  # empty row
@@ -275,7 +248,8 @@ class CompassParser:
                     comment=section_comment,
                     correction=(float(correct_A), float(correct_B), float(correct_C)),
                     correction2=(float(correct2_A), float(correct2_B)),
-                    date=date,
+                    survey_date=survey_date,
+                    discovery_date=discovery_date,
                     declination=float(declination_str),
                     format=format_str if format_str is not None else "DDDDUDLRLADN",
                     shots=shots,
@@ -287,101 +261,95 @@ class CompassParser:
 
     # =================== Export Formats =================== #
 
-    def to_json(
-        self, filepath: str | Path | None = None, include_depth: bool = False
-    ) -> str:
-        data = self.data.model_dump()
+    # @classmethod
+    # def calculate_depth(
+    #     self, filepath: str | Path | None = None, include_depth: bool = False
+    # ) -> str:
+    #     data = self.data.model_dump()
 
-        # all_shots = [shot for section in data["sections"] for shot in section["shots"]]
+    #     all_shots = [
+    #       shot for section in data["sections"] for shot in section["shots"]
+    #     ]
 
-        # if not include_depth:
-        #     for shot in all_shots:
-        #         del shot["depth"]
+    #     if not include_depth:
+    #         for shot in all_shots:
+    #             del shot["depth"]
 
-        # else:
-        #     # create an index of all the shots by "ID"
-        #     # use a copy to avoid data corruption.
-        #     shot_by_origins = defaultdict(list)
-        #     shot_by_destinations = defaultdict(list)
-        #     for shot in all_shots:
-        #         shot_by_origins[shot["from_id"]].append(shot)
-        #         shot_by_destinations[shot["to_id"]].append(shot)
+    #     else:
+    #         # create an index of all the shots by "ID"
+    #         # use a copy to avoid data corruption.
+    #         shot_by_origins = defaultdict(list)
+    #         shot_by_destinations = defaultdict(list)
+    #         for shot in all_shots:
+    #             shot_by_origins[shot["from_id"]].append(shot)
+    #             shot_by_destinations[shot["to_id"]].append(shot)
 
-        #     origin_keys = set(shot_by_origins.keys())
-        #     destination_keys = set(shot_by_destinations.keys())
+    #         origin_keys = set(shot_by_origins.keys())
+    #         destination_keys = set(shot_by_destinations.keys())
 
-        #     # Finding the "origin stations" - aka. stations with no incoming
-        #     # shots. They are assumed at depth 0.0
-        #     origin_stations = set()
-        #     for shot_key in origin_keys:
-        #         if shot_key in destination_keys:
-        #             continue
-        #         origin_stations.add(shot_key)
+    #         # Finding the "origin stations" - aka. stations with no incoming
+    #         # shots. They are assumed at depth 0.0
+    #         origin_stations = set()
+    #         for shot_key in origin_keys:
+    #             if shot_key in destination_keys:
+    #                 continue
+    #             origin_stations.add(shot_key)
 
-        #     processing_queue = OrderedQueue()
+    #         processing_queue = OrderedQueue()
 
-        #     def collect_downstream_stations(target: str) -> list[str]:
-        #         if target in processing_queue:
-        #             return
+    #         def collect_downstream_stations(target: str) -> list[str]:
+    #             if target in processing_queue:
+    #                 return
 
-        #         processing_queue.add(target, value=None, fail_if_present=True)
-        #         direct_shots = shot_by_origins[target]
+    #             processing_queue.add(target, value=None, fail_if_present=True)
+    #             direct_shots = shot_by_origins[target]
 
-        #         for shot in direct_shots:
-        #             processing_queue.add(
-        #                 shot["from_id"], value=None, fail_if_present=False
-        #             )
-        #             if (next_shot := shot["to_id"]) not in processing_queue:
-        #                 collect_downstream_stations(next_shot)
+    #             for shot in direct_shots:
+    #                 processing_queue.add(
+    #                     shot["from_id"], value=None, fail_if_present=False
+    #                 )
+    #                 if (next_shot := shot["to_id"]) not in processing_queue:
+    #                     collect_downstream_stations(next_shot)
 
-        #     for station in sorted(origin_stations):
-        #         collect_downstream_stations(station)
+    #         for station in sorted(origin_stations):
+    #             collect_downstream_stations(station)
 
-        #     def calculate_depth(
-        #         target: str, fail_if_unknown: bool = False
-        #     ) -> float | None:
-        #         if target in origin_stations:
-        #             return 0.0
+    #         def calculate_depth(
+    #             target: str, fail_if_unknown: bool = False
+    #         ) -> float | None:
+    #             if target in origin_stations:
+    #                 return 0.0
 
-        #         if (depth := processing_queue[target]) is not None:
-        #             return depth
+    #             if (depth := processing_queue[target]) is not None:
+    #                 return depth
 
-        #         if fail_if_unknown:
-        #             return None
+    #             if fail_if_unknown:
+    #                 return None
 
-        #         for shot in shot_by_destinations[target]:
-        #             start_depth = calculate_depth(shot["from_id"], fail_if_unknown=True)
-        #             if start_depth is not None:
-        #                 break
-        #         else:
-        #             raise RuntimeError("None of the previous shot has a known depth")
+    #             for shot in shot_by_destinations[target]:
+    #                 start_depth = calculate_depth(
+    #                   shot["from_id"], fail_if_unknown=True
+    # )
+    #                 if start_depth is not None:
+    #                     break
+    #             else:
+    #                 raise RuntimeError("None of the previous shot has a known depth")
 
-        #         vertical_delta = math.cos(
-        #             math.radians(90 + float(shot["inclination"]))
-        #         ) * float(shot["length"])
+    #             vertical_delta = math.cos(
+    #                 math.radians(90 + float(shot["inclination"]))
+    #             ) * float(shot["length"])
 
-        #         return round(start_depth + vertical_delta, ndigits=4)
+    #             return round(start_depth + vertical_delta, ndigits=4)
 
-        #     for shot in processing_queue:
-        #         processing_queue[shot] = calculate_depth(shot)
+    #         for shot in processing_queue:
+    #             processing_queue[shot] = calculate_depth(shot)
 
-        #     for shot in all_shots:
-        #         shot["depth"] = round(processing_queue[shot["to_id"]], ndigits=1)
+    #         for shot in all_shots:
+    #             shot["depth"] = round(processing_queue[shot["to_id"]], ndigits=1)
 
-        json_str = json.dumps(data, indent=4, sort_keys=True, cls=EnhancedJSONEncoder)
-
-        if filepath is not None:
-            if not isinstance(filepath, Path):
-                filepath = Path(filepath)
-
-            with filepath.open(mode="w") as file:
-                file.write(json_str)
-
-        return json_str
-
-    def to_dat(self, filepath: Path | str) -> None:
-        if isinstance(filepath, str):
-            filepath = Path(filepath)
+    @classmethod
+    def export_to_dat(cls, survey: Survey, filepath: Path | str) -> None:
+        filepath = Path(filepath)
 
         filetype = CompassFileType.from_path(filepath)
 
@@ -392,12 +360,17 @@ class CompassParser:
             )
 
         with codecs.open(filepath, "wb", "windows-1252") as f:
-            survey = self.data
             for section in survey.sections:
                 # Section Header
                 f.write(f"{survey.cave_name}\n")
                 f.write(f"SURVEY NAME: {section.name}\n")
-                f.write(f"SURVEY DATE: {section.date.strftime('%m %-d %Y')}  ")
+                f.write(
+                    f"SURVEY DATE: {
+                        section.survey_date.strftime('%m %-d %Y')
+                        if section.survey_date
+                        else 'None'
+                    }  "
+                )
                 f.write(f"COMMENT:{section.comment}\n")
                 f.write(f"SURVEY TEAM:\n{section.surveyors}\n")
                 f.write(f"DECLINATION: {section.declination:>7.02f}  ")
@@ -406,7 +379,14 @@ class CompassParser:
                     f"CORRECTIONS:  {' '.join(f'{nbr:.02f}' for nbr in section.correction)}  "  # noqa: E501
                 )
                 f.write(
-                    f"CORRECTIONS2:  {' '.join(f'{nbr:.02f}' for nbr in section.correction2)}\n\n"  # noqa: E501
+                    f"CORRECTIONS2:  {' '.join(f'{nbr:.02f}' for nbr in section.correction2)}  "  # noqa: E501
+                )
+                f.write(
+                    f"DISCOVERY: {
+                        section.discovery_date.strftime('%m %-d %Y')
+                        if section.discovery_date
+                        else 'None'
+                    }\n\n"
                 )
 
                 # Shots - Header
@@ -440,24 +420,3 @@ class CompassParser:
 
             # End of File - Substitute: https://www.ascii-code.com/26
             f.write(f"{COMPASS_END_OF_FILE}\n")
-
-    # ==================== Public APIs ====================== #
-
-    @cached_property
-    def shots(self):
-        return []
-        # return [
-        #     SurveyShot(data=survey_shot)
-        #     for survey_shot in self._KEY_MAP.fetch(self._shots_list, "_shots")
-        # ]
-
-    @cached_property
-    def sections(self):
-        return []
-        # section_map = dict()
-        # for shot in self.shots:
-        #     try:
-        #         section_map[shot.section].add_shot(shot)
-        #     except KeyError:
-        #         section_map[shot.section] = SurveySection(shot=shot)
-        # return list(section_map.values())
