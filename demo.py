@@ -2,7 +2,7 @@ from pathlib import Path
 
 from compass_lib.parser import CompassParser
 
-# flake8: noqa
+# flake8: noqa: T201 E501
 
 if __name__ == "__main__":
     paths = [
@@ -27,7 +27,7 @@ if __name__ == "__main__":
             continue
 
         compass_file = Path(fp)
-        print(f"# ------------------------ {compass_file} ------------------------#")  # noqa: T201
+        print(f"# ------------------------ {compass_file} ------------------------#")
         survey = CompassParser.load_dat_file(compass_file)
 
         survey.to_json(filepath=compass_file.with_suffix(".json"))
