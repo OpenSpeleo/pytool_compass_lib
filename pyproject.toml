@@ -1,12 +1,6 @@
 [build-system]
-requires = ["setuptools >= 61.0"]
-build-backend = "setuptools.build_meta"
-
-[tool.distutils.bdist_wheel]
-universal = true
-
-[tool.setuptools.package-dir]
-compass_lib = "compass_lib"
+requires = ["flit_core >=3.11,<4"]
+build-backend = "flit_core.buildapi"
 
 [project]
 name = "compass_lib"
