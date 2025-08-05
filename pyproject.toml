@@ -53,7 +53,7 @@ dev = [
   # Pre Commit Hooks
   "pre-commit>=4.1,<4.3",
   # Linting
-  "ruff>=0.3,<0.12",
+  "ruff>=0.3,<0.13",
   # File encryption/decryption
   "python-dotenv>=1.0.0,<2.0.0",
   "cryptography>=44.0.0,<45.0.0",
