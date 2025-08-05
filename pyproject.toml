@@ -56,11 +56,11 @@ dev = [
   "ruff>=0.3,<0.12",
   # File encryption/decryption
   "python-dotenv>=1.0.0,<2.0.0",
-  "cryptography>=44.0.0,<45.0.0",
+  "cryptography>=44.0.0,<46.0.0",
 ]
 test = [
   # File encryption/decryption
-  "cryptography>=44.0.0,<45.0.0",
+  "cryptography>=44.0.0,<46.0.0",
   "python-dotenv>=1.0.0,<2.0.0",
   # Testing
   "deepdiff>=7.0,<9.0",
