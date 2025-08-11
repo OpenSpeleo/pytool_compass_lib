@@ -2,6 +2,19 @@
 requires = ["flit_core >=3.11,<4"]
 build-backend = "flit_core.buildapi"
 
+[tool.uv]
+dev-dependencies = [
+  "check-manifest",
+  "pre-commit>=4.1,<4.4",
+  "ruff>=0.3,<0.13",
+  "flit>=3.12,<4",
+  "wheel>=0.45",
+  # File encryption/decryption
+  "python-dotenv>=1.0.0,<2.0.0",
+  "cryptography>=44.0.0,<46.0.0",
+]
+package = true
+
 [project]
 name = "compass_lib"
 version = "0.0.1"
@@ -45,22 +58,12 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3 :: Only",
 ]
-dependencies = ["orjson>=3.10,<3.11", "pydantic>=2.10,<2.12"]
+dependencies = ["orjson>=3.10,<3.12", "pydantic>=2.10,<2.12"]
 
 [project.optional-dependencies]
-dev = [
-  "check-manifest",
-  # Pre Commit Hooks
-  "pre-commit>=4.1,<4.3",
-  # Linting
-  "ruff>=0.3,<0.12",
-  # File encryption/decryption
-  "python-dotenv>=1.0.0,<2.0.0",
-  "cryptography>=44.0.0,<45.0.0",
-]
 test = [
   # File encryption/decryption
-  "cryptography>=44.0.0,<45.0.0",
+  "cryptography>=44.0.0,<46.0.0",
   "python-dotenv>=1.0.0,<2.0.0",
   # Testing
   "deepdiff>=7.0,<9.0",
