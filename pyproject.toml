@@ -11,7 +11,7 @@ dev-dependencies = [
   "wheel>=0.45",
   # File encryption/decryption
   "python-dotenv>=1.0.0,<2.0.0",
-  "cryptography>=44.0.0,<46.0.0",
+  "cryptography>=44.0.0,<47.0.0",
 ]
 package = true
 
@@ -63,7 +63,7 @@ dependencies = ["orjson>=3.10,<3.12", "pydantic>=2.10,<2.12"]
 [project.optional-dependencies]
 test = [
   # File encryption/decryption
-  "cryptography>=44.0.0,<46.0.0",
+  "cryptography>=44.0.0,<47.0.0",
   "python-dotenv>=1.0.0,<2.0.0",
   # Testing
   "deepdiff>=7.0,<9.0",
