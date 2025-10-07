@@ -60,7 +60,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3 :: Only",
 ]
-dependencies = ["orjson>=3.10,<3.12", "pydantic>=2.10,<2.12"]
+dependencies = ["orjson>=3.10,<3.12", "pydantic>=2.12,<2.13"]
 
 [project.optional-dependencies]
 test = [
