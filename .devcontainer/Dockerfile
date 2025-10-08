@@ -1,4 +1,4 @@
-FROM python:3.13-slim-bookworm
+FROM python:3.14.0-bookworm
 
 RUN apt update && apt install -y --no-install-recommends \
     git \
@@ -18,4 +18,3 @@ RUN apt update && apt install -y --no-install-recommends \
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 
 ENV UV_CACHE_DIR="/workspace/.uv/cache"
-ENV PATH="/workspace/.venv/bin:$PATH"

@@ -10,8 +10,6 @@ clean-build: ## remove build artifacts
 	rm -fr build/
 	rm -fr dist/
 	rm -fr .eggs/
-	find . -name '*.egg-info' -exec rm -fr {} +
-	find . -name '*.egg' -exec rm -f {} +
 
 clean-pyc: ## remove Python file artifacts
 	find . -name '*.pyc' -exec rm -f {} +
@@ -42,19 +40,19 @@ format:
 # ============================================================================ #
 
 test: ## run tests quickly with the default Python
-	pytest
+	pytest -n 24
 
 test-all: ## run tests on every Python version with tox
 	tox
 
 test-regen-json:  ## rerun the json conversion to JSON of the test artifacts
-	compass convert -i tests/artifacts/1998.dat -o tests/artifacts/1998.json -f json -w
-	compass convert -i tests/artifacts/flags.dat -o tests/artifacts/flags.json -f json -w
-	compass convert -i tests/artifacts/flags.dat -o tests/artifacts/flags.json -f json -w
-	compass convert -i tests/artifacts/fulford.dat -o tests/artifacts/fulford.json -f json -w
-	compass convert -i tests/artifacts/fulsurf.dat -o tests/artifacts/fulsurf.json -f json -w
-	compass convert -i tests/artifacts/random.dat -o tests/artifacts/random.json -f json -w
-	compass convert -i tests/artifacts/unicode.dat -o tests/artifacts/unicode.json -f json -w
+	compass convert -i tests/artifacts/fountainware/1998.dat -o tests/artifacts/fountainware/1998.json -f json -w
+	compass convert -i tests/artifacts/fountainware/flags.dat -o tests/artifacts/fountainware/flags.json -f json -w
+	compass convert -i tests/artifacts/fountainware/flags.dat -o tests/artifacts/fountainware/flags.json -f json -w
+	compass convert -i tests/artifacts/fountainware/fulford.dat -o tests/artifacts/fountainware/fulford.json -f json -w
+	compass convert -i tests/artifacts/fountainware/fulsurf.dat -o tests/artifacts/fountainware/fulsurf.json -f json -w
+	compass convert -i tests/artifacts/fountainware/random.dat -o tests/artifacts/fountainware/random.json -f json -w
+	compass convert -i tests/artifacts/fountainware/unicode.dat -o tests/artifacts/fountainware/unicode.json -f json -w
 
 coverage: ## check code coverage quickly with the default Python
 	coverage run --source comp_bench_tools -m pytest
@@ -66,21 +64,15 @@ coverage: ## check code coverage quickly with the default Python
 # BUILD COMMANDS
 # ============================================================================ #
 
-build: clean ## builds source and wheel package
-	pip install --upgrade wheel
-	python3 -m build --wheel
-	ls -l dist
-
-publish: build
-	pip install --upgrade twine
-	twine upload --config-file=.pypirc dist/*.whl
+build: clean
+	flit build --format wheel
 
 # ============================================================================ #
 # INSTALL COMMANDS
 # ============================================================================ #
 
-install: clean ## install the package to the active Python's site-packages
-	pip install -e ".[dev,test]"
+install: clean
+	uv sync --all-extras --dev
 
 # ============================================================================ #
 # Encryption

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import re
 
 from compass_lib.enums import ShotFlag

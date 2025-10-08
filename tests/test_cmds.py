@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+from __future__ import annotations
 
 import shlex
 import subprocess
@@ -9,6 +9,7 @@ from pathlib import Path
 from parameterized import parameterized_class
 
 from tests.utils import BASE_ARTIFACTS_PATH
+from tests.utils import compass_files_rglob
 
 
 class CMDUnittest(unittest.TestCase):
@@ -28,12 +29,7 @@ class CMDUnittest(unittest.TestCase):
 
 @parameterized_class(
     ("input_file"),
-    [
-        (p,)
-        for p in (BASE_ARTIFACTS_PATH / "fountainware").rglob(
-            pattern="*.dat", case_sensitive=False
-        )
-    ],
+    [(p,) for p in compass_files_rglob(BASE_ARTIFACTS_PATH / "fountainware")],
 )
 class ConvertCMDTest(CMDUnittest):
     @classmethod

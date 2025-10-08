@@ -1,12 +1,11 @@
-#!/usr/bin/env python
+from __future__ import annotations
 
-import codecs
 import contextlib
 import datetime
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Self
+from typing import TYPE_CHECKING
 
 from compass_lib.constants import COMPASS_DATE_COMMENT_RE
 from compass_lib.constants import COMPASS_END_OF_FILE
@@ -19,6 +18,9 @@ from compass_lib.enums import ShotFlag
 from compass_lib.models import Survey
 from compass_lib.models import SurveySection
 from compass_lib.models import SurveyShot
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
 
 
 @dataclass
@@ -125,7 +127,7 @@ class CompassParser:
             raise FileNotFoundError(f"File not found: {filepath}")
 
         # Ensure at least that the file type is valid
-        with codecs.open(filepath, "rb", "windows-1252") as f:
+        with Path(filepath).open(mode="r", encoding="windows-1252") as f:
             # Skip all the comments
             file_content = "".join(
                 [line for line in f.readlines() if not line.startswith("/")]
@@ -148,7 +150,7 @@ class CompassParser:
         for date_format in ["%m %d %Y", "%m %d %y", "%d %m %Y", "%d %m %y"]:
             try:
                 return datetime.datetime.strptime(date_str, date_format).date()
-            except ValueError:
+            except ValueError:  # noqa: PERF203
                 continue
         raise ValueError("Unknown date format: `%s`", date_str)
 
@@ -200,11 +202,11 @@ class CompassParser:
             discovery_date = survey_date
 
             with contextlib.suppress(IndexError, ValueError):
-                header, declination_str = optional_data[0:2]
-                header, format_str = optional_data[2:4]
-                header, correct_A, correct_B, correct_C = optional_data[4:8]
-                header, correct2_A, correct2_B = optional_data[8:11]
-                header, d_month, d_day, d_year = optional_data[11:15]
+                _header, declination_str = optional_data[0:2]
+                _header, format_str = optional_data[2:4]
+                _header, correct_A, correct_B, correct_C = optional_data[4:8]
+                _header, correct2_A, correct2_B = optional_data[8:11]
+                _header, d_month, d_day, d_year = optional_data[11:15]
                 discovery_date = cls._parse_date(f"{d_month} {d_day} {d_year}")
 
             # -------------- Skip Rows -------------- #
@@ -359,17 +361,21 @@ class CompassParser:
                 f"Expected: `{CompassFileType.DAT.name}`"
             )
 
-        with codecs.open(filepath, "wb", "windows-1252") as f:
+        with filepath.open(mode="w", encoding="windows-1252") as f:
             for section in survey.sections:
                 # Section Header
                 f.write(f"{survey.cave_name}\n")
                 f.write(f"SURVEY NAME: {section.name}\n")
                 f.write(
-                    f"SURVEY DATE: {
-                        section.survey_date.strftime('%m %-d %Y')
-                        if section.survey_date
-                        else 'None'
-                    }  "
+                    "".join(
+                        (
+                            "SURVEY DATE: ",
+                            section.survey_date.strftime("%m %-d %Y")
+                            if section.survey_date
+                            else "None",
+                            " ",
+                        )
+                    )
                 )
                 f.write(f"COMMENT:{section.comment}\n")
                 f.write(f"SURVEY TEAM:\n{section.surveyors}\n")
@@ -382,11 +388,15 @@ class CompassParser:
                     f"CORRECTIONS2:  {' '.join(f'{nbr:.02f}' for nbr in section.correction2)}  "  # noqa: E501
                 )
                 f.write(
-                    f"DISCOVERY: {
-                        section.discovery_date.strftime('%m %-d %Y')
-                        if section.discovery_date
-                        else 'None'
-                    }\n\n"
+                    "".join(
+                        (
+                            "DISCOVERY: ",
+                            section.discovery_date.strftime("%m %-d %Y")
+                            if section.discovery_date
+                            else "None",
+                            "\n\n",
+                        )
+                    )
                 )
 
                 # Shots - Header
@@ -408,7 +418,10 @@ class CompassParser:
                     f.write(f"{shot.azimuth2:8.2f} ")
                     f.write(f"{shot.inclination2:8.3f}")
                     if shot.flags is not None:
-                        f.write(f" {str(ShotFlag.__start_token__).replace('\\', '')}")
+                        escaped_start_token = str(ShotFlag.__start_token__).replace(
+                            "\\", ""
+                        )
+                        f.write(f" {escaped_start_token}")
                         f.write("".join([flag.value for flag in shot.flags]))
                         f.write(ShotFlag.__end_token__)
                     if shot.comment is not None:

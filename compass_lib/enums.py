@@ -1,7 +1,12 @@
+from __future__ import annotations
+
 from enum import Enum
 from enum import IntEnum
 from pathlib import Path
-from typing import Self
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
 
 
 class CustomEnum(Enum):

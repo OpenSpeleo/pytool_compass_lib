@@ -1,4 +1,6 @@
-import datetime
+from __future__ import annotations
+
+import datetime  # noqa: TC003
 import json
 from pathlib import Path
 from typing import Annotated

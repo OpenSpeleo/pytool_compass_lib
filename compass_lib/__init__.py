@@ -1,5 +1,7 @@
-#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-import importlib.metadata
+"""
+"A library to read Compass Survey files"
+"""
 
-__version__ = importlib.metadata.version("compass_lib")
+__version__ = "0.0.2"
