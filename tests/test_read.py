@@ -7,7 +7,7 @@ from pathlib import Path
 
 import orjson
 from deepdiff import DeepDiff
-from parameterized import parameterized_class
+from parameterized import parameterized_class  # pyright: ignore[reportMissingTypeStubs]
 
 from compass_lib.parser import CompassParser
 from tests.utils import get_valid_dat_artifacts
@@ -26,6 +26,8 @@ from tests.utils import get_valid_dat_artifacts
     # ],
 )
 class ReadCompassDATFileTest(unittest.TestCase):
+    filepath: str
+
     @classmethod
     def setUpClass(cls) -> None:
         cls._file = Path(cls.filepath)

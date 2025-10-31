@@ -5,23 +5,25 @@ import json
 import uuid
 from dataclasses import asdict
 from dataclasses import is_dataclass
+from typing import Any
 
 
 class EnhancedJSONEncoder(json.JSONEncoder):
-    def default(self, obj):
+    def default(self, o: Any) -> Any:
         from compass_lib.parser import ShotFlag  # noqa: PLC0415
 
-        match obj:
+        match o:
             case datetime.date():
-                return obj.isoformat()
+                return o.isoformat()
 
             case ShotFlag():
-                return obj.value
+                return o.value
 
             case uuid.UUID():
-                return str(obj)
+                return str(o)
 
-        if is_dataclass(obj):
-            return asdict(obj)
+            case _ if is_dataclass(o):
+                return asdict(o)  # pyright: ignore[reportArgumentType]
 
-        return super().default(obj)
+            case _:
+                return super().default(o)

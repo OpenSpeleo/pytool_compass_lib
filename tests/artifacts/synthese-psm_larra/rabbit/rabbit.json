@@ -218,10 +218,7 @@
                     "azimuth2": 0.0,
                     "comment": "[ 13@rabbit None - 14@rabbit None ]",
                     "down": 0.0,
-                    "flags": [
-                        "L",
-                        "P"
-                    ],
+                    "flags": "LP",
                     "from_id": "[Lonne]14",
                     "inclination": 2.7,
                     "inclination2": 0.0,
@@ -236,10 +233,7 @@
                     "azimuth2": 0.0,
                     "comment": "[ 14@rabbit None - 15@rabbit fix ]",
                     "down": 0.0,
-                    "flags": [
-                        "L",
-                        "P"
-                    ],
+                    "flags": "LP",
                     "from_id": "[Lonne]15",
                     "inclination": 1.8,
                     "inclination2": 0.0,

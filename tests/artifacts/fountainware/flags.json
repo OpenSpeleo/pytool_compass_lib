@@ -143,9 +143,7 @@
                     "azimuth2": 0.0,
                     "comment": "Disto shot up 70' dome",
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "toc7",
                     "inclination": 90.0,
                     "inclination2": 0.0,
@@ -205,9 +203,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "toc10",
                     "inclination": -5.5,
                     "inclination2": 0.0,
@@ -222,9 +218,7 @@
                     "azimuth2": 0.0,
                     "comment": "Disto shot up 165+' dome (superceded by wcd survey)",
                     "down": 0.0,
-                    "flags": [
-                        "X"
-                    ],
+                    "flags": "X",
                     "from_id": "toc11",
                     "inclination": 90.0,
                     "inclination2": 0.0,

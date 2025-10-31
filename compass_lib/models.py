@@ -12,13 +12,14 @@ from pydantic import Field
 from pydantic import field_validator
 
 from compass_lib.encoding import EnhancedJSONEncoder
+from compass_lib.enums import ShotFlag
 
 # from compass_lib.errors import DuplicateValueError
 
 
 class SurveyShot(BaseModel):
-    from_id: str
-    to_id: str
+    from_id: Annotated[str, Field(min_length=1, max_length=32)]
+    to_id: Annotated[str, Field(min_length=1, max_length=32)]
 
     azimuth: Annotated[float, Field(ge=0, lt=360)]
 
@@ -26,8 +27,9 @@ class SurveyShot(BaseModel):
     length: Annotated[float, Field(ge=0)]
 
     # Optional Values
-    comment: str | None = None
-    flags: Any | None = None
+    flags: Annotated[str, Field(max_length=5)] | None = None
+    # flags: Any | None = None
+    comment: Annotated[str, Field(max_length=256)] | None = None
 
     azimuth2: Annotated[float, Field(ge=0, lt=360)] | None = None
     inclination2: Annotated[float, Field(ge=-90, le=90)] | None = None
@@ -54,6 +56,30 @@ class SurveyShot(BaseModel):
     @classmethod
     def validate_inclination2(cls, value: float) -> float:
         return value if -90 <= value <= 90 else 0.0
+
+    @field_validator("flags", mode="before")
+    @classmethod
+    def normalize_flags(cls, v: Any) -> str | None:
+        if v is None:
+            return v
+
+        if not isinstance(v, str):
+            raise TypeError("flags must be a string")
+
+        # Remove Start & Stop Tokens
+        v = v.lstrip(ShotFlag.__start_token__)
+        v = v.rstrip(ShotFlag.__end_token__)
+
+        # Verify flag validity
+        allowed_flags = {flag.value for flag in ShotFlag}
+        chars = list(v.strip())
+
+        if not all(c in allowed_flags for c in chars):
+            invalid = [c for c in chars if c not in allowed_flags]
+            raise ValueError(f"Invalid flag characters: {invalid}")
+
+        # Sort alphabetically & remove duplicates for consistency
+        return "".join(sorted(set(chars)))
 
     # ======================== VALIDATOR UTILS ======================== #
 

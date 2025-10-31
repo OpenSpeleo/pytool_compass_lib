@@ -1873,9 +1873,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 2.6,
-                    "flags": [
-                        "P"
-                    ],
+                    "flags": "P",
                     "from_id": "A1",
                     "inclination": 35.0,
                     "inclination2": 0.0,
@@ -1890,9 +1888,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "P"
-                    ],
+                    "flags": "P",
                     "from_id": "S2",
                     "inclination": 11.0,
                     "inclination2": 0.0,
@@ -2602,9 +2598,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "P"
-                    ],
+                    "flags": "P",
                     "from_id": "A1",
                     "inclination": 39.0,
                     "inclination2": 0.0,
@@ -2619,9 +2613,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "P"
-                    ],
+                    "flags": "P",
                     "from_id": "XS2",
                     "inclination": 20.0,
                     "inclination2": 0.0,

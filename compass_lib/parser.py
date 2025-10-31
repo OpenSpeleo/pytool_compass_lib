@@ -6,6 +6,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
+from typing import Any
 
 from compass_lib.constants import COMPASS_DATE_COMMENT_RE
 from compass_lib.constants import COMPASS_END_OF_FILE
@@ -50,9 +51,9 @@ class CompassDataRow:
     def from_str_data(cls, str_data: str, header_row: str) -> Self:
         shot_data = str_data.split(maxsplit=9)
 
-        instance = cls(*shot_data[:9])
+        instance = cls(*shot_data[:9])  # pyright: ignore[reportArgumentType]
 
-        def split1_str(val: str) -> tuple[str]:
+        def split1_str(val: str | None) -> tuple[str, str | None]:
             """
             Splits the input string into at most two parts.
 
@@ -72,36 +73,28 @@ class CompassDataRow:
             rslt = val.split(maxsplit=1)
             if len(rslt) == 1:
                 return rslt[0], None
-            return rslt
+
+            return rslt  # pyright: ignore[reportReturnType]
 
         with contextlib.suppress(IndexError):
             optional_data = shot_data[9]
 
             if "AZM2" in header_row:
-                instance.azimuth2, optional_data = split1_str(optional_data)
+                instance.azimuth2, optional_data = split1_str(optional_data)  # pyright: ignore[reportAttributeAccessIssue]
 
             if "INC2" in header_row:
-                instance.inclination2, optional_data = split1_str(optional_data)
+                instance.inclination2, optional_data = split1_str(optional_data)  # pyright: ignore[reportAttributeAccessIssue]
 
             if (
                 all(x in header_row for x in ["FLAGS", "COMMENTS"])
                 and optional_data is not None
             ):
-                flags_comment = optional_data
-
-                _, flag_str, comment = re.search(
-                    COMPASS_SHOT_FLAGS_RE, flags_comment
-                ).groups()
-
-                instance.comment = comment.strip() if comment != "" else None
-
-                instance.flags = (
-                    [ShotFlag._value2member_map_[f] for f in flag_str]
-                    if flag_str
-                    else None
-                )
-                if instance.flags is not None:
-                    instance.flags = sorted(set(instance.flags), key=lambda f: f.value)
+                if (
+                    match := re.search(COMPASS_SHOT_FLAGS_RE, optional_data)
+                ) is not None:
+                    _, flag_str, comment = match.groups()
+                    instance.comment = comment.strip() if comment != "" else None
+                    instance.flags = flag_str
 
         # Input Normalization
         instance.azimuth = float(instance.azimuth)
@@ -114,20 +107,20 @@ class CompassDataRow:
 
 
 class CompassParser:
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: dict[str, Any]) -> None:
         raise NotImplementedError(
             "This class is not meant to be instantiated directly."
         )
 
     @classmethod
-    def load_dat_file(cls, filepath: str) -> Survey:
+    def load_dat_file(cls, filepath: str | Path) -> Survey:
         filepath = Path(filepath)
 
         if not filepath.is_file():
             raise FileNotFoundError(f"File not found: {filepath}")
 
         # Ensure at least that the file type is valid
-        with Path(filepath).open(mode="r", encoding="windows-1252") as f:
+        with filepath.open(mode="r", encoding="windows-1252") as f:
             # Skip all the comments
             file_content = "".join(
                 [line for line in f.readlines() if not line.startswith("/")]
@@ -143,7 +136,7 @@ class CompassParser:
         try:
             return cls._parse_dat_file(raw_sections)
         except (UnicodeDecodeError, ValueError, IndexError, TypeError) as e:
-            raise ValueError(f"Failed to parse file: `{filepath}`") from e
+            raise ValueError(f"Failed to parse file: `{fp}`") from e
 
     @classmethod
     def _parse_date(cls, date_str: str) -> datetime.date:
@@ -216,7 +209,7 @@ class CompassParser:
 
             # -------------- Section Shots -------------- #
 
-            shots = []
+            shots: list[SurveyShot] = []
 
             with contextlib.suppress(StopIteration):
                 while shot_str := next(section_data_iter):
@@ -248,11 +241,11 @@ class CompassParser:
                 SurveySection(
                     name=survey_name,
                     comment=section_comment,
-                    correction=(float(correct_A), float(correct_B), float(correct_C)),
-                    correction2=(float(correct2_A), float(correct2_B)),
+                    correction=[float(correct_A), float(correct_B), float(correct_C)],
+                    correction2=[float(correct2_A), float(correct2_B)],
                     survey_date=survey_date,
                     discovery_date=discovery_date,
-                    declination=float(declination_str),
+                    declination=float(declination_str),  # pyright: ignore[reportArgumentType]
                     format=format_str if format_str is not None else "DDDDUDLRLADN",
                     shots=shots,
                     surveyors=surveyors,
@@ -422,7 +415,7 @@ class CompassParser:
                             "\\", ""
                         )
                         f.write(f" {escaped_start_token}")
-                        f.write("".join([flag.value for flag in shot.flags]))
+                        f.write(shot.flags)
                         f.write(ShotFlag.__end_token__)
                     if shot.comment is not None:
                         f.write(f" {shot.comment}")

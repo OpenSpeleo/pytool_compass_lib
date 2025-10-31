@@ -23,10 +23,7 @@
                     "azimuth2": 0.0,
                     "comment": "Surface shot with GPS - these systems are not connected underwater",
                     "down": 2.0,
-                    "flags": [
-                        "L",
-                        "P"
-                    ],
+                    "flags": "LP",
                     "from_id": "RANDOM",
                     "inclination": 2.87,
                     "inclination2": 0.0,
@@ -161,9 +158,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 4.0,
-                    "flags": [
-                        "X"
-                    ],
+                    "flags": "X",
                     "from_id": "CMOBC8",
                     "inclination": -5.35,
                     "inclination2": 0.0,
@@ -208,11 +203,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "C",
-                        "P",
-                        "X"
-                    ],
+                    "flags": "CPX",
                     "from_id": "CMOBC11",
                     "inclination": 1.19,
                     "inclination2": 0.0,
@@ -302,9 +293,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "P"
-                    ],
+                    "flags": "P",
                     "from_id": "CMOBC17",
                     "inclination": 5.1,
                     "inclination2": 0.0,
@@ -364,9 +353,7 @@
                     "azimuth2": 0.0,
                     "comment": "Hanging \"T\" - Now a jump",
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "CMOBC21",
                     "inclination": 5.74,
                     "inclination2": 0.0,

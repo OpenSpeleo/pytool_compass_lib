@@ -23,9 +23,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT345_79",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -40,9 +38,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT345_79",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -57,9 +53,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT345_79",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -74,9 +68,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT345_79",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -91,9 +83,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT345_79",
                     "inclination": -90.0,
                     "inclination2": 0.0,
@@ -108,9 +98,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT345_79",
                     "inclination": 90.0,
                     "inclination2": 0.0,
@@ -125,9 +113,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT346_80",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -142,9 +128,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT346_80",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -159,9 +143,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT346_80",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -176,9 +158,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT346_80",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -193,9 +173,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT346_80",
                     "inclination": -90.0,
                     "inclination2": 0.0,
@@ -210,9 +188,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT346_80",
                     "inclination": 90.0,
                     "inclination2": 0.0,
@@ -227,9 +203,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT344_80",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -244,9 +218,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT344_80",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -261,9 +233,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT344_80",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -278,9 +248,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT344_80",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -295,9 +263,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT344_80",
                     "inclination": -90.0,
                     "inclination2": 0.0,
@@ -312,9 +278,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT344_80",
                     "inclination": 90.0,
                     "inclination2": 0.0,
@@ -329,9 +293,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT346_78",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -346,9 +308,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT346_78",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -363,9 +323,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT346_78",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -380,9 +338,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT346_78",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -397,9 +353,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT346_78",
                     "inclination": -90.0,
                     "inclination2": 0.0,
@@ -414,9 +368,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT346_78",
                     "inclination": 90.0,
                     "inclination2": 0.0,
@@ -431,9 +383,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT344_78",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -448,9 +398,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT344_78",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -465,9 +413,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT344_78",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -482,9 +428,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT344_78",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -499,9 +443,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT344_78",
                     "inclination": -90.0,
                     "inclination2": 0.0,
@@ -516,9 +458,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "LT344_78",
                     "inclination": 90.0,
                     "inclination2": 0.0,
@@ -553,9 +493,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "UT683_4757",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -570,9 +508,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "UT683_4757",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -587,9 +523,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "UT684_4757",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -604,9 +538,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "UT684_4757",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -621,9 +553,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "UT684_4758",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -638,9 +568,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "UT684_4758",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -655,9 +583,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "UT683_4758",
                     "inclination": 0.0,
                     "inclination2": 0.0,
@@ -672,9 +598,7 @@
                     "azimuth2": 0.0,
                     "comment": null,
                     "down": 0.0,
-                    "flags": [
-                        "L"
-                    ],
+                    "flags": "L",
                     "from_id": "UT683_4758",
                     "inclination": 0.0,
                     "inclination2": 0.0,
