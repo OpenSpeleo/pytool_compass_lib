@@ -1,20 +1,51 @@
 from __future__ import annotations
 
-import datetime  # noqa: TC003
+import datetime
 import json
+import math
 from pathlib import Path
+from typing import TYPE_CHECKING
 from typing import Annotated
 from typing import Any
 
+import pyIGRF14 as pyIGRF
 from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field
+from pydantic import PastDate
 from pydantic import field_validator
+from pydantic import model_validator
 
+from compass_lib.constants import COMPASS_SECTION_SEPARATOR
 from compass_lib.encoding import EnhancedJSONEncoder
 from compass_lib.enums import ShotFlag
+from compass_lib.utils import calc_inclination
+from compass_lib.utils import decimal_year
+
+if TYPE_CHECKING:
+    from typing import Any
+
 
 # from compass_lib.errors import DuplicateValueError
+class DeclinationObj(BaseModel):
+    survey_date: PastDate
+    latitude: float = Field(..., ge=-90.0, le=90.0)
+    longitude: float = Field(..., ge=-180.0, le=180.0)
+
+    @property
+    def declination(self) -> float:
+        declination: float = pyIGRF.igrf_value(  # type: ignore[attr-defined,no-untyped-call]
+            self.latitude,
+            self.longitude,
+            alt=0.0,
+            year=decimal_year(
+                datetime.datetime.combine(
+                    self.survey_date,
+                    datetime.datetime.min.time(),
+                )
+            ),
+        )[0]
+        return round(declination, 2)
 
 
 class SurveyShot(BaseModel):
@@ -30,34 +61,45 @@ class SurveyShot(BaseModel):
 
     # Optional Values
     flags: Annotated[str, Field(max_length=5)] | None = None
-    # flags: Any | None = None
     comment: Annotated[str, Field(max_length=256)] | None = None
 
     azimuth2: Annotated[float, Field(ge=0, lt=360)] | None = None
     inclination2: Annotated[float, Field(ge=-90, le=90)] | None = None
 
     # LRUD
-    left: Annotated[float, Field(ge=0)] = 0.0
-    right: Annotated[float, Field(ge=0)] = 0.0
-    up: Annotated[float, Field(ge=0)] = 0.0
-    down: Annotated[float, Field(ge=0)] = 0.0
+    left: Annotated[float, Field(ge=0)] | None = None
+    right: Annotated[float, Field(ge=0)] | None = None
+    up: Annotated[float, Field(ge=0)] | None = None
+    down: Annotated[float, Field(ge=0)] | None = None
 
     model_config = ConfigDict(extra="forbid")
 
-    @field_validator("left", "right", "up", "down", mode="before")
+    @field_validator("azimuth", "inclination", mode="before")
     @classmethod
-    def validate_lrud(cls, value: float) -> float:
-        return value if value > 0 else 0.0
+    def parse_numeric_str(cls, v: Any) -> float | None:
+        if v in ("", None):
+            return None
 
-    @field_validator("azimuth", "azimuth2", mode="before")
-    @classmethod
-    def validate_azimuth(cls, value: float) -> float:
-        return value if value > 0 else 0.0
+        try:
+            return float(v)
+        except (TypeError, ValueError) as e:
+            raise ValueError(f"Expected numeric or empty value, got {v!r}") from e
 
-    @field_validator("inclination2", mode="before")
+    @field_validator(
+        "left",
+        "right",
+        "up",
+        "down",
+        "azimuth2",
+        "inclination2",
+        mode="before",
+    )
     @classmethod
-    def validate_inclination2(cls, value: float) -> float:
-        return value if -90 <= value <= 90 else 0.0
+    def validate_optional(cls, value: Any | None) -> float | None:
+        if (value := cls.parse_numeric_str(value)) is None:
+            return None
+
+        return value if value > 0 else None
 
     @field_validator("flags", mode="before")
     @classmethod
@@ -122,25 +164,39 @@ class SurveyShot(BaseModel):
 
 
 class SurveySection(BaseModel):
-    name: str
-    comment: str
-    correction: list[float]
-    correction2: list[float]
-    survey_date: datetime.date | None = None
-    discovery_date: datetime.date | None = None
-    declination: float
+    cave_name: str
+    name: Annotated[str, Field(min_length=1, max_length=256)]
+    comment: Annotated[str, Field(max_length=512)] = ""
+    correction: Annotated[list[float], Field(min_length=3, max_length=3)] = [
+        0.0,
+        0.0,
+        0.0,
+    ]
+    correction2: Annotated[list[float], Field(min_length=2, max_length=2)] = [0.0, 0.0]
+    survey_date: PastDate
+    discovery_date: PastDate | None = None
+    declination: Annotated[float, Field(..., ge=-90.0, le=90.0)]
+
     format: str = "DDDDUDLRLADN"
-    shots: list[SurveyShot]
-    surveyors: str | None = None
+    unit: Annotated[str, Field(pattern=r"^(feet|meters)$")] = "feet"
+
+    survey_team: Annotated[list[str], Field(min_length=0)]
+
+    shots: Annotated[list[SurveyShot], Field(min_length=1)]
 
     model_config = ConfigDict(extra="forbid")
 
+    @field_validator("survey_team", mode="before")
+    @classmethod
+    def strip_team_names(cls, v: list[str] | str) -> list[str]:
+        if isinstance(v, str):
+            v = v.split(",")
+
+        return [name.strip() for name in v if name.strip()]
+
 
 class Survey(BaseModel):
-    cave_name: str
-    description: str = ""
-
-    sections: list[SurveySection] = []
+    sections: Annotated[list[SurveySection], Field(min_length=1)]
 
     model_config = ConfigDict(extra="forbid")
 

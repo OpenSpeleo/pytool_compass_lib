@@ -53,7 +53,7 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
 ]
-dependencies = ["orjson>=3.10,<3.12", "pydantic>=2.12,<2.13"]
+dependencies = ["orjson>=3.10,<3.12", "pydantic>=2.12,<2.13", "pyIGRF14==1.0.4"]
 dynamic = ["description", "version"]
 
 [project.optional-dependencies]

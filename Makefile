@@ -45,14 +45,35 @@ test: ## run tests quickly with the default Python
 test-all: ## run tests on every Python version with tox
 	tox
 
+DATA_DIRS := \
+	tests/artifacts/dlubom/ciekawa \
+	tests/artifacts/dlubom/hagen_all \
+	tests/artifacts/fountainware \
+	tests/artifacts/migovecsurveydata \
+	tests/artifacts/plankermira \
+	tests/artifacts/private \
+	tests/artifacts/sausage-cave-map \
+	tests/artifacts/suu-akan \
+	tests/artifacts/synthese_clot_daspres \
+	tests/artifacts/synthese-psm_larra/complexe_lonne_peyret-bourrugues \
+	tests/artifacts/synthese-psm_larra/database_criou \
+	tests/artifacts/synthese-psm_larra/database_hashim-oyuk \
+	tests/artifacts/synthese-psm_larra/database_jb \
+	tests/artifacts/synthese-psm_larra/gouffre_z510 \
+	tests/artifacts/synthese-psm_larra/lonne_peyret \
+	tests/artifacts/synthese-psm_larra/padavka \
+	tests/artifacts/synthese-psm_larra/rabbit \
+	tests/artifacts/synthese-psm_larra/z510
+
 test-regen-json:  ## rerun the json conversion to JSON of the test artifacts
-	compass convert -i tests/artifacts/fountainware/1998.dat -o tests/artifacts/fountainware/1998.json -f json -w
-	compass convert -i tests/artifacts/fountainware/flags.dat -o tests/artifacts/fountainware/flags.json -f json -w
-	compass convert -i tests/artifacts/fountainware/flags.dat -o tests/artifacts/fountainware/flags.json -f json -w
-	compass convert -i tests/artifacts/fountainware/fulford.dat -o tests/artifacts/fountainware/fulford.json -f json -w
-	compass convert -i tests/artifacts/fountainware/fulsurf.dat -o tests/artifacts/fountainware/fulsurf.json -f json -w
-	compass convert -i tests/artifacts/fountainware/random.dat -o tests/artifacts/fountainware/random.json -f json -w
-	compass convert -i tests/artifacts/fountainware/unicode.dat -o tests/artifacts/fountainware/unicode.json -f json -w
+	@for dir in $(DATA_DIRS); do \
+		for file in $$dir/*.dat; do \
+			[ -f "$$file" ] || continue; \
+			out=$${file%.dat}.json; \
+			echo "Converting $$file → $$out"; \
+			compass convert -i "$$file" -o "$$out" -f json -w; \
+		done; \
+	done
 
 coverage: ## check code coverage quickly with the default Python
 	coverage run --source comp_bench_tools -m pytest

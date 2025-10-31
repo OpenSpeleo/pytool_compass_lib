@@ -149,14 +149,12 @@ class CompassParser:
 
     @classmethod
     def _parse_dat_file(cls, raw_sections: list[str]) -> Survey:
-        survey = Survey(cave_name=raw_sections[0].split("\n", maxsplit=1)[0].strip())
-
+        survey_sections: list[SurveySection] = []
         for raw_section in raw_sections:
             section_data_iter = iter(raw_section.splitlines())
 
             # Note: not used
-            # cave_name = next(section_data_iter)
-            _ = next(section_data_iter)
+            cave_name = next(section_data_iter)
 
             # -------------- Survey Name -------------- #
             input_str = next(section_data_iter)
@@ -184,7 +182,7 @@ class CompassParser:
             # -------------- Surveyors -------------- #
             if (surveyor_header := next(section_data_iter).strip()) != "SURVEY TEAM:":
                 raise ValueError("Unknown surveyor string: `%s`", surveyor_header)
-            surveyors = next(section_data_iter).rstrip(";, ").rstrip()
+            survey_team = next(section_data_iter).rstrip(";, ").rstrip()
 
             # -------------- Optional Data -------------- #
 
@@ -237,8 +235,9 @@ class CompassParser:
                         )
                     )
 
-            survey.sections.append(
+            survey_sections.append(
                 SurveySection(
+                    cave_name=cave_name,
                     name=survey_name,
                     comment=section_comment,
                     correction=[float(correct_A), float(correct_B), float(correct_C)],
@@ -248,11 +247,11 @@ class CompassParser:
                     declination=float(declination_str),  # pyright: ignore[reportArgumentType]
                     format=format_str if format_str is not None else "DDDDUDLRLADN",
                     shots=shots,
-                    surveyors=surveyors,
+                    survey_team=survey_team,
                 )
             )
 
-        return survey
+        return Survey(sections=survey_sections)
 
     # =================== Export Formats =================== #
 
@@ -357,7 +356,7 @@ class CompassParser:
         with filepath.open(mode="w", encoding="windows-1252") as f:
             for section in survey.sections:
                 # Section Header
-                f.write(f"{survey.cave_name}\n")
+                f.write(f"{section.cave_name}\n")
                 f.write(f"SURVEY NAME: {section.name}\n")
                 f.write(
                     "".join(
@@ -371,7 +370,7 @@ class CompassParser:
                     )
                 )
                 f.write(f"COMMENT:{section.comment}\n")
-                f.write(f"SURVEY TEAM:\n{section.surveyors}\n")
+                f.write(f"SURVEY TEAM:\n{', '.join(section.survey_team)}\n")
                 f.write(f"DECLINATION: {section.declination:>7.02f}  ")
                 f.write(f"FORMAT: {section.format}  ")
                 f.write(
