@@ -24,13 +24,13 @@
                     "comment": null,
                     "down": 0.0,
                     "flags": null,
-                    "from_id": "G:343",
+                    "from": "G:343",
                     "inclination": -82.7,
                     "inclination2": 0.0,
                     "left": 0.0,
                     "length": 52.13,
                     "right": 0.0,
-                    "to_id": "G:1",
+                    "to": "G:1",
                     "up": 0.0
                 },
                 {
@@ -39,13 +39,13 @@
                     "comment": null,
                     "down": 0.0,
                     "flags": null,
-                    "from_id": "G:1",
+                    "from": "G:1",
                     "inclination": -78.7,
                     "inclination2": 0.0,
                     "left": 0.0,
                     "length": 44.59,
                     "right": 0.0,
-                    "to_id": "G:2",
+                    "to": "G:2",
                     "up": 0.0
                 },
                 {
@@ -54,13 +54,13 @@
                     "comment": null,
                     "down": 0.0,
                     "flags": null,
-                    "from_id": "G:2",
+                    "from": "G:2",
                     "inclination": -82.5,
                     "inclination2": 0.0,
                     "left": 0.0,
                     "length": 6.56,
                     "right": 0.0,
-                    "to_id": "G:3",
+                    "to": "G:3",
                     "up": 0.0
                 }
             ],

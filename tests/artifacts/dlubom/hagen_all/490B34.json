@@ -24,13 +24,13 @@
                     "comment": null,
                     "down": 0.0,
                     "flags": null,
-                    "from_id": "a490",
+                    "from": "a490",
                     "inclination": -90.0,
                     "inclination2": 0.0,
                     "left": 0.0,
                     "length": 98.43,
                     "right": 0.0,
-                    "to_id": "a490.1",
+                    "to": "a490.1",
                     "up": 0.0
                 }
             ],

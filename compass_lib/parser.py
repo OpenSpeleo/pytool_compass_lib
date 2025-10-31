@@ -31,8 +31,8 @@ class CompassDataRow:
     the PyDantic class: `ShotData`.
     The sole purpose of this class is to aggregate the parsing logic."""
 
-    from_id: str
-    to_id: str
+    from_: str
+    to: str
     length: float
     azimuth: float
     inclination: float
@@ -136,7 +136,7 @@ class CompassParser:
         try:
             return cls._parse_dat_file(raw_sections)
         except (UnicodeDecodeError, ValueError, IndexError, TypeError) as e:
-            raise ValueError(f"Failed to parse file: `{fp}`") from e
+            raise ValueError(f"Failed to parse file: `{filepath}`") from e
 
     @classmethod
     def _parse_date(cls, date_str: str) -> datetime.date:
@@ -219,8 +219,8 @@ class CompassParser:
 
                     shots.append(
                         SurveyShot(
-                            from_id=shot_data.from_id,
-                            to_id=shot_data.to_id,
+                            from_=shot_data.from_,
+                            to=shot_data.to,
                             azimuth=float(shot_data.azimuth),
                             inclination=float(shot_data.inclination),
                             length=float(shot_data.length),
@@ -260,7 +260,7 @@ class CompassParser:
     # def calculate_depth(
     #     self, filepath: str | Path | None = None, include_depth: bool = False
     # ) -> str:
-    #     data = self.data.model_dump()
+    #     data = self.data.model_dump(by_alias=True)
 
     #     all_shots = [
     #       shot for section in data["sections"] for shot in section["shots"]
@@ -276,8 +276,8 @@ class CompassParser:
     #         shot_by_origins = defaultdict(list)
     #         shot_by_destinations = defaultdict(list)
     #         for shot in all_shots:
-    #             shot_by_origins[shot["from_id"]].append(shot)
-    #             shot_by_destinations[shot["to_id"]].append(shot)
+    #             shot_by_origins[shot["from_"]].append(shot)
+    #             shot_by_destinations[shot["to"]].append(shot)
 
     #         origin_keys = set(shot_by_origins.keys())
     #         destination_keys = set(shot_by_destinations.keys())
@@ -301,9 +301,9 @@ class CompassParser:
 
     #             for shot in direct_shots:
     #                 processing_queue.add(
-    #                     shot["from_id"], value=None, fail_if_present=False
+    #                     shot["from_"], value=None, fail_if_present=False
     #                 )
-    #                 if (next_shot := shot["to_id"]) not in processing_queue:
+    #                 if (next_shot := shot["to"]) not in processing_queue:
     #                     collect_downstream_stations(next_shot)
 
     #         for station in sorted(origin_stations):
@@ -323,7 +323,7 @@ class CompassParser:
 
     #             for shot in shot_by_destinations[target]:
     #                 start_depth = calculate_depth(
-    #                   shot["from_id"], fail_if_unknown=True
+    #                   shot["from_"], fail_if_unknown=True
     # )
     #                 if start_depth is not None:
     #                     break
@@ -340,7 +340,7 @@ class CompassParser:
     #             processing_queue[shot] = calculate_depth(shot)
 
     #         for shot in all_shots:
-    #             shot["depth"] = round(processing_queue[shot["to_id"]], ndigits=1)
+    #             shot["depth"] = round(processing_queue[shot["to"]], ndigits=1)
 
     @classmethod
     def export_to_dat(cls, survey: Survey, filepath: Path | str) -> None:
@@ -399,8 +399,8 @@ class CompassParser:
 
                 # Shots - Data
                 for shot in section.shots:
-                    f.write(f"{shot.from_id: >12} ")
-                    f.write(f"{shot.to_id: >12} ")
+                    f.write(f"{shot.from_: >12} ")
+                    f.write(f"{shot.to: >12} ")
                     f.write(f"{shot.length:8.2f} ")
                     f.write(f"{shot.azimuth:8.2f} ")
                     f.write(f"{shot.inclination:8.3f} ")

@@ -22,11 +22,13 @@ if __name__ == "__main__":
     # ]
 
     for fp in sorted(paths):
-        _fp = Path(fp)
-        if Path("tests/artifacts/invalid_files").resolve() in _fp.resolve().parents:
+        compass_file = Path(fp)
+        if (
+            Path("tests/artifacts/invalid_files").resolve()
+            in compass_file.resolve().parents
+        ):
             continue
 
-        compass_file = Path(fp)
         print(f"# ------------------------ {compass_file} ------------------------#")
         survey = CompassParser.load_dat_file(compass_file)
 
@@ -38,7 +40,7 @@ if __name__ == "__main__":
         # print(f"{parser.filepath=}")
         # print(f"{parser.filetype=}")
         # print(f"{parser.to_json()=}")
-        # pprint(parser.data.model_dump())
+        # pprint(parser.data.model_dump(by_alias=True))
         # print(f"{parser._data=}")
         # print(f"{parser.lstat=}")
         # print(f"{parser.date_created=}")
@@ -57,7 +59,7 @@ if __name__ == "__main__":
         # parser.to_json(compass_file.parent / compass_file.name.replace(".dat", ".json"))
         # parser.to_dat("test.dat")
         # from pprint import pprint
-        # pprint(parser.data.model_dump())
+        # pprint(parser.data.model_dump(by_alias=True))
         # data = parser.to_json(include_depth=True)
         # print(data)
         # print(activities[-1])

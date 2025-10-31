@@ -24,13 +24,13 @@
                     "comment": null,
                     "down": 65.0,
                     "flags": null,
-                    "from_id": "i18n1",
+                    "from": "i18n1",
                     "inclination": -3.0,
                     "inclination2": 2.5,
                     "left": 3.0,
                     "length": 2.0,
                     "right": 0.0,
-                    "to_id": "i18n2",
+                    "to": "i18n2",
                     "up": 25.0
                 },
                 {
@@ -39,13 +39,13 @@
                     "comment": null,
                     "down": 0.0,
                     "flags": null,
-                    "from_id": "i18n2",
+                    "from": "i18n2",
                     "inclination": -90.0,
                     "inclination2": 90.0,
                     "left": 1.0,
                     "length": 65.0,
                     "right": 3.0,
-                    "to_id": "i18n3",
+                    "to": "i18n3",
                     "up": 90.0
                 }
             ],
