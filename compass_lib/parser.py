@@ -403,19 +403,19 @@ class CompassParser:
                     f.write(f"{shot.length:8.2f} ")
                     f.write(f"{shot.azimuth:8.2f} ")
                     f.write(f"{shot.inclination:8.3f} ")
-                    f.write(f"{shot.left:8.2f} ")
-                    f.write(f"{shot.up:8.2f} ")
-                    f.write(f"{shot.down:8.2f} ")
-                    f.write(f"{shot.right:8.2f} ")
-                    f.write(f"{shot.azimuth2:8.2f} ")
-                    f.write(f"{shot.inclination2:8.3f}")
-                    if shot.flags is not None:
+                    f.write(f"{left if (left := shot.left) else -9999.0:8.2f} ")
+                    f.write(f"{up if (up := shot.up) else -9999.0:8.2f} ")
+                    f.write(f"{down if (down := shot.down) else -9999.0:8.2f} ")
+                    f.write(f"{right if (right := shot.right) else -9999.0:8.2f} ")
+                    f.write(f"{azm2 if (azm2 := shot.azimuth2) else -9999.0:8.2f} ")
+                    f.write(f"{inc2 if (inc2 := shot.inclination2) else -9999.0:8.2f} ")
+                    if shot.flags is not None and shot.flags != "":
                         escaped_start_token = str(ShotFlag.__start_token__).replace(
                             "\\", ""
                         )
-                        f.write(f" {escaped_start_token}")
-                        f.write(shot.flags)
-                        f.write(ShotFlag.__end_token__)
+                        f.write(
+                            f" {escaped_start_token}{shot.flags}{ShotFlag.__end_token__}"
+                        )
                     if shot.comment is not None:
                         f.write(f" {shot.comment}")
                     f.write("\n")

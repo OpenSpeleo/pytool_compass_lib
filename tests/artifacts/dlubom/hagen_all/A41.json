@@ -1,8 +1,7 @@
 {
-    "cave_name": "A4-1",
-    "description": "",
     "sections": [
         {
+            "cave_name": "A4-1",
             "comment": "nie wpisana do katastra",
             "correction": [
                 0.0,
@@ -20,52 +19,53 @@
             "shots": [
                 {
                     "azimuth": 243.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "a401-0",
                     "inclination": -44.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 16.17,
-                    "right": 0.0,
+                    "right": null,
                     "to": "a401-1",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 258.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "a401-1",
                     "inclination": -86.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 16.9,
-                    "right": 0.0,
+                    "right": null,
                     "to": "a401-2",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 184.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "a401-2",
                     "inclination": -28.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 9.19,
-                    "right": 0.0,
+                    "right": null,
                     "to": "a401-3",
-                    "up": 0.0
+                    "up": null
                 }
             ],
             "survey_date": "2009-05-09",
-            "surveyors": ""
+            "survey_team": [],
+            "unit": "feet"
         }
     ]
 }

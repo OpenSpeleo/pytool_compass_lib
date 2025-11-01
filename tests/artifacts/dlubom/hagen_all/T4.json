@@ -1,8 +1,7 @@
 {
-    "cave_name": "T4",
-    "description": "",
     "sections": [
         {
+            "cave_name": "T4",
             "comment": "team Filip Filar(Telefon), Marek Wierzbowski, Dariusz Lubomski",
             "correction": [
                 0.0,
@@ -20,37 +19,38 @@
             "shots": [
                 {
                     "azimuth": 196.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "B:0",
                     "inclination": -61.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 85.3,
-                    "right": 0.0,
+                    "right": null,
                     "to": "B:1",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 0.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "B:1",
                     "inclination": -90.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 68.9,
-                    "right": 0.0,
+                    "right": null,
                     "to": "B:2",
-                    "up": 0.0
+                    "up": null
                 }
             ],
             "survey_date": "2018-08-15",
-            "surveyors": ""
+            "survey_team": [],
+            "unit": "feet"
         }
     ]
 }

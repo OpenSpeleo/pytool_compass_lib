@@ -1,8 +1,7 @@
 {
-    "cave_name": "[493] Lodowka Eisschrank A3-86",
-    "description": "",
     "sections": [
         {
+            "cave_name": "[493] Lodowka Eisschrank A3-86",
             "comment": ";dm",
             "correction": [
                 0.0,
@@ -20,82 +19,83 @@
             "shots": [
                 {
                     "azimuth": 50.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "ld0",
                     "inclination": -22.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 40.16,
-                    "right": 0.0,
+                    "right": null,
                     "to": "l2",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 125.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "l2",
                     "inclination": -15.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 21.82,
-                    "right": 0.0,
+                    "right": null,
                     "to": "l3",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 0.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "l3",
                     "inclination": -90.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 4.59,
-                    "right": 0.0,
+                    "right": null,
                     "to": "l4",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 130.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "l4",
                     "inclination": -12.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 13.45,
-                    "right": 0.0,
+                    "right": null,
                     "to": "l5",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 183.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "l5",
                     "inclination": -20.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 23.62,
-                    "right": 0.0,
+                    "right": null,
                     "to": "l6",
-                    "up": 0.0
+                    "up": null
                 }
             ],
             "survey_date": "2006-08-21",
-            "surveyors": ""
+            "survey_team": [],
+            "unit": "feet"
         }
     ]
 }

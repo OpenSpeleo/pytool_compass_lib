@@ -1,8 +1,7 @@
 {
-    "cave_name": "[429] Grenzlandruine",
-    "description": "",
     "sections": [
         {
+            "cave_name": "[429] Grenzlandruine",
             "comment": ";dm",
             "correction": [
                 0.0,
@@ -20,112 +19,113 @@
             "shots": [
                 {
                     "azimuth": 245.7,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "K:0",
                     "inclination": -18.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 57.41,
-                    "right": 0.0,
+                    "right": null,
                     "to": "K:1",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 165.6,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "K:1",
                     "inclination": 23.4,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 20.01,
-                    "right": 0.0,
+                    "right": null,
                     "to": "K:2",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 173.7,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "K:2",
                     "inclination": 38.7,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 13.78,
-                    "right": 0.0,
+                    "right": null,
                     "to": "K:3",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 233.1,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "K:1",
                     "inclination": 19.8,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 32.15,
-                    "right": 0.0,
+                    "right": null,
                     "to": "K:4",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 214.2,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "K:4",
                     "inclination": 10.8,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 32.15,
-                    "right": 0.0,
+                    "right": null,
                     "to": "K:5",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 322.2,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "K:1",
                     "inclination": 16.2,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 39.04,
-                    "right": 0.0,
+                    "right": null,
                     "to": "K:6",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 337.5,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "K:6",
                     "inclination": 31.5,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 27.23,
-                    "right": 0.0,
+                    "right": null,
                     "to": "K:7",
-                    "up": 0.0
+                    "up": null
                 }
             ],
             "survey_date": "1992-08-15",
-            "surveyors": ""
+            "survey_team": [],
+            "unit": "feet"
         }
     ]
 }

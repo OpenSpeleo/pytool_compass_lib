@@ -1,5 +1,7 @@
 .PHONY: clean test coverage build install lint
 
+SHELL := /bin/bash
+
 # ============================================================================ #
 # CLEAN COMMANDS
 # ============================================================================ #
@@ -67,12 +69,14 @@ DATA_DIRS := \
 
 test-regen-json:  ## rerun the json conversion to JSON of the test artifacts
 	@for dir in $(DATA_DIRS); do \
+		shopt -s nocaseglob; \
 		for file in $$dir/*.dat; do \
 			[ -f "$$file" ] || continue; \
-			out=$${file%.dat}.json; \
+			out=$${file%.[dD][aA][tT]}.json; \
 			echo "Converting $$file → $$out"; \
 			compass convert -i "$$file" -o "$$out" -f json -w; \
 		done; \
+		shopt -u nocaseglob; \
 	done
 
 coverage: ## check code coverage quickly with the default Python

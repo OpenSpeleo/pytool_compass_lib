@@ -1,8 +1,7 @@
 {
-    "cave_name": "[492] Koralowa Korallenhohle A3-8 P04",
-    "description": "",
     "sections": [
         {
+            "cave_name": "[492] Koralowa Korallenhohle A3-8 P04",
             "comment": ";#FLAG p04_11",
             "correction": [
                 0.0,
@@ -20,39 +19,41 @@
             "shots": [
                 {
                     "azimuth": 160.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "p04_9",
                     "inclination": -30.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 21.19,
-                    "right": 0.0,
+                    "right": null,
                     "to": "p04_10",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 130.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "p04_10",
                     "inclination": 32.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 22.47,
-                    "right": 0.0,
+                    "right": null,
                     "to": "p04_11",
-                    "up": 0.0
+                    "up": null
                 }
             ],
             "survey_date": "2006-08-21",
-            "surveyors": ""
+            "survey_team": [],
+            "unit": "feet"
         },
         {
+            "cave_name": "[492] Koralowa Korallenhohle A3-8 P04",
             "comment": ";#DATE 2006-08-21",
             "correction": [
                 0.0,
@@ -70,39 +71,41 @@
             "shots": [
                 {
                     "azimuth": 80.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "p04_7",
                     "inclination": -4.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 10.5,
-                    "right": 0.0,
+                    "right": null,
                     "to": "p04_8",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 158.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "p04_8",
                     "inclination": 0.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 35.6,
-                    "right": 0.0,
+                    "right": null,
                     "to": "p04_9",
-                    "up": 0.0
+                    "up": null
                 }
             ],
             "survey_date": "2006-08-21",
-            "surveyors": ""
+            "survey_team": [],
+            "unit": "feet"
         },
         {
+            "cave_name": "[492] Koralowa Korallenhohle A3-8 P04",
             "comment": ";dm",
             "correction": [
                 0.0,
@@ -120,97 +123,98 @@
             "shots": [
                 {
                     "azimuth": 92.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "p04_1",
                     "inclination": -21.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 24.77,
-                    "right": 0.0,
+                    "right": null,
                     "to": "p04_2",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 103.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "p04_2",
                     "inclination": -55.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 9.35,
-                    "right": 0.0,
+                    "right": null,
                     "to": "p04_3",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 45.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "p04_3",
                     "inclination": -25.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 34.35,
-                    "right": 0.0,
+                    "right": null,
                     "to": "p04_4",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 134.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "p04_4",
                     "inclination": 22.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 23.82,
-                    "right": 0.0,
+                    "right": null,
                     "to": "p04_5",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 104.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "p04_5",
                     "inclination": 26.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 61.84,
-                    "right": 0.0,
+                    "right": null,
                     "to": "p04_6",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 98.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "p04_6",
                     "inclination": 41.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 19.13,
-                    "right": 0.0,
+                    "right": null,
                     "to": "p04_7",
-                    "up": 0.0
+                    "up": null
                 }
             ],
             "survey_date": "2006-08-21",
-            "surveyors": ""
+            "survey_team": [],
+            "unit": "feet"
         }
     ]
 }

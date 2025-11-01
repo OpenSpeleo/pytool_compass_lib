@@ -1,8 +1,7 @@
 {
-    "cave_name": "[497] Hohle mit Oliphant",
-    "description": "",
     "sections": [
         {
+            "cave_name": "[497] Hohle mit Oliphant",
             "comment": "TODO fikcyjny strzal",
             "correction": [
                 0.0,
@@ -20,22 +19,23 @@
             "shots": [
                 {
                     "azimuth": 0.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "a497",
                     "inclination": -90.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 98.43,
-                    "right": 0.0,
+                    "right": null,
                     "to": "a497.1",
-                    "up": 0.0
+                    "up": null
                 }
             ],
             "survey_date": "1900-01-01",
-            "surveyors": ""
+            "survey_team": [],
+            "unit": "feet"
         }
     ]
 }

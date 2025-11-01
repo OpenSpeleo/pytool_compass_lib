@@ -1,8 +1,7 @@
 {
-    "cave_name": "[503] Biwakko",
-    "description": "",
     "sections": [
         {
+            "cave_name": "[503] Biwakko",
             "comment": "delta Disto = 0.0",
             "correction": [
                 0.0,
@@ -20,82 +19,83 @@
             "shots": [
                 {
                     "azimuth": 320.1,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "BI:biwakko",
                     "inclination": -15.3,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 40.65,
-                    "right": 0.0,
+                    "right": null,
                     "to": "BI:1.2",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 26.81,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "BI:1.2",
                     "inclination": 7.2,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 13.94,
-                    "right": 0.0,
+                    "right": null,
                     "to": "BI:1.22",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 325.7,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "BI:1.2",
                     "inclination": 7.4,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 17.78,
-                    "right": 0.0,
+                    "right": null,
                     "to": "BI:1.23",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 334.5,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "BI:1.23",
                     "inclination": 62.79,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 18.21,
-                    "right": 0.0,
+                    "right": null,
                     "to": "BI:1.231",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 237.9,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "BI:1.2",
                     "inclination": 8.2,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 31.5,
-                    "right": 0.0,
+                    "right": null,
                     "to": "BI:1.3",
-                    "up": 0.0
+                    "up": null
                 }
             ],
             "survey_date": "2014-08-13",
-            "surveyors": ""
+            "survey_team": [],
+            "unit": "feet"
         }
     ]
 }

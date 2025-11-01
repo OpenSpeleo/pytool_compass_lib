@@ -1,8 +1,7 @@
 {
-    "cave_name": "[485] A4-3",
-    "description": "",
     "sections": [
         {
+            "cave_name": "[485] A4-3",
             "comment": ";dm",
             "correction": [
                 0.0,
@@ -20,97 +19,98 @@
             "shots": [
                 {
                     "azimuth": 355.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "a403-0",
                     "inclination": -69.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 13.65,
-                    "right": 0.0,
+                    "right": null,
                     "to": "a403-1",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 294.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "a403-1",
                     "inclination": -45.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 17.09,
-                    "right": 0.0,
+                    "right": null,
                     "to": "a403-2",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 314.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "a403-2",
                     "inclination": -44.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 10.99,
-                    "right": 0.0,
+                    "right": null,
                     "to": "a403-3",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 321.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "a403-3",
                     "inclination": -49.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 6.36,
-                    "right": 0.0,
+                    "right": null,
                     "to": "a403-4",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 296.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "a403-4",
                     "inclination": -41.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 20.67,
-                    "right": 0.0,
+                    "right": null,
                     "to": "a403-5",
-                    "up": 0.0
+                    "up": null
                 },
                 {
                     "azimuth": 353.0,
-                    "azimuth2": 0.0,
+                    "azimuth2": null,
                     "comment": null,
-                    "down": 0.0,
+                    "down": null,
                     "flags": null,
                     "from": "a403-5",
                     "inclination": -28.0,
-                    "inclination2": 0.0,
-                    "left": 0.0,
+                    "inclination2": null,
+                    "left": null,
                     "length": 3.41,
-                    "right": 0.0,
+                    "right": null,
                     "to": "a403-6",
-                    "up": 0.0
+                    "up": null
                 }
             ],
             "survey_date": "2004-08-21",
-            "surveyors": ""
+            "survey_team": [],
+            "unit": "feet"
         }
     ]
 }
