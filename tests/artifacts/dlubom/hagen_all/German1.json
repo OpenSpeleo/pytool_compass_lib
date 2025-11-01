@@ -14,7 +14,6 @@
             ],
             "declination": 3.42,
             "discovery_date": "2017-08-09",
-            "format": "DMMDLRUDLADN",
             "name": "GER",
             "shots": [
                 {
@@ -440,7 +439,7 @@
             ],
             "survey_date": "2017-08-09",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

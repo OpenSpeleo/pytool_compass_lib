@@ -14,7 +14,6 @@
             ],
             "declination": 11.18,
             "discovery_date": "1988-08-28",
-            "format": "DDDDUDLRLADN",
             "name": "SS",
             "shots": [
                 {
@@ -160,7 +159,6 @@
             ],
             "declination": 11.18,
             "discovery_date": "1988-08-28",
-            "format": "DDDDUDLRLADN",
             "name": "SC",
             "shots": [
                 {
@@ -260,7 +258,6 @@
             ],
             "declination": 11.18,
             "discovery_date": "1988-08-28",
-            "format": "DDDDUDLRLADN",
             "name": "Z",
             "shots": [
                 {
@@ -375,7 +372,6 @@
             ],
             "declination": 11.18,
             "discovery_date": "1989-08-27",
-            "format": "DDDDUDLRLADN",
             "name": "Z+",
             "shots": [
                 {

@@ -11,14 +11,11 @@ from typing import Any
 from compass_lib.constants import COMPASS_DATE_COMMENT_RE
 from compass_lib.constants import COMPASS_END_OF_FILE
 from compass_lib.constants import COMPASS_SECTION_NAME_RE
-from compass_lib.constants import COMPASS_SECTION_SEPARATOR
 from compass_lib.constants import COMPASS_SECTION_SPLIT_RE
 from compass_lib.constants import COMPASS_SHOT_FLAGS_RE
 from compass_lib.enums import CompassFileType
-from compass_lib.enums import ShotFlag
 from compass_lib.models import Survey
 from compass_lib.models import SurveySection
-from compass_lib.models import SurveyShot
 
 if TYPE_CHECKING:
     from typing_extensions import Self
@@ -207,7 +204,7 @@ class CompassParser:
 
             # -------------- Section Shots -------------- #
 
-            shots: list[SurveyShot] = []
+            shots: list[dict[str, Any]] = []
 
             with contextlib.suppress(StopIteration):
                 while shot_str := next(section_data_iter):
@@ -216,42 +213,51 @@ class CompassParser:
                     )
 
                     shots.append(
-                        SurveyShot(
-                            from_=shot_data.from_,
-                            to=shot_data.to,
-                            azimuth=float(shot_data.azimuth),
-                            inclination=float(shot_data.inclination),
-                            length=float(shot_data.length),
+                        {
+                            "from_": shot_data.from_,
+                            "to": shot_data.to,
+                            "azimuth": float(shot_data.azimuth),
+                            "inclination": float(shot_data.inclination),
+                            "length": float(shot_data.length),
                             # Optional Values
-                            comment=shot_data.comment,
-                            flags=shot_data.flags,
-                            azimuth2=float(shot_data.azimuth2),
-                            inclination2=float(shot_data.inclination2),
+                            "comment": shot_data.comment,
+                            "flags": shot_data.flags,
+                            "azimuth2": float(shot_data.azimuth2),
+                            "inclination2": float(shot_data.inclination2),
                             # LRUD
-                            left=float(shot_data.left),
-                            right=float(shot_data.right),
-                            up=float(shot_data.up),
-                            down=float(shot_data.down),
-                        )
+                            "left": float(shot_data.left),
+                            "right": float(shot_data.right),
+                            "up": float(shot_data.up),
+                            "down": float(shot_data.down),
+                        }
                     )
 
             survey_sections.append(
-                SurveySection(
-                    cave_name=cave_name,
-                    name=survey_name,
-                    comment=section_comment,
-                    correction=[float(correct_A), float(correct_B), float(correct_C)],
-                    correction2=[float(correct2_A), float(correct2_B)],
-                    survey_date=survey_date,
-                    discovery_date=discovery_date,
-                    declination=float(declination_str),  # pyright: ignore[reportArgumentType]
-                    format=format_str if format_str is not None else "DDDDUDLRLADN",
-                    shots=shots,
-                    survey_team=survey_team,
-                )
+                {
+                    "cave_name": cave_name,
+                    "name": survey_name,
+                    "comment": section_comment,
+                    "correction": [
+                        float(correct_A),
+                        float(correct_B),
+                        float(correct_C),
+                    ],
+                    "correction2": [float(correct2_A), float(correct2_B)],
+                    "format": format_str,  # pyright: ignore[reportArgumentType]
+                    "unit": (
+                        "feet"
+                        if format_str is None or format_str[1] == "D"
+                        else "meters"
+                    ),
+                    "survey_date": survey_date,  # pyright: ignore[reportArgumentType]
+                    "discovery_date": discovery_date,
+                    "declination": float(declination_str),  # pyright: ignore[reportArgumentType]
+                    "shots": shots,
+                    "survey_team": survey_team,  # pyright: ignore[reportArgumentType]
+                }
             )
 
-        return Survey(sections=survey_sections)
+        return Survey.model_validate({"sections": survey_sections})
 
     # =================== Export Formats =================== #
 
@@ -353,75 +359,5 @@ class CompassParser:
                 f"Expected: `{CompassFileType.DAT.name}`"
             )
 
-        with filepath.open(mode="w", encoding="windows-1252") as f:
-            for section in survey.sections:
-                # Section Header
-                f.write(f"{section.cave_name}\n")
-                f.write(f"SURVEY NAME: {section.name}\n")
-                f.write(
-                    "".join(
-                        (
-                            "SURVEY DATE: ",
-                            section.survey_date.strftime("%m %-d %Y")
-                            if section.survey_date
-                            else "None",
-                            " ",
-                        )
-                    )
-                )
-                f.write(f"COMMENT:{section.comment}\n")
-                f.write(f"SURVEY TEAM:\n{', '.join(section.survey_team)}\n")
-                f.write(f"DECLINATION: {section.declination:>7.02f}  ")
-                f.write(f"FORMAT: {section.format}  ")
-                f.write(
-                    f"CORRECTIONS:  {' '.join(f'{nbr:.02f}' for nbr in section.correction)}  "  # noqa: E501
-                )
-                f.write(
-                    f"CORRECTIONS2:  {' '.join(f'{nbr:.02f}' for nbr in section.correction2)}  "  # noqa: E501
-                )
-                f.write(
-                    "".join(
-                        (
-                            "DISCOVERY: ",
-                            section.discovery_date.strftime("%m %-d %Y")
-                            if section.discovery_date
-                            else "None",
-                            "\n\n",
-                        )
-                    )
-                )
-
-                # Shots - Header
-                f.write("        FROM           TO   LENGTH  BEARING      INC")
-                f.write("     LEFT       UP     DOWN    RIGHT")
-                f.write("     AZM2     INC2   FLAGS  COMMENTS\n\n")
-
-                # Shots - Data
-                for shot in section.shots:
-                    f.write(f"{shot.from_: >12} ")
-                    f.write(f"{shot.to: >12} ")
-                    f.write(f"{shot.length:8.2f} ")
-                    f.write(f"{shot.azimuth:8.2f} ")
-                    f.write(f"{shot.inclination:8.3f} ")
-                    f.write(f"{left if (left := shot.left) else -9999.0:8.2f} ")
-                    f.write(f"{up if (up := shot.up) else -9999.0:8.2f} ")
-                    f.write(f"{down if (down := shot.down) else -9999.0:8.2f} ")
-                    f.write(f"{right if (right := shot.right) else -9999.0:8.2f} ")
-                    f.write(f"{azm2 if (azm2 := shot.azimuth2) else -9999.0:8.2f} ")
-                    f.write(f"{inc2 if (inc2 := shot.inclination2) else -9999.0:8.2f} ")
-                    if shot.flags is not None and shot.flags != "":
-                        escaped_start_token = str(ShotFlag.__start_token__).replace(
-                            "\\", ""
-                        )
-                        f.write(
-                            f" {escaped_start_token}{shot.flags}{ShotFlag.__end_token__}"
-                        )
-                    if shot.comment is not None:
-                        f.write(f" {shot.comment}")
-                    f.write("\n")
-
-                # End of Section - Form_feed: https://www.ascii-code.com/12
-                f.write(f"{COMPASS_SECTION_SEPARATOR}\n")
-
-            # End of File - Substitute: https://www.ascii-code.com/26
-            f.write(f"{COMPASS_END_OF_FILE}\n")
+        with filepath.open(mode="w", encoding="windows-1252") as fp:
+            survey.export_to_dat(fp)

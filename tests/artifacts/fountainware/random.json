@@ -14,7 +14,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2001-04-22",
-            "format": "DDDWLRUDALDN",
             "name": "Random",
             "shots": [
                 {

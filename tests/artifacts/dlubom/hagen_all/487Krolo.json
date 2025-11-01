@@ -14,7 +14,6 @@
             ],
             "declination": 1.85,
             "discovery_date": "2004-08-23",
-            "format": "DMMDLRUDLADN",
             "name": "KROLOWEJ",
             "shots": [
                 {
@@ -275,7 +274,7 @@
             ],
             "survey_date": "2004-08-23",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

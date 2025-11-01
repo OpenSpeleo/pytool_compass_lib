@@ -14,7 +14,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2011-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "B3_Amonts_01.B3_Amonts.B3-Bourrugues.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -519,7 +518,7 @@
                 "Francoise Lidonne",
                 "Evelyne Renaud"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des Bourrugues B3, amonts 02 : amont vers jonction AP7 suite",
@@ -535,7 +534,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2012-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "B3_Amonts_02.B3_Amonts.B3-Bourrugues.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -1835,7 +1833,7 @@
                 "Francoise Lidonne",
                 "Pascale Porte"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des Bourrugues B3, entree 06 : a partir du point C-00, siphon 1 et siphon 2",
@@ -1851,7 +1849,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "1990-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "B3_Entree_06.B3_Entree.B3-Bourrugues.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -2280,7 +2277,7 @@
                 "Serge Latapie",
                 "Philippe Rabatel"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des Bourrugues B3, Aval 2 : suite des grandes salles",
@@ -2296,7 +2293,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "1993-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "B3_Aval_02.B3_Aval.B3-Bourrugues.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -2905,7 +2901,7 @@
                 "Olivier Gaspe",
                 "Serge Latapie"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "GL102 - Gouffre du Lonne Peyret - Entree",
@@ -2921,7 +2917,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2024-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "GL102_Entree_01.Gouffre_du_Lonne_Peyret.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -8885,7 +8880,7 @@
                 "Alexandre Pont",
                 "Pierre Senon"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des Bourrugues B3, amonts 03 : galerie des cheminees",
@@ -8901,7 +8896,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2015-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "B3_Amonts_03.B3_Amonts.B3-Bourrugues.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -10472,7 +10466,7 @@
                 "Anne Johannet",
                 "Franck Soulage"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "GL102 - Gouffre du Lonne Peyret - Puits suite",
@@ -10488,7 +10482,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2024-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "GL102_Entree_02.Gouffre_du_Lonne_Peyret.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -16768,7 +16761,7 @@
                 "Alexandre Pont",
                 "Olivier Venaut"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "GL102 - Gouffre du Lonne Peyret - Aval salle chao des Titans",
@@ -16784,7 +16777,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2024-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "GL102_Aval_01.Gouffre_du_Lonne_Peyret.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -25059,7 +25051,7 @@
                 "Alexandre Pont",
                 "Olivier Venaut"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des Bourrugues B3, entree 02 : base des puits_ a la jonction du shunt-actif",
@@ -25075,7 +25067,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "1990-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "B3_Entree_02.B3_Entree.B3-Bourrugues.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -25699,7 +25690,7 @@
                 "Jean Duplantier",
                 "Francois Ichas"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "GL102 - Gouffre du Lonne Peyret - Aval Embarquadere (Sup)",
@@ -25715,7 +25706,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2024-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "GL102_Riviere.Gouffre_du_Lonne_Peyret.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -28349,7 +28339,7 @@
                 "Marina Ferrand",
                 "Guillaume Lapie"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des Bourrugues B3, entree 04 : de la sortie du shunt au siphon terminal",
@@ -28365,7 +28355,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "1990-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "B3_Entree_04.B3_Entree.B3-Bourrugues.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -28765,7 +28754,7 @@
                 "Jean Duplantier",
                 "Francois Ichas"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre GL4 - Lonne-Peyret Amonts",
@@ -28781,7 +28770,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "1971-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "GL4_Amonts.GL04_Amonts.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -29570,7 +29558,7 @@
                 "Jo Marbach",
                 "Lambert Martin"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -29586,7 +29574,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2006-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -29835,7 +29822,7 @@
                 "Philippe Guillemin",
                 "Franck Soulage"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -29851,7 +29838,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2006-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -30100,7 +30086,7 @@
                 "Philippe Guillemin",
                 "Franck Soulage"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -30116,7 +30102,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2006-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -30155,7 +30140,7 @@
                 "Philippe Guillemin",
                 "Franck Soulage"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -30171,7 +30156,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2006-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -30330,7 +30314,7 @@
                 "Philippe Guillemin",
                 "Aude Priem"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -30346,7 +30330,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2006-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -30415,7 +30398,7 @@
                 "Philippe Guillemin",
                 "Aude Priem"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -30431,7 +30414,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2006-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -30951,7 +30933,7 @@
                 "Aude Priem",
                 "Franck Soulage"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -30967,7 +30949,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2006-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -31126,7 +31107,7 @@
                 "Philippe Guillemin",
                 "Aude Priem"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -31142,7 +31123,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2006-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -31197,7 +31177,7 @@
                 "Francoise Lidonne",
                 "Franck Soulage"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -31213,7 +31193,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2006-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -31373,7 +31352,7 @@
                 "Aude Priem",
                 "Pascal Reig"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -31389,7 +31368,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2006-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -31474,7 +31452,7 @@
                 "Francoise Lidonne",
                 "Franck Soulage"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7",
@@ -31490,7 +31468,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2007-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Entree.AP7_Entree.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -31665,7 +31642,7 @@
                 "Francoise Lidonne",
                 "Pascal Reig"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -31681,7 +31658,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2007-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -32095,7 +32071,7 @@
                 "Philippe Guillemin",
                 "Franck Soulage"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -32111,7 +32087,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2007-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -32301,7 +32276,7 @@
                 "Francoise Lidonne",
                 "Franck Soulage"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -32317,7 +32292,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2007-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -32447,7 +32421,7 @@
                 "Francoise Lidonne",
                 "Franck Soulage"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -32463,7 +32437,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2007-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -32503,7 +32476,7 @@
                 "Francoise Lidonne",
                 "Franck Soulage"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -32519,7 +32492,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2007-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -32589,7 +32561,7 @@
                 "Francoise Lidonne",
                 "Franck Soulage"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7",
@@ -32605,7 +32577,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2008-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Entree.AP7_Entree.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -32810,7 +32781,7 @@
                 "Francoise Lidonne",
                 "Pascal Reig"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -32826,7 +32797,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2008-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -33031,7 +33001,7 @@
                 "Francoise Lidonne",
                 "Franck Soulage"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -33047,7 +33017,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2008-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -33267,7 +33236,7 @@
                 "Francoise Lidonne",
                 "Franck Soulage"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7",
@@ -33283,7 +33252,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2010-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Entree.AP7_Entree.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -34313,7 +34281,7 @@
                 "Francoise Lidonne",
                 "Franck Soulage"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -34329,7 +34297,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2010-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -34624,7 +34591,7 @@
                 "Francoise Lidonne",
                 "Franck Soulage"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -34640,7 +34607,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2010-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -35370,7 +35336,7 @@
                 "Francoise Lidonne",
                 "Franck Soulage"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -35386,7 +35352,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2010-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -35757,7 +35722,7 @@
                 "Pascal Reig",
                 "Franck Soulage"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -35773,7 +35738,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2011-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -35976,7 +35940,7 @@
             "survey_team": [
                 "Philippe Guillemin"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -35992,7 +35956,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2011-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -36242,7 +36205,7 @@
                 "Phillipe Germain",
                 "Philippe Guillemin"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -36258,7 +36221,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2011-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -36326,7 +36288,7 @@
             "survey_team": [
                 "Philippe Guillemin"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -36342,7 +36304,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2011-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -36635,7 +36596,7 @@
             "survey_team": [
                 "Philippe Guillemin"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 Amonts",
@@ -36651,7 +36612,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2014-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Amonts.AP7_Amonts.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -36947,7 +36907,7 @@
                 "Pascale Porte",
                 "Franck Soulage"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 Amonts",
@@ -36963,7 +36923,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2014-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Amonts.AP7_Amonts.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -37033,7 +36992,7 @@
                 "Philippe Guillemin",
                 "Pascale Porte"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 Amonts",
@@ -37049,7 +37008,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2014-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Amonts.AP7_Amonts.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -37119,7 +37077,7 @@
                 "Philippe Guillemin",
                 "Pascale Porte"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 Amonts",
@@ -37135,7 +37093,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2014-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Amonts.AP7_Amonts.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -37280,7 +37237,7 @@
                 "Philippe Guillemin",
                 "Pascale Porte"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -37296,7 +37253,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2016-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -38431,7 +38387,7 @@
                 "Franck Soulage",
                 "Flavie Vampouille"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -38447,7 +38403,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2016-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -39447,7 +39402,7 @@
                 "Pascale Porte",
                 "Franck Soulage"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 Amonts",
@@ -39463,7 +39418,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2016-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Amonts.AP7_Amonts.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -39668,7 +39622,7 @@
                 "Franck Soulage",
                 "Flavie Vampouille"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 Amonts",
@@ -39684,7 +39638,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2016-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Amonts.AP7_Amonts.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -40365,7 +40318,7 @@
             ],
             "survey_date": "2016-07-15",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 - Reseau Nord",
@@ -40381,7 +40334,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2017-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Aval.AP7_Aval.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -40927,7 +40879,7 @@
             ],
             "survey_date": "2017-07-15",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 Amonts",
@@ -40943,7 +40895,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2017-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Amonts.AP7_Amonts.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -41099,7 +41050,7 @@
             ],
             "survey_date": "2017-07-15",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 Amonts",
@@ -41115,7 +41066,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2017-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Amonts.AP7_Amonts.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -41601,7 +41551,7 @@
             ],
             "survey_date": "2017-07-15",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 Amonts",
@@ -41617,7 +41567,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2017-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Amonts.AP7_Amonts.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -42178,7 +42127,7 @@
             ],
             "survey_date": "2017-07-15",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 Amonts",
@@ -42194,7 +42143,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2017-07-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Amonts.AP7_Amonts.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -42350,7 +42298,7 @@
             ],
             "survey_date": "2017-07-15",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "GL102 - Gouffre du Lonne Peyret - Amonts",
@@ -42366,7 +42314,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2024-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "GL102_Amont_01.Gouffre_du_Lonne_Peyret.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -48780,7 +48727,7 @@
                 "Marina Ferrand",
                 "Guillaume Lapie"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre GL4 - Lonne-Peyret Amonts",
@@ -48796,7 +48743,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "1971-07-16",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "GL4_Amonts.GL04_Amonts.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -49075,7 +49021,7 @@
                 "Alain Marbach",
                 "Bernard Plan"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 Amonts",
@@ -49091,7 +49037,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2015-07-17",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Amonts.AP7_Amonts.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -49371,7 +49316,7 @@
                 "Pascale Porte",
                 "Franck Soulage"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 Amonts",
@@ -49387,7 +49332,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2015-07-17",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Amonts.AP7_Amonts.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -50897,7 +50841,7 @@
                 "Pascale Porte",
                 "Franck Soulage"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des Bourrugues B3, entree 01 : puits d'entree",
@@ -50913,7 +50857,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "1990-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "B3_Entree_01.B3_Entree.B3-Bourrugues.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -51582,7 +51525,7 @@
                 "Francois Ichas",
                 "Stephane Vogrig"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre GL4 - Lonne-Peyret Amonts",
@@ -51598,7 +51541,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "1971-07-20",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "GL4_Amonts.GL04_Amonts.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -53062,7 +53004,7 @@
                 "Richard Bednarek",
                 "Jean-Claude Dobrilla"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre GL4 - Lonne-Peyret Amonts",
@@ -53078,7 +53020,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "1971-07-21",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "GL4_Amonts.GL04_Amonts.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -53882,7 +53823,7 @@
                 "Jean-Claude Coppenolle",
                 "Lambert Martin"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre GL4 - Lonne-Peyret Amonts",
@@ -53898,7 +53839,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "1971-07-21",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "GL4_Amonts.GL04_Amonts.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -54432,7 +54372,7 @@
                 "Jean-Marc Mattlet",
                 "Guy Sevenier"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des Bourrugues B3, entree 03 : de la sortie du shunt vers l'amont",
@@ -54448,7 +54388,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "1991-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "B3_Entree_03.B3_Entree.B3-Bourrugues.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -54757,7 +54696,7 @@
                 "Jacques Bauer",
                 "Michel Lauga"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des Bourrugues B3, entree 05 : a partir du point C-09",
@@ -54773,7 +54712,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "1990-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "B3_Entree_05.B3_Entree.B3-Bourrugues.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -55203,7 +55141,7 @@
                 "Francois Ichas",
                 "Stephane Vogrig"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des Bourrugues B3, Aval 1 : a partir de la sortie du S3",
@@ -55219,7 +55157,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "1990-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "B3_Aval_01.B3_Aval.B3-Bourrugues.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -59653,7 +59590,7 @@
                 "Olivier Gaspe",
                 "Alain Perre"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 Amonts",
@@ -59669,7 +59606,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2014-07-25",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Amonts.AP7_Amonts.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -60670,7 +60606,7 @@
                 "Franck Soulage",
                 "Melanie Vatin"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre des arres planeres AP7 Amonts",
@@ -60686,7 +60622,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2019-07-25",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AP7_Amonts.AP7_Amonts.AP7_Arres_Planeres.Complexe_Lonne_Peyret-Bourrugues",
             "shots": [
                 {
@@ -60814,7 +60749,7 @@
             "survey_team": [
                 "Eric Fevre"
             ],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

@@ -14,7 +14,6 @@
             ],
             "declination": 0.77,
             "discovery_date": "1992-08-15",
-            "format": "DMMDLRUDLADN",
             "name": "GRENZLANDRUINE",
             "shots": [
                 {
@@ -125,7 +124,7 @@
             ],
             "survey_date": "1992-08-15",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

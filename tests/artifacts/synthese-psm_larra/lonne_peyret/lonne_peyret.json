@@ -14,7 +14,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2024-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "GL102_Entree_01.Gouffre_du_Lonne_Peyret",
             "shots": [
                 {
@@ -5988,7 +5987,7 @@
                 "Marina Ferrand",
                 "Guillaume Lapie"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "GL102 - Gouffre du Lonne Peyret - Puits suite",
@@ -6004,7 +6003,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2024-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "GL102_Entree_02.Gouffre_du_Lonne_Peyret",
             "shots": [
                 {
@@ -12280,7 +12278,7 @@
             ],
             "survey_date": "2024-07-08",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "GL102 - Gouffre du Lonne Peyret - Aval salle chao des Titans",
@@ -12296,7 +12294,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2024-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "GL102_Aval_01.Gouffre_du_Lonne_Peyret",
             "shots": [
                 {
@@ -20567,7 +20564,7 @@
             ],
             "survey_date": "2024-07-08",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "GL102 - Gouffre du Lonne Peyret - Aval Embarquadere (Sup)",
@@ -20583,7 +20580,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2024-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "GL102_Riviere.Gouffre_du_Lonne_Peyret",
             "shots": [
                 {
@@ -23214,7 +23210,7 @@
             ],
             "survey_date": "2024-11-08",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "GL102 - Gouffre du Lonne Peyret - Amonts",
@@ -23230,7 +23226,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2024-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "GL102_Amont_01.Gouffre_du_Lonne_Peyret",
             "shots": [
                 {
@@ -29641,7 +29636,7 @@
             ],
             "survey_date": "2024-08-15",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

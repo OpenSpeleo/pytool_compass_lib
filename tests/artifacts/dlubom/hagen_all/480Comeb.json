@@ -14,7 +14,6 @@
             ],
             "declination": 2.51,
             "discovery_date": "2010-08-01",
-            "format": "DMMDLRUDLADN",
             "name": "COMEBACK-HOHLE",
             "shots": [
                 {
@@ -605,7 +604,7 @@
             ],
             "survey_date": "2010-08-01",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

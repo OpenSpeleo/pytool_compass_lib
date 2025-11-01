@@ -14,7 +14,6 @@
             ],
             "declination": 3.29,
             "discovery_date": "2016-08-06",
-            "format": "DMMDLRUDLADN",
             "name": "STUDNIA-X_2",
             "shots": [
                 {
@@ -215,7 +214,7 @@
             ],
             "survey_date": "2016-08-06",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "[507] X-Schacht",
@@ -231,7 +230,6 @@
             ],
             "declination": 3.29,
             "discovery_date": "2016-08-06",
-            "format": "DMMDLRUDLADN",
             "name": "STUDNIA-X",
             "shots": [
                 {
@@ -1287,7 +1285,7 @@
             ],
             "survey_date": "2016-08-06",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

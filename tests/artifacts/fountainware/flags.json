@@ -14,7 +14,6 @@
             ],
             "declination": -9.04,
             "discovery_date": "2009-12-05",
-            "format": "DDDDUDRLLADB",
             "name": "toc",
             "shots": [
                 {

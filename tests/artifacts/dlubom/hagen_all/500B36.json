@@ -14,7 +14,6 @@
             ],
             "declination": 3.16,
             "discovery_date": "2015-08-09",
-            "format": "DMMDLRUDLADN",
             "name": "B3.6",
             "shots": [
                 {
@@ -1010,7 +1009,7 @@
             ],
             "survey_date": "2015-08-09",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

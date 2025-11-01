@@ -14,7 +14,6 @@
             ],
             "declination": 2.39,
             "discovery_date": "2009-08-07",
-            "format": "DMMDLRUDLADN",
             "name": "DESZCZ2009",
             "shots": [
                 {
@@ -260,7 +259,7 @@
             ],
             "survey_date": "2009-08-07",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "[496] Kraina Deszczowcow Land der Regenmenschacht",
@@ -276,7 +275,6 @@
             ],
             "declination": 1.76,
             "discovery_date": "2003-08-16",
-            "format": "DMMDLRUDLADN",
             "name": "DESZCZ",
             "shots": [
                 {
@@ -447,7 +445,7 @@
             ],
             "survey_date": "2003-08-16",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

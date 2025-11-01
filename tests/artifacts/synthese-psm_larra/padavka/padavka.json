@@ -14,7 +14,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2000-01-08",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "nad_pad.pod30",
             "shots": [
                 {
@@ -249,7 +248,7 @@
                 "Stacho Mudrak",
                 "Libor Stubna"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Prepoj Traverz-Padavka",
@@ -265,7 +264,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2000-12-08",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "nad_pad2.pod30",
             "shots": [
                 {
@@ -335,7 +333,7 @@
                 "Peter Sterba",
                 "Libor Stubna"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Nad Padavkou",
@@ -351,7 +349,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2000-12-08",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "nad_pad3.pod30",
             "shots": [
                 {
@@ -601,7 +598,7 @@
                 "Peter Sterba",
                 "Libor Stubna"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Dom Padavky, Klenotnica",
@@ -617,7 +614,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "1986-12-31",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "padavka.pod30",
             "shots": [
                 {
@@ -942,7 +938,7 @@
                 "Gabriela Rekosova",
                 "Stanislav Vanecek"
             ],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

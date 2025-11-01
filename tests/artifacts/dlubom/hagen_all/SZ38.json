@@ -14,7 +14,6 @@
             ],
             "declination": 3.55,
             "discovery_date": "2018-08-01",
-            "format": "DMMDLRUDLADN",
             "name": "LKA7",
             "shots": [
                 {
@@ -335,7 +334,7 @@
             ],
             "survey_date": "2018-08-01",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

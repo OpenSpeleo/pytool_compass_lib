@@ -14,7 +14,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2024-12-04",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "Entree2.Entree.Hashim-oyuk",
             "shots": [
                 {
@@ -4580,7 +4579,7 @@
             ],
             "survey_date": "2024-12-04",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "AshimyukFond",
@@ -4596,7 +4595,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2024-12-04",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "AshimyukFond.AshimyukFond.Hashim-oyuk",
             "shots": [
                 {
@@ -14922,7 +14920,7 @@
             ],
             "survey_date": "2024-12-04",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "ochy muyuk",
@@ -14938,7 +14936,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2024-04-15",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "ochy_muyuk.Boucle1.Hashim-oyuk",
             "shots": [
                 {
@@ -21454,7 +21451,7 @@
             ],
             "survey_date": "2024-04-15",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Hochimoyouk",
@@ -21470,7 +21467,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2024-04-22",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "Hashimoyuk4.Hashimoyuk4.Hashim-oyuk",
             "shots": [
                 {
@@ -43256,7 +43252,7 @@
             ],
             "survey_date": "2024-04-22",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

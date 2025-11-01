@@ -14,7 +14,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "1997-10-08",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "rabbit",
             "shots": [
                 {
@@ -249,7 +248,7 @@
                 "Miroslav Hofer",
                 "Stacho Mudrak"
             ],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

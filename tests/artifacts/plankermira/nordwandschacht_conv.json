@@ -14,7 +14,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2023-08-13",
-            "format": "DMMDLRUDLDAN",
             "name": "NWS1A",
             "shots": [
                 {
@@ -729,7 +728,7 @@
                 "Robin Jeutter",
                 "Tanguy Racine"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Nordwandschacht",
@@ -745,7 +744,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2023-08-14",
-            "format": "DMMDLRUDLDAN",
             "name": "NWS1B",
             "shots": [
                 {
@@ -1760,7 +1758,7 @@
                 "Robin Jeutter",
                 "Tanguy Racine"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Nordwandschacht",
@@ -1776,7 +1774,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2023-08-18",
-            "format": "DMMDLRUDLDAN",
             "name": "NWS2",
             "shots": [
                 {
@@ -2491,7 +2488,7 @@
                 "Andreas Glitzner",
                 "Rebecca Lawson"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Nordwandschacht",
@@ -2507,7 +2504,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2023-08-15",
-            "format": "DMMDLRUDLDAN",
             "name": "NWS3",
             "shots": [
                 {
@@ -2667,7 +2663,7 @@
                 "Robin Jeutter",
                 "Tanguy Racine"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Nordwandschacht",
@@ -2683,7 +2679,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2024-08-12",
-            "format": "DMMDLRUDLDAN",
             "name": "NWS4A",
             "shots": [
                 {
@@ -2949,7 +2944,7 @@
                 "Tanguy Racine",
                 "Marcel Jeutter"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Nordwandschacht",
@@ -2965,7 +2960,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2024-08-13",
-            "format": "DMMDLRUDLDAN",
             "name": "NWS4B",
             "shots": [
                 {
@@ -3636,7 +3630,7 @@
                 "Tanguy Racine",
                 "Marcel Jeutter"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Nordwandschacht",
@@ -3652,7 +3646,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2024-08-14",
-            "format": "DMMDLRUDLDAN",
             "name": "NWS5",
             "shots": [
                 {
@@ -4233,7 +4226,7 @@
                 "Tanguy Racine",
                 "Marcel Jeutter"
             ],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

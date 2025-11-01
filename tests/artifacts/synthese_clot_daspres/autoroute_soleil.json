@@ -14,7 +14,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2024-09-08",
-            "format": "DMMDLRUDLADNT",
             "name": "???",
             "shots": [
                 {
@@ -200,7 +199,7 @@
             ],
             "survey_date": "2024-09-08",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

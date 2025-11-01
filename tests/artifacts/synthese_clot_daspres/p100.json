@@ -14,7 +14,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2018-07-22",
-            "format": "DMMDLUDRLADN",
             "name": "p100",
             "shots": [
                 {
@@ -1552,7 +1551,7 @@
             "survey_team": [
                 "ced et bab"
             ],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

@@ -14,7 +14,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "1900-01-01",
-            "format": "DMMDLRUDLADN",
             "name": "BAZA",
             "shots": [
                 {
@@ -35,7 +34,7 @@
             ],
             "survey_date": "1900-01-01",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

@@ -14,7 +14,6 @@
             ],
             "declination": 3.03,
             "discovery_date": "2014-08-06",
-            "format": "DMMDLRUDLADN",
             "name": "GEROLLENHEIM",
             "shots": [
                 {
@@ -1010,7 +1009,7 @@
             ],
             "survey_date": "2014-08-06",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

@@ -14,7 +14,6 @@
             ],
             "declination": 2.07,
             "discovery_date": "2006-08-21",
-            "format": "DMMDLRUDLADN",
             "name": "LODOWKA",
             "shots": [
                 {
@@ -95,7 +94,7 @@
             ],
             "survey_date": "2006-08-21",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

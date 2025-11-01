@@ -14,7 +14,6 @@
             ],
             "declination": -9.06,
             "discovery_date": "2008-08-30",
-            "format": "DIDDLRUDLADB",
             "name": "i18n",
             "shots": [
                 {
@@ -56,7 +55,7 @@
                 "Tommy Shifflett",
                 "Tanya Pietra\u00df"
             ],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

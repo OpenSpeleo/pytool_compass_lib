@@ -14,7 +14,6 @@
             ],
             "declination": 1.76,
             "discovery_date": "2003-08-03",
-            "format": "DMMDLRUDLADN",
             "name": "PETLA",
             "shots": [
                 {
@@ -335,7 +334,7 @@
             ],
             "survey_date": "2003-08-03",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "[479] Kasztanowa Kastanienhohle",
@@ -351,7 +350,6 @@
             ],
             "declination": 1.76,
             "discovery_date": "2003-08-03",
-            "format": "DMMDLRUDLADN",
             "name": "OD",
             "shots": [
                 {
@@ -732,7 +730,7 @@
             ],
             "survey_date": "2003-08-03",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "[479] Kasztanowa Kastanienhohle",
@@ -748,7 +746,6 @@
             ],
             "declination": 1.76,
             "discovery_date": "2003-08-03",
-            "format": "DMMDLRUDLADN",
             "name": "SYFONY",
             "shots": [
                 {
@@ -799,7 +796,7 @@
             ],
             "survey_date": "2003-08-03",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "[479] Kasztanowa Kastanienhohle",
@@ -815,7 +812,6 @@
             ],
             "declination": 1.76,
             "discovery_date": "2003-08-03",
-            "format": "DMMDLRUDLADN",
             "name": "DO",
             "shots": [
                 {
@@ -941,7 +937,7 @@
             ],
             "survey_date": "2003-08-03",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "[479] Kasztanowa Kastanienhohle",
@@ -957,7 +953,6 @@
             ],
             "declination": 1.76,
             "discovery_date": "2003-07-31",
-            "format": "DMMDLRUDLADN",
             "name": "PRZEZ",
             "shots": [
                 {
@@ -1278,7 +1273,7 @@
             ],
             "survey_date": "2003-07-31",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "[479] Kasztanowa Kastanienhohle",
@@ -1294,7 +1289,6 @@
             ],
             "declination": 1.76,
             "discovery_date": "2003-07-31",
-            "format": "DMMDLRUDLADN",
             "name": "OD",
             "shots": [
                 {
@@ -1600,7 +1594,7 @@
             ],
             "survey_date": "2003-07-31",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "[479] Kasztanowa Kastanienhohle",
@@ -1616,7 +1610,6 @@
             ],
             "declination": 1.76,
             "discovery_date": "2003-07-31",
-            "format": "DMMDLRUDLADN",
             "name": "MEANDER",
             "shots": [
                 {
@@ -1907,7 +1900,7 @@
             ],
             "survey_date": "2003-07-31",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "[479] Kasztanowa Kastanienhohle",
@@ -1923,7 +1916,6 @@
             ],
             "declination": 1.76,
             "discovery_date": "2003-08-03",
-            "format": "DMMDLRUDLADN",
             "name": "KORYTARZ",
             "shots": [
                 {
@@ -2049,7 +2041,7 @@
             ],
             "survey_date": "2003-08-03",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "[479] Kasztanowa Kastanienhohle",
@@ -2065,7 +2057,6 @@
             ],
             "declination": 1.76,
             "discovery_date": "2003-08-03",
-            "format": "DMMDLRUDLADN",
             "name": "OBEJ\u0153CIE",
             "shots": [
                 {
@@ -2191,7 +2182,7 @@
             ],
             "survey_date": "2003-08-03",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "[479] Kasztanowa Kastanienhohle",
@@ -2207,7 +2198,6 @@
             ],
             "declination": 1.76,
             "discovery_date": "2003-08-03",
-            "format": "DMMDLRUDLADN",
             "name": "CI\u00b9G",
             "shots": [
                 {
@@ -2828,7 +2818,7 @@
             ],
             "survey_date": "2003-08-03",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "[479] Kasztanowa Kastanienhohle",
@@ -2844,7 +2834,6 @@
             ],
             "declination": 1.67,
             "discovery_date": "2002-08-19",
-            "format": "DMMDLRUDLADN",
             "name": "BOK",
             "shots": [
                 {
@@ -2895,7 +2884,7 @@
             ],
             "survey_date": "2002-08-19",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "[479] Kasztanowa Kastanienhohle",
@@ -2911,7 +2900,6 @@
             ],
             "declination": 1.67,
             "discovery_date": "2002-08-19",
-            "format": "DMMDLRUDLADN",
             "name": "POMIAR",
             "shots": [
                 {
@@ -3022,7 +3010,7 @@
             ],
             "survey_date": "2002-08-19",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "[479] Kasztanowa Kastanienhohle",
@@ -3038,7 +3026,6 @@
             ],
             "declination": 1.67,
             "discovery_date": "2002-08-19",
-            "format": "DMMDLRUDLADN",
             "name": "KASZTANOWA",
             "shots": [
                 {
@@ -3314,7 +3301,7 @@
             ],
             "survey_date": "2002-08-19",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "[479] Kasztanowa Kastanienhohle",
@@ -3330,7 +3317,6 @@
             ],
             "declination": 1.67,
             "discovery_date": "2002-08-19",
-            "format": "DMMDLRUDLADN",
             "name": "DAREK",
             "shots": [
                 {
@@ -3531,7 +3517,7 @@
             ],
             "survey_date": "2002-08-19",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

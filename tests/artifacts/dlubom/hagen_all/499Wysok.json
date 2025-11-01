@@ -14,7 +14,6 @@
             ],
             "declination": 2.39,
             "discovery_date": "2009-08-28",
-            "format": "DMMDLRUDLADN",
             "name": "WYSDOL",
             "shots": [
                 {
@@ -155,7 +154,7 @@
             ],
             "survey_date": "2009-08-28",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "[499] Wysoka Z27 Hoher Schacht",
@@ -171,7 +170,6 @@
             ],
             "declination": 2.39,
             "discovery_date": "2009-08-15",
-            "format": "DMMDLRUDLADN",
             "name": "WYSOKA",
             "shots": [
                 {
@@ -387,7 +385,7 @@
             ],
             "survey_date": "2009-08-15",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

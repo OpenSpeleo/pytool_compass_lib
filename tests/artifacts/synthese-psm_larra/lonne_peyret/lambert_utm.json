@@ -14,7 +14,6 @@
             ],
             "declination": -3.68,
             "discovery_date": "2009-09-12",
-            "format": "DMMDUDRLLADN",
             "name": "Lambert_Square",
             "shots": [
                 {
@@ -472,7 +471,7 @@
             "survey_team": [
                 "Alex"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "UTM_Square",
@@ -488,7 +487,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2009-09-12",
-            "format": "DMDDUDRLLAaDdNF",
             "name": "UTM_Square",
             "shots": [
                 {
@@ -616,7 +614,7 @@
             "survey_team": [
                 "PdB"
             ],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

@@ -14,7 +14,6 @@
             ],
             "declination": 2.18,
             "discovery_date": "2007-08-20",
-            "format": "DMMDLRUDLADN",
             "name": "PLYNACYCH",
             "shots": [
                 {
@@ -155,7 +154,7 @@
             ],
             "survey_date": "2007-08-20",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

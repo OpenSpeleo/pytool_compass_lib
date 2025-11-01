@@ -14,7 +14,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2020-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "Z510.Z510",
             "shots": [
                 {
@@ -369,7 +368,7 @@
                 "Alexandre Pont",
                 "Olivier Venaut"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre Z510",
@@ -385,7 +384,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2020-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "Z510.Z510",
             "shots": [
                 {
@@ -919,7 +917,7 @@
                 "Bastien Courtier",
                 "Philippe Monteil"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre Z510",
@@ -935,7 +933,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2022-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "Z510.Z510",
             "shots": [
                 {
@@ -1469,7 +1466,7 @@
                 "Anouk Darne",
                 "Philippe Monteil"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre Z510",
@@ -1485,7 +1482,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2021-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "Z510.Z510",
             "shots": [
                 {
@@ -3280,7 +3276,7 @@
                 "Emma Pont",
                 "Olivier Venaut"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre Z510",
@@ -3296,7 +3292,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2024-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "Z510.Z510",
             "shots": [
                 {
@@ -7385,7 +7380,7 @@
                 "Bertrand Hamm",
                 "Emma Pont"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Gouffre Z510",
@@ -7401,7 +7396,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2023-01-01",
-            "format": "DMMDUDRLLAaDdNF",
             "name": "Z510.Z510",
             "shots": [
                 {
@@ -8686,7 +8680,7 @@
                 "Alexandre Pont",
                 "Janet Saumet"
             ],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

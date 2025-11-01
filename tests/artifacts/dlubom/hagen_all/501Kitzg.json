@@ -14,7 +14,6 @@
             ],
             "declination": 2.9,
             "discovery_date": "2013-08-08",
-            "format": "DMMDLRUDLADN",
             "name": "2013-08-08",
             "shots": [
                 {
@@ -530,7 +529,7 @@
             ],
             "survey_date": "2013-08-08",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "[501] Kitzgrabenwasserschacht",
@@ -546,7 +545,6 @@
             ],
             "declination": 2.77,
             "discovery_date": "2012-08-13",
-            "format": "DMMDLRUDLADN",
             "name": "2012-08-13",
             "shots": [
                 {
@@ -672,7 +670,7 @@
             ],
             "survey_date": "2012-08-13",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "[501] Kitzgrabenwasserschacht",
@@ -688,7 +686,6 @@
             ],
             "declination": 2.77,
             "discovery_date": "2012-08-13",
-            "format": "DMMDLRUDLADN",
             "name": "2012-08-13",
             "shots": [
                 {
@@ -934,7 +931,7 @@
             ],
             "survey_date": "2012-08-13",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "[501] Kitzgrabenwasserschacht",
@@ -950,7 +947,6 @@
             ],
             "declination": 2.64,
             "discovery_date": "2011-08-11",
-            "format": "DMMDLRUDLADN",
             "name": "KITZGRABENWASSERSCHACHT",
             "shots": [
                 {
@@ -1316,7 +1312,7 @@
             ],
             "survey_date": "2011-08-11",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

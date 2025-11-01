@@ -14,7 +14,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "1985-02-17",
-            "format": "DDDDUDLRLADN",
             "name": "0??",
             "shots": [
                 {
@@ -1674,7 +1673,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "1986-11-25",
-            "format": "DDDDUDLRLADN",
             "name": "C",
             "shots": [
                 {
@@ -1954,7 +1952,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "1986-11-26",
-            "format": "DDDDUDLRLADN",
             "name": "E",
             "shots": [
                 {
@@ -2054,7 +2051,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "1986-01-26",
-            "format": "DDDDUDLRLADN",
             "name": "3??",
             "shots": [
                 {

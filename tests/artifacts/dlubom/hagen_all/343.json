@@ -14,7 +14,6 @@
             ],
             "declination": 2.51,
             "discovery_date": "2010-07-28",
-            "format": "DMMDLRUDLADN",
             "name": "343",
             "shots": [
                 {
@@ -65,7 +64,7 @@
             ],
             "survey_date": "2010-07-28",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

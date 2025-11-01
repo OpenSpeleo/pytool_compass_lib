@@ -3,6 +3,7 @@ from __future__ import annotations
 import datetime
 import json
 import math
+from io import TextIOWrapper
 from pathlib import Path
 from typing import TYPE_CHECKING
 from typing import Annotated
@@ -16,6 +17,7 @@ from pydantic import PastDate
 from pydantic import field_validator
 from pydantic import model_validator
 
+from compass_lib.constants import COMPASS_END_OF_FILE
 from compass_lib.constants import COMPASS_SECTION_SEPARATOR
 from compass_lib.encoding import EnhancedJSONEncoder
 from compass_lib.enums import ShotFlag
@@ -125,6 +127,25 @@ class SurveyShot(BaseModel):
         # Sort alphabetically & remove duplicates for consistency
         return "".join(sorted(set(chars)))
 
+    def export_to_dat(self, fp: TextIOWrapper) -> None:
+        fp.write(f"{self.from_: >12} ")
+        fp.write(f"{self.to: >12} ")
+        fp.write(f"{self.length:8.2f} ")
+        fp.write(f"{self.azimuth:8.2f} ")
+        fp.write(f"{self.inclination:8.3f} ")
+        fp.write(f"{left if (left := self.left) else -9999.0:8.2f} ")
+        fp.write(f"{up if (up := self.up) else -9999.0:8.2f} ")
+        fp.write(f"{down if (down := self.down) else -9999.0:8.2f} ")
+        fp.write(f"{right if (right := self.right) else -9999.0:8.2f} ")
+        fp.write(f"{azm2 if (azm2 := self.azimuth2) else -9999.0:8.2f} ")
+        fp.write(f"{inc2 if (inc2 := self.inclination2) else -9999.0:8.2f} ")
+        if self.flags is not None and self.flags != "":
+            escaped_start_token = str(ShotFlag.__start_token__).replace("\\", "")
+            fp.write(f" {escaped_start_token}{self.flags}{ShotFlag.__end_token__}")
+        if self.comment is not None:
+            fp.write(f" {self.comment}")
+        fp.write("\n")
+
     # ======================== VALIDATOR UTILS ======================== #
 
     # @classmethod
@@ -177,8 +198,8 @@ class SurveySection(BaseModel):
     discovery_date: PastDate | None = None
     declination: Annotated[float, Field(..., ge=-90.0, le=90.0)]
 
-    format: str = "DDDDUDLRLADN"
-    unit: Annotated[str, Field(pattern=r"^(feet|meters)$")] = "feet"
+    format: Annotated[str, Field(exclude=True, min_length=11, max_length=15)]
+    unit: Annotated[str, Field(pattern=r"^(feet|meters)$")]
 
     survey_team: Annotated[list[str], Field(min_length=0)]
 
@@ -193,6 +214,173 @@ class SurveySection(BaseModel):
             v = v.split(",")
 
         return [name.strip() for name in v if name.strip()]
+
+    @field_validator("format", mode="before")
+    @classmethod
+    def validate_format(cls, v: str | None) -> str:
+        if v is None:
+            return "DDDDLUDLRLAD"
+
+        return v
+
+    @property
+    def survey_format(self) -> str:
+        # File Format (Line 5). For backward compatibility, this item is optional.
+        # This field specifies the format of the original survey notebook. Since Compass
+        # converts the file to fixed format, this information is used by programs like
+        # the editor to display and edit the data in original form. The field begins
+        # with the string: "FORMAT: " followed by 11, 12 or 13 upper case alphabetic
+        # characters. Each character specifies a particular part of the format.
+
+        # Compatibility Issues. Over time, the Compass Format string has changed to
+        # accommodate more format information. For backward compatibility, Compass can
+        # read all previous versions of the format. Here is detailed information about
+        # different versions of the Format strings:
+
+        # (U = Units, D = Dimension Order, S = Shot Order, B = Backsight Info, L = LRUD association)  # noqa: E501
+
+        # 11-Character Format. The earliest version of the string had 11 characters
+        # like this: UUUUDDDDSSS
+
+        # 12-Character Format. The next version had 12 characters, adding Backsight
+        # information: UUUUDDDDSSSB
+
+        # 13-Character Format. The next version had 13 characters, adding information
+        # about the LRUD associations: UUUUDDDDSSSBL
+
+        # 15-Character Format. Finally, the current version has 15 characters, adding
+        # backsights to order information: UUUUDDDDSSSSSBL
+
+        # ---------------------------------------------------------------------------- #
+        #
+        # Here is a list of the format items:
+
+        # XIV.	Backsight: B=Redundant, N or empty=No Redundant Backsights.
+        # XV.	LRUD Association: F=From Station, T=To Station
+
+        cformat = ""
+
+        # I.	Bearing Units: D = Degrees, Q = quads, R = Grads
+        cformat += "D"
+
+        # II.	Length Units: D = Decimal Feet, I = Feet and Inches M = Meters
+        cformat += "D" if self.unit == "feet" else "M"
+
+        # III.	Passage Units: Same as length
+        cformat += "D" if self.unit == "feet" else "M"
+
+        # IV.	Inclination Units:
+        #         - D = Degrees
+        #         - G = Percent Grade
+        #         - M = Degrees and Minutes
+        #         - R = Grads
+        #         - W = Depth Gauge
+        cformat += "D"
+
+        # V.	Passage Dimension Order: U = Up, D = Down, R = Right L = Left
+        cformat += "L"
+        # VI.	Passage Dimension Order: U = Up, D = Down, R = Right L = Left
+        # cformat += "R"
+        cformat += "U"
+        # VII.	Passage Dimension Order: U = Up, D = Down, R = Right L = Left
+        # cformat += "U"
+        cformat += "D"
+        # VIII.	Passage Dimension Order: U = Up, D = Down, R = Right L = Left
+        # cformat += "D"
+        cformat += "R"
+
+        # IX.	Shot Item Order:
+        #         - L = Length
+        #         - A = Azimuth
+        #         - D = Inclination
+        #         - a = Back Azimuth
+        #         - d = Back Inclination
+        cformat += "L"
+
+        # X.	Shot Item Order:
+        #         - L = Length
+        #         - A = Azimuth
+        #         - D = Inclination
+        #         - a = Back Azimuth
+        #         - d = Back Inclination
+        cformat += "A"
+
+        # XI.	Shot Item Order:
+        #         - L = Length
+        #         - A = Azimuth
+        #         - D = Inclination
+        #         - a = Back Azimuth
+        #         - d = Back Inclination
+        cformat += "D"
+
+        # XII.	Shot Item Order:
+        #         - L = Length
+        #         - A = Azimuth
+        #         - D = Inclination
+        #         - a = Back Azimuth
+        #         - d = Back Inclination
+        #         - B = Redundant
+        #         - N or empty = No Redundant Backsights
+        cformat += "N"
+
+        # XIII.	Shot Item Order:
+        #         - L = Length
+        #         - A = Azimuth
+        #         - D = Inclination
+        #         - a = Back Azimuth
+        #         - d = Back Inclination
+        #         - B = Redundant
+        #         - N or empty = No Redundant Backsights
+        cformat += "N"
+
+        return cformat
+
+    def export_to_dat(self, fp: TextIOWrapper) -> None:
+        fp.write(f"{self.cave_name}\n")
+        fp.write(f"SURVEY NAME: {self.name}\n")
+        fp.write(
+            "".join(
+                (
+                    "SURVEY DATE: ",
+                    self.survey_date.strftime("%m %-d %Y")
+                    if self.survey_date
+                    else "None",
+                    " ",
+                )
+            )
+        )
+        fp.write(f"COMMENT:{self.comment}\n")
+        fp.write(f"SURVEY TEAM:\n{', '.join(self.survey_team)}\n")
+        fp.write(f"DECLINATION: {self.declination:>7.02f}  ")
+        fp.write(f"FORMAT: {self.survey_format}  ")
+        fp.write(
+            f"CORRECTIONS:  {' '.join(f'{nbr:.02f}' for nbr in self.correction)}  "
+        )
+        fp.write(
+            f"CORRECTIONS2:  {' '.join(f'{nbr:.02f}' for nbr in self.correction2)}  "
+        )
+        fp.write(
+            "".join(
+                (
+                    "DISCOVERY: ",
+                    self.discovery_date.strftime("%m %-d %Y")
+                    if self.discovery_date
+                    else "None",
+                    "\n\n",
+                )
+            )
+        )
+
+        # Shots - Header
+        fp.write("        FROM           TO   LENGTH  BEARING      INC")
+        fp.write("     LEFT       UP     DOWN    RIGHT")
+        fp.write("     AZM2     INC2   FLAGS  COMMENTS\n\n")
+
+        for shot in self.shots:
+            shot.export_to_dat(fp)
+
+        # End of Section - Form_feed: https://www.ascii-code.com/12
+        fp.write(f"{COMPASS_SECTION_SEPARATOR}\n")
 
 
 class Survey(BaseModel):
@@ -211,3 +399,10 @@ class Survey(BaseModel):
                 file.write(json_str)
 
         return json_str
+
+    def export_to_dat(self, fp: TextIOWrapper) -> None:
+        for section in self.sections:
+            section.export_to_dat(fp)
+
+        # End of File - Substitute: https://www.ascii-code.com/26
+        fp.write(f"{COMPASS_END_OF_FILE}\n")

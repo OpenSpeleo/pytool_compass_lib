@@ -14,7 +14,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2004-07-18",
-            "format": "DMMDLRUDADLN",
             "name": "POP",
             "shots": [
                 {
@@ -382,7 +381,7 @@
             "survey_team": [
                 "?"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Rile Brezno",
@@ -398,7 +397,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2004-07-18",
-            "format": "DMMDLRUDADLN",
             "name": "KAK",
             "shots": [
                 {
@@ -586,7 +584,7 @@
             "survey_team": [
                 "?"
             ],
-            "unit": "feet"
+            "unit": "meters"
         },
         {
             "cave_name": "Rile Brezno",
@@ -602,7 +600,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2005-10-17",
-            "format": "DMMDLRUDLDAN",
             "name": "BV",
             "shots": [
                 {
@@ -1075,7 +1072,7 @@
             "survey_team": [
                 "?"
             ],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

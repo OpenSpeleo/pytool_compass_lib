@@ -14,7 +14,6 @@
             ],
             "declination": 1.85,
             "discovery_date": "2004-08-21",
-            "format": "DMMDLRUDLADN",
             "name": "A4-3",
             "shots": [
                 {
@@ -110,7 +109,7 @@
             ],
             "survey_date": "2004-08-21",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

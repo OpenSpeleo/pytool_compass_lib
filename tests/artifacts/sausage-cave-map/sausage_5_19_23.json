@@ -14,7 +14,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2023-05-19",
-            "format": "DMMDLUDRLADN",
             "name": "Sausage_5_19_23",
             "shots": [
                 {
@@ -16269,7 +16268,7 @@
                 "Adrian Ballard",
                 "Michael Ketzner"
             ],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

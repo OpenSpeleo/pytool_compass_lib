@@ -14,7 +14,6 @@
             ],
             "declination": 2.39,
             "discovery_date": "2009-08-12",
-            "format": "DMMDLRUDLADN",
             "name": "PODKOSOWKA",
             "shots": [
                 {
@@ -695,7 +694,7 @@
             ],
             "survey_date": "2009-08-12",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }

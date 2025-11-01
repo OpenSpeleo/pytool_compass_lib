@@ -14,7 +14,6 @@
             ],
             "declination": 0.0,
             "discovery_date": "2018-12-17",
-            "format": "DMMDLRUDLADNT",
             "name": "???",
             "shots": [
                 {
@@ -2585,7 +2584,7 @@
             ],
             "survey_date": "2018-12-17",
             "survey_team": [],
-            "unit": "feet"
+            "unit": "meters"
         }
     ]
 }
