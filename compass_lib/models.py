@@ -3,11 +3,13 @@ from __future__ import annotations
 import datetime
 import json
 import math
-from io import TextIOWrapper
+import re
 from pathlib import Path
 from typing import TYPE_CHECKING
 from typing import Annotated
 from typing import Any
+from typing import Literal
+from typing import Self
 
 import pyIGRF14 as pyIGRF
 from pydantic import BaseModel
@@ -15,16 +17,23 @@ from pydantic import ConfigDict
 from pydantic import Field
 from pydantic import PastDate
 from pydantic import field_validator
-from pydantic import model_validator
 
 from compass_lib.constants import COMPASS_END_OF_FILE
 from compass_lib.constants import COMPASS_SECTION_SEPARATOR
 from compass_lib.encoding import EnhancedJSONEncoder
+from compass_lib.enums import LRUD
+from compass_lib.enums import Backsight
+from compass_lib.enums import BearingUnits
+from compass_lib.enums import InclinationUnits
+from compass_lib.enums import LengthUnits
+from compass_lib.enums import LRUDAssociation
 from compass_lib.enums import ShotFlag
+from compass_lib.enums import ShotItem
 from compass_lib.utils import calc_inclination
 from compass_lib.utils import decimal_year
 
 if TYPE_CHECKING:
+    from io import TextIOWrapper
     from typing import Any
 
 
@@ -184,6 +193,74 @@ class SurveyShot(BaseModel):
     #     return value
 
 
+class CompassFormat(BaseModel):
+    """Parses and represents the Compass FORMAT string."""
+
+    bearing_units: BearingUnits
+    length_units: LengthUnits
+    passage_units: LengthUnits
+    inclination_units: InclinationUnits
+    lrud_order: list[LRUD]
+    shot_order: list[ShotItem]
+    backsight: Backsight | None = None
+    lrud_association: LRUDAssociation | None = None
+    version: Annotated[
+        Literal[11, 12, 13, 15],
+        Field(exclude=True),
+    ]
+
+    @classmethod
+    def from_string(cls, fmt: str) -> Self:
+        """Create a Format model from a FORMAT string."""
+        if not re.match(r"^[A-Za-z]{11,15}$", fmt):
+            raise ValueError(
+                f"The value received is not a valid Compass Format: `{fmt}`"
+            )
+
+        version = 11
+
+        # Assign components
+        bearing = BearingUnits(fmt[0])
+        length = LengthUnits(fmt[1])
+        passage = LengthUnits(fmt[2])
+        inclination = InclinationUnits(fmt[3])
+        lrud_order = [LRUD(c) for c in fmt[4:8]]
+        shot_order = [ShotItem(c) for c in fmt[8:11]]
+
+        backsight = None
+        lrud_assoc = None
+
+        match len(fmt):
+            case 11:
+                pass
+            case 12:
+                version = 12
+                backsight = Backsight(fmt[11])
+            case 13:
+                version = 13
+                backsight = Backsight(fmt[11])
+                lrud_assoc = LRUDAssociation(fmt[12])
+            case 15:
+                version = 15
+                shot_order.extend([ShotItem(fmt[idx]) for idx in [11, 12]])
+                backsight = Backsight(fmt[13])
+                lrud_assoc = LRUDAssociation(fmt[14])
+            case _:
+                raise ValueError(f"Invalid format length received: {len(fmt)}")
+
+        return cls(
+            bearing_units=bearing,
+            length_units=length,
+            passage_units=passage,
+            inclination_units=inclination,
+            lrud_order=lrud_order,
+            shot_order=shot_order,
+            backsight=backsight,
+            lrud_association=lrud_assoc,
+            version=version,
+        )
+
+
 class SurveySection(BaseModel):
     cave_name: str
     name: Annotated[str, Field(min_length=1, max_length=256)]
@@ -198,14 +275,21 @@ class SurveySection(BaseModel):
     discovery_date: PastDate | None = None
     declination: Annotated[float, Field(..., ge=-90.0, le=90.0)]
 
-    format: Annotated[str, Field(exclude=True, min_length=11, max_length=15)]
-    unit: Annotated[str, Field(pattern=r"^(feet|meters)$")]
+    format: Annotated[CompassFormat | None, Field(exclude=True)] = None
+    unit: Literal["feet", "meters"]
 
     survey_team: Annotated[list[str], Field(min_length=0)]
 
     shots: Annotated[list[SurveyShot], Field(min_length=1)]
 
     model_config = ConfigDict(extra="forbid")
+
+    @field_validator("format", mode="before")
+    @classmethod
+    def parse_format(cls, v: Any) -> CompassFormat | Any:
+        if isinstance(v, str):
+            return CompassFormat.from_string(v)
+        return v
 
     @field_validator("survey_team", mode="before")
     @classmethod
@@ -214,14 +298,6 @@ class SurveySection(BaseModel):
             v = v.split(",")
 
         return [name.strip() for name in v if name.strip()]
-
-    @field_validator("format", mode="before")
-    @classmethod
-    def validate_format(cls, v: str | None) -> str:
-        if v is None:
-            return "DDDDLUDLRLAD"
-
-        return v
 
     @property
     def survey_format(self) -> str:
@@ -319,9 +395,7 @@ class SurveySection(BaseModel):
         #         - D = Inclination
         #         - a = Back Azimuth
         #         - d = Back Inclination
-        #         - B = Redundant
-        #         - N or empty = No Redundant Backsights
-        cformat += "N"
+        cformat += "a"
 
         # XIII.	Shot Item Order:
         #         - L = Length
@@ -331,7 +405,13 @@ class SurveySection(BaseModel):
         #         - d = Back Inclination
         #         - B = Redundant
         #         - N or empty = No Redundant Backsights
+        cformat += "d"
+
+        # XIV.	Backsight: B=Redundant, N or empty=No Redundant Backsights.
         cformat += "N"
+
+        # XV.	LRUD Association: F=From Station, T=To Station
+        cformat += "F"
 
         return cformat
 

@@ -10,7 +10,7 @@ from typing import Any
 
 class EnhancedJSONEncoder(json.JSONEncoder):
     def default(self, o: Any) -> Any:
-        from compass_lib.parser import ShotFlag  # noqa: PLC0415
+        from compass_lib.models import ShotFlag  # noqa: PLC0415
 
         match o:
             case datetime.date():

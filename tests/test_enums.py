@@ -6,13 +6,13 @@ from pathlib import Path
 import pytest
 
 from compass_lib.enums import LRUD
-from compass_lib.enums import AzimuthUnits
+from compass_lib.enums import BearingUnits
 from compass_lib.enums import CompassFileType
 from compass_lib.enums import InclinationUnits
 from compass_lib.enums import LengthUnits
+from compass_lib.enums import LRUDAssociation
 from compass_lib.enums import ShotFlag
 from compass_lib.enums import ShotItem
-from compass_lib.enums import StationSide
 
 
 class TestCustomEnum(unittest.TestCase):
@@ -20,8 +20,8 @@ class TestCustomEnum(unittest.TestCase):
 
     def test_reverse(self):
         """Test the reverse method for returning enum by value."""
-        result = AzimuthUnits.reverse("D")
-        assert result == AzimuthUnits.DEGREES
+        result = BearingUnits.reverse("D")
+        assert result == BearingUnits.DEGREES
 
         result = InclinationUnits.reverse("G")
         assert result == InclinationUnits.PERCENT_GRADE
@@ -53,14 +53,14 @@ class TestCompassFileType(unittest.TestCase):
             CompassFileType.from_path("invalid.file")
 
 
-class TestAzimuthUnits(unittest.TestCase):
-    """Tests for the AzimuthUnits enum."""
+class TestBearingUnits(unittest.TestCase):
+    """Tests for the BearingUnits enum."""
 
     def test_enum_values(self):
         """Test enum values for correctness."""
-        assert AzimuthUnits.DEGREES.value == "D"
-        assert AzimuthUnits.QUADS.value == "Q"
-        assert AzimuthUnits.GRADIANS.value == "G"
+        assert BearingUnits.DEGREES.value == "D"
+        assert BearingUnits.QUADS.value == "Q"
+        assert BearingUnits.GRADIANS.value == "R"
 
 
 class TestInclinationUnits(unittest.TestCase):
@@ -101,13 +101,13 @@ class TestShotItem(unittest.TestCase):
         assert ShotItem.BACKSIGHT_INCLINATION.value == "d"
 
 
-class TestStationSide(unittest.TestCase):
-    """Tests for the StationSide enum."""
+class TestLRUDAssociation(unittest.TestCase):
+    """Tests for the LRUDAssociation enum."""
 
     def test_enum_values(self):
         """Test enum values for correctness."""
-        assert StationSide.FROM.value == "F"
-        assert StationSide.TO.value == "T"
+        assert LRUDAssociation.FROM_STATION.value == "F"
+        assert LRUDAssociation.TO_STATION.value == "T"
 
 
 class TestShotFlag(unittest.TestCase):

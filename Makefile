@@ -67,7 +67,7 @@ DATA_DIRS := \
 	tests/artifacts/synthese-psm_larra/rabbit \
 	tests/artifacts/synthese-psm_larra/z510
 
-test-regen-json:  ## rerun the json conversion to JSON of the test artifacts
+regen-test-json:  ## rerun the json conversion to JSON of the test artifacts
 	@for dir in $(DATA_DIRS); do \
 		shopt -s nocaseglob; \
 		for file in $$dir/*.dat; do \
