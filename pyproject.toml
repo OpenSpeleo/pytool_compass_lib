@@ -8,7 +8,7 @@ package = true
 [dependency-groups]
 dev = [
     "check-manifest",
-    "pre-commit>=4.1,<4.5",
+    "pre-commit>=4.1,<4.6",
     "ruff>=0.14,<0.15",
     "flit>=3.12,<4",
     "wheel>=0.45",
