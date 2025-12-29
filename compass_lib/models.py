@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import datetime
 import json
-import math
 import re
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -29,7 +28,6 @@ from compass_lib.enums import LengthUnits
 from compass_lib.enums import LRUDAssociation
 from compass_lib.enums import ShotFlag
 from compass_lib.enums import ShotItem
-from compass_lib.utils import calc_inclination
 from compass_lib.utils import decimal_year
 
 if TYPE_CHECKING:
