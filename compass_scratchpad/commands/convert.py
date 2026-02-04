@@ -7,19 +7,14 @@ and JSON format using Pydantic's built-in serialization.
 
 import argparse
 import json
-import sys
 from pathlib import Path
 
 from compass_scratchpad.constants import COMPASS_ENCODING
-from compass_scratchpad.constants import EXT_DAT
-from compass_scratchpad.constants import EXT_JSON
-from compass_scratchpad.constants import EXT_MAK
-from compass_scratchpad.constants import FORMAT_COMPASS_DAT
-from compass_scratchpad.constants import FORMAT_COMPASS_MAK
-from compass_scratchpad.constants import FORMAT_COMPASS_PROJECT
 from compass_scratchpad.constants import JSON_ENCODING
 from compass_scratchpad.enums import CompassFileType
+from compass_scratchpad.enums import FileExtension
 from compass_scratchpad.enums import FileFormat
+from compass_scratchpad.enums import FormatIdentifier
 from compass_scratchpad.io import load_project
 from compass_scratchpad.io import read_dat_file
 from compass_scratchpad.project.format import format_mak_file
@@ -45,33 +40,33 @@ def detect_file_format(
         - format_type: FileFormat.COMPASS or FileFormat.JSON
         - file_type: CompassFileType.DAT or CompassFileType.MAK (or None)
     """
-    suffix = path.suffix.lower()
 
-    if suffix == EXT_DAT:
-        return (FileFormat.COMPASS, CompassFileType.DAT)
-    if suffix == EXT_MAK:
-        return (FileFormat.COMPASS, CompassFileType.MAK)
-    if suffix == EXT_JSON:
-        # Read the file to detect format from content
-        try:
+    match f_ext := path.suffix.lower():
+        case FileExtension.DAT.value:
+            return (FileFormat.COMPASS, CompassFileType.DAT)
+
+        case FileExtension.MAK.value:
+            return (FileFormat.COMPASS, CompassFileType.MAK)
+
+        case FileExtension.JSON.value:
+            # Read the file to detect format from content
             content = path.read_text(encoding=JSON_ENCODING)
             if (
-                f'"format": "{FORMAT_COMPASS_DAT}"' in content
-                or f'"format":"{FORMAT_COMPASS_DAT}"' in content
+                f'"format": "{FormatIdentifier.COMPASS_DAT.value}"' in content
+                or f'"format":"{FormatIdentifier.COMPASS_DAT.value}"' in content
             ):
                 return (FileFormat.JSON, CompassFileType.DAT)
+
             if (
-                f'"format": "{FORMAT_COMPASS_MAK}"' in content
-                or f'"format":"{FORMAT_COMPASS_MAK}"' in content
-                or f'"format": "{FORMAT_COMPASS_PROJECT}"' in content
-                or f'"format":"{FORMAT_COMPASS_PROJECT}"' in content
+                f'"format": "{FormatIdentifier.COMPASS_MAK.value}"' in content
+                or f'"format":"{FormatIdentifier.COMPASS_MAK.value}"' in content
             ):
                 return (FileFormat.JSON, CompassFileType.MAK)
-        except Exception:
-            pass
-        return (FileFormat.JSON, None)
 
-    return (FileFormat.COMPASS, None)
+            raise ValueError(f"Unknown file type found inside json: `{f_ext}`")
+
+        case _:
+            raise ValueError(f"Unknown file extension: `{f_ext}`")
 
 
 def _convert(
@@ -130,7 +125,7 @@ def _convert(
             # Wrap in format envelope for DAT files
             envelope = {
                 "version": "1.0",
-                "format": FORMAT_COMPASS_DAT,
+                "format": FormatIdentifier.COMPASS_DAT.value,
                 "trips": json.loads(dat_file.model_dump_json(by_alias=True))["trips"],
             }
             result = json.dumps(envelope, indent=2, sort_keys=True)
@@ -229,12 +224,12 @@ Notes:
 
         if result is not None:
             # Print to stdout
-            print(result, end="")
+            pass
 
         # Print status to stderr if writing to file
         if parsed_args.output_file is not None:
-            source_format, file_type = detect_file_format(parsed_args.input_file)
-            target_format = (
+            source_format, _file_type = detect_file_format(parsed_args.input_file)
+            (
                 FileFormat(parsed_args.target_format)
                 if parsed_args.target_format
                 else (
@@ -243,20 +238,12 @@ Notes:
                     else FileFormat.COMPASS
                 )
             )
-            print(
-                f"Converted {parsed_args.input_file} ({source_format.value}) -> "
-                f"{parsed_args.output_file} ({target_format.value})",
-                file=sys.stderr,
-            )
 
-        return 0
+    except ConversionError:
+        return 1
+    except FileNotFoundError:
+        return 1
+    except Exception:  # noqa: BLE001
+        return 1
 
-    except ConversionError as e:
-        print(f"Error: {e}", file=sys.stderr)
-        return 1
-    except FileNotFoundError as e:
-        print(f"Error: {e}", file=sys.stderr)
-        return 1
-    except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
-        return 1
+    return 0

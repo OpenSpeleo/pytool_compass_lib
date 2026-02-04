@@ -8,13 +8,10 @@ This test module verifies end-to-end southern hemisphere functionality:
 4. Roundtrip parsing and formatting
 """
 
-from pathlib import Path
-
 import pytest
 
 from compass_scratchpad.enums import Datum
 from compass_scratchpad.models import UTMLocation
-from compass_scratchpad.project.format import format_directive
 from compass_scratchpad.project.format import format_project
 from compass_scratchpad.project.models import CompassMakFile
 from compass_scratchpad.project.models import DatumDirective
@@ -47,17 +44,17 @@ $-56;
         parser = CompassProjectParser()
         parsed = parser.parse_string_to_dict(southern_mak_content)
         mak_file = CompassMakFile.model_validate(parsed)
-        
+
         # Check location directive
         location = mak_file.location
         assert location is not None
         assert location.utm_zone == -56
         assert location.easting == 334000.0
         assert location.northing == 6252000.0
-        
+
         # Check UTM zone directive
         assert mak_file.utm_zone == -56
-        
+
         # Verify hemisphere is southern
         assert location.utm_zone < 0, "Negative zone indicates southern hemisphere"
 
@@ -76,10 +73,10 @@ $-56;
             UTMZoneDirective(utm_zone=-56),
             FileDirective(file="TestCave.DAT"),
         ]
-        
+
         mak_file = CompassMakFile(directives=directives)
         formatted = format_project(mak_file)
-        
+
         # Verify negative zone is formatted correctly
         assert "@334000.000,6252000.000,50.000,-56,-1.234;" in formatted
         assert "$-56;" in formatted
@@ -90,34 +87,49 @@ $-56;
         parser = CompassProjectParser()
         parsed = parser.parse_string_to_dict(southern_mak_content)
         mak_file = CompassMakFile.model_validate(parsed)
-        
+
         # Format
         formatted = format_project(mak_file)
-        
+
         # Parse again
         parsed2 = parser.parse_string_to_dict(formatted)
         mak_file2 = CompassMakFile.model_validate(parsed2)
-        
+
         # Verify zone is preserved
         assert mak_file2.utm_zone == -56
         assert mak_file2.location.utm_zone == -56
 
-    @pytest.mark.parametrize("zone", [
-        -1, -10, -20, -30, -40, -50, -60,  # Southern hemisphere
-        1, 10, 20, 30, 40, 50, 60,  # Northern hemisphere
-    ])
+    @pytest.mark.parametrize(
+        "zone",
+        [
+            -1,
+            -10,
+            -20,
+            -30,
+            -40,
+            -50,
+            -60,  # Southern hemisphere
+            1,
+            10,
+            20,
+            30,
+            40,
+            50,
+            60,  # Northern hemisphere
+        ],
+    )
     def test_parse_and_format_all_zones(self, zone):
         """Test parsing and formatting all valid zone numbers (both hemispheres)."""
-        mak_content = f"${ zone};"
-        
+        mak_content = f"${zone};"
+
         # Parse
         parser = CompassProjectParser()
         parsed = parser.parse_string_to_dict(mak_content)
         mak_file = CompassMakFile.model_validate(parsed)
-        
+
         # Verify
         assert mak_file.utm_zone == zone
-        
+
         # Format
         formatted = format_project(mak_file)
         assert f"${zone};" in formatted
@@ -136,9 +148,9 @@ class TestSouthernHemisphereCoordinates:
             zone=-56,
             datum=Datum.WGS_1984,
         )
-        
+
         lat, lon = loc.to_latlon()
-        
+
         # Sydney Opera House: -33.8568°S, 151.2153°E
         assert -34.0 < lat < -33.5
         assert 150.5 < lon < 152.0
@@ -154,9 +166,9 @@ class TestSouthernHemisphereCoordinates:
             zone=-55,
             datum=Datum.WGS_1984,
         )
-        
+
         lat, lon = loc.to_latlon()
-        
+
         # Melbourne: -37.8°S, 144.9°E
         assert -38.5 < lat < -37.0
         assert 144.0 < lon < 146.0
@@ -172,9 +184,9 @@ class TestSouthernHemisphereCoordinates:
             zone=-19,
             datum=Datum.WGS_1984,
         )
-        
+
         lat, lon = loc.to_latlon()
-        
+
         # Santiago: -33.4°S, -70.6°W
         assert -34.0 < lat < -32.0
         assert -71.5 < lon < -69.5
@@ -191,9 +203,9 @@ class TestSouthernHemisphereCoordinates:
             zone=-34,
             datum=Datum.WGS_1984,
         )
-        
+
         lat, lon = loc.to_latlon()
-        
+
         # Cape Town: -33.9°S, 18.4°E
         assert -34.5 < lat < -33.0
         assert 17.5 < lon < 19.5
@@ -210,7 +222,7 @@ class TestSouthernHemisphereCoordinates:
         )
         assert loc_north.is_northern_hemisphere is True
         assert loc_north.zone_number == 16
-        
+
         # Southern hemisphere
         loc_south = UTMLocation(
             easting=500000.0,
@@ -232,7 +244,7 @@ class TestSouthernHemisphereCoordinates:
             )
             assert loc_north.zone_number == zone
             assert loc_north.is_northern_hemisphere is True
-            
+
             loc_south = UTMLocation(
                 easting=500000.0,
                 northing=4000000.0,
@@ -258,7 +270,10 @@ class TestSouthernHemisphereValidation:
 
     def test_zone_beyond_60_not_allowed(self):
         """Test that zone > 60 is not allowed."""
-        with pytest.raises(ValueError):
+        with pytest.raises(
+            ValueError,
+            match=r".*Input should be less than or equal to 60.*",
+        ):
             UTMLocation(
                 easting=500000.0,
                 northing=4000000.0,
@@ -268,7 +283,10 @@ class TestSouthernHemisphereValidation:
 
     def test_zone_below_minus_60_not_allowed(self):
         """Test that zone < -60 is not allowed."""
-        with pytest.raises(ValueError):
+        with pytest.raises(
+            ValueError,
+            match=r".*Input should be greater than or equal to -60.*",
+        ):
             UTMLocation(
                 easting=500000.0,
                 northing=4000000.0,

@@ -11,6 +11,9 @@ This test module verifies:
 import pytest
 
 from compass_scratchpad.enums import Datum
+from compass_scratchpad.models import UTMLocation
+from compass_scratchpad.project.format import format_directive
+from compass_scratchpad.project.models import CompassMakFile
 from compass_scratchpad.project.models import DatumDirective
 from compass_scratchpad.project.parser import CompassProjectParser
 
@@ -45,9 +48,9 @@ class TestDatumEnum:
             "WGS 1972",
             "WGS 1984",
         ]
-        
+
         actual_datums = [datum.value for datum in Datum]
-        
+
         assert len(actual_datums) == len(expected_datums)
         for expected in expected_datums:
             assert expected in actual_datums, f"Missing datum: {expected}"
@@ -144,7 +147,7 @@ class TestDatumDirective:
         """Test string representation uses datum value."""
         directive = DatumDirective(datum=Datum.WGS_1984)
         assert str(directive) == "&WGS 1984;"
-        
+
         directive = DatumDirective(datum=Datum.NORTH_AMERICAN_1927)
         assert str(directive) == "&North American 1927;"
 
@@ -171,89 +174,103 @@ $16;
 #TestCave.DAT;
 """
 
-    @pytest.mark.parametrize("datum_value", [
-        "Adindan",
-        "Arc 1950",
-        "Arc 1960",
-        "Australian 1966",
-        "Australian 1984",
-        "Camp Area Astro",
-        "Cape",
-        "European 1950",
-        "European 1979",
-        "Geodetic 1949",
-        "Hong Kong 1963",
-        "Hu Tzu Shan",
-        "Indian",
-        "North American 1927",
-        "North American 1983",
-        "Oman",
-        "Ordnance Survey 1936",
-        "Pulkovo 1942",
-        "South American 1956",
-        "South American 1969",
-        "Tokyo",
-        "WGS 1972",
-        "WGS 1984",
-    ])
+    @pytest.mark.parametrize(
+        "datum_value",
+        [
+            "Adindan",
+            "Arc 1950",
+            "Arc 1960",
+            "Australian 1966",
+            "Australian 1984",
+            "Camp Area Astro",
+            "Cape",
+            "European 1950",
+            "European 1979",
+            "Geodetic 1949",
+            "Hong Kong 1963",
+            "Hu Tzu Shan",
+            "Indian",
+            "North American 1927",
+            "North American 1983",
+            "Oman",
+            "Ordnance Survey 1936",
+            "Pulkovo 1942",
+            "South American 1956",
+            "South American 1969",
+            "Tokyo",
+            "WGS 1972",
+            "WGS 1984",
+        ],
+    )
     def test_parse_mak_with_datum(self, mak_template, datum_value):
         """Test parsing MAK file with each datum value."""
         mak_content = mak_template.format(datum=datum_value)
         parser = CompassProjectParser()
         parsed = parser.parse_string_to_dict(mak_content)
-        
-        # Validate the parsed data
-        from compass_scratchpad.project.models import CompassMakFile
-        mak_file = CompassMakFile.model_validate(parsed)
-        
-        # Check that datum directives are present and correct
-        datum_directives = [d for d in mak_file.directives if hasattr(d, 'datum') and d.type == 'datum']
-        assert len(datum_directives) == 2, f"Expected 2 datum directives for {datum_value}"
-        
-        for directive in datum_directives:
-            assert isinstance(directive.datum, Datum), f"Datum should be enum for {datum_value}"
-            assert directive.datum.value == datum_value, f"Datum value mismatch for {datum_value}"
 
-    @pytest.mark.parametrize("datum_variant,expected_datum", [
-        ("north american 1927", Datum.NORTH_AMERICAN_1927),
-        ("NORTH AMERICAN 1927", Datum.NORTH_AMERICAN_1927),
-        ("North American 1927", Datum.NORTH_AMERICAN_1927),
-        ("wgs 1984", Datum.WGS_1984),
-        ("WGS 1984", Datum.WGS_1984),
-        ("  Arc 1950  ", Datum.ARC_1950),  # With whitespace
-    ])
-    def test_parse_mak_with_datum_variants(self, mak_template, datum_variant, expected_datum):
+        # Validate the parsed data
+
+        mak_file = CompassMakFile.model_validate(parsed)
+
+        # Check that datum directives are present and correct
+        datum_directives = [
+            d for d in mak_file.directives if hasattr(d, "datum") and d.type == "datum"
+        ]
+        assert len(datum_directives) == 2, (
+            f"Expected 2 datum directives for {datum_value}"
+        )
+
+        for directive in datum_directives:
+            assert isinstance(directive.datum, Datum), (
+                f"Datum should be enum for {datum_value}"
+            )
+            assert directive.datum.value == datum_value, (
+                f"Datum value mismatch for {datum_value}"
+            )
+
+    @pytest.mark.parametrize(
+        ("datum_variant", "expected_datum"),
+        [
+            ("north american 1927", Datum.NORTH_AMERICAN_1927),
+            ("NORTH AMERICAN 1927", Datum.NORTH_AMERICAN_1927),
+            ("North American 1927", Datum.NORTH_AMERICAN_1927),
+            ("wgs 1984", Datum.WGS_1984),
+            ("WGS 1984", Datum.WGS_1984),
+            ("  Arc 1950  ", Datum.ARC_1950),  # With whitespace
+        ],
+    )
+    def test_parse_mak_with_datum_variants(
+        self, mak_template, datum_variant, expected_datum
+    ):
         """Test parsing MAK file with different datum string variations."""
         mak_content = mak_template.format(datum=datum_variant)
         parser = CompassProjectParser()
         parsed = parser.parse_string_to_dict(mak_content)
-        
-        from compass_scratchpad.project.models import CompassMakFile
+
         mak_file = CompassMakFile.model_validate(parsed)
-        
+
         # Check that datum variations are normalized correctly
-        datum_directives = [d for d in mak_file.directives if hasattr(d, 'datum') and d.type == 'datum']
+        datum_directives = [
+            d for d in mak_file.directives if hasattr(d, "datum") and d.type == "datum"
+        ]
         assert len(datum_directives) == 2
-        
+
         for directive in datum_directives:
             assert directive.datum == expected_datum
 
     def test_roundtrip_datum_preservation(self):
         """Test that datum values are preserved in roundtrip parsing and formatting."""
-        from compass_scratchpad.project.format import format_directive
-        
         # Test roundtrip for each datum
         for datum in Datum:
             directive = DatumDirective(datum=datum)
             formatted = format_directive(directive)
-            
+
             # Parse the formatted string
             parser = CompassProjectParser()
             parsed = parser.parse_string_to_dict(formatted)
-            
-            from compass_scratchpad.project.models import CompassMakFile
+
             mak_file = CompassMakFile.model_validate(parsed)
-            
+
             # Verify the datum is preserved
             assert len(mak_file.directives) == 1
             assert isinstance(mak_file.directives[0], DatumDirective)
@@ -266,8 +283,7 @@ class TestUTMLocationWithDatum:
 
     def test_create_with_datum_enum(self):
         """Test creating UTMLocation with Datum enum."""
-        from compass_scratchpad.models import UTMLocation
-        
+
         location = UTMLocation(
             easting=500000.0,
             northing=4000000.0,
@@ -280,8 +296,7 @@ class TestUTMLocationWithDatum:
 
     def test_create_with_datum_string(self):
         """Test creating UTMLocation with datum string."""
-        from compass_scratchpad.models import UTMLocation
-        
+
         location = UTMLocation(
             easting=500000.0,
             northing=4000000.0,
@@ -294,8 +309,7 @@ class TestUTMLocationWithDatum:
 
     def test_create_with_datum_case_insensitive(self):
         """Test creating UTMLocation with case-insensitive datum name."""
-        from compass_scratchpad.models import UTMLocation
-        
+
         location = UTMLocation(
             easting=500000.0,
             northing=4000000.0,
@@ -308,8 +322,7 @@ class TestUTMLocationWithDatum:
 
     def test_create_with_none_datum(self):
         """Test creating UTMLocation with None datum."""
-        from compass_scratchpad.models import UTMLocation
-        
+
         location = UTMLocation(
             easting=500000.0,
             northing=4000000.0,
@@ -321,8 +334,6 @@ class TestUTMLocationWithDatum:
 
     def test_create_with_invalid_datum(self):
         """Test creating UTMLocation with invalid datum raises error."""
-        from compass_scratchpad.models import UTMLocation
-        
         with pytest.raises(ValueError, match="Unknown datum"):
             UTMLocation(
                 easting=500000.0,

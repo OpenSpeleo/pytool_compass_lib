@@ -117,9 +117,13 @@ class UTMLocation(BaseModel):
             ValueError: If zone is 0 or abs(zone) > 60
         """
         if v == 0:
-            raise ValueError("UTM zone cannot be 0. Use 1-60 for north, -1 to -60 for south.")
+            raise ValueError(
+                "UTM zone cannot be 0. Use 1-60 for north, -1 to -60 for south."
+            )
         if abs(v) > 60:
-            raise ValueError(f"UTM zone must be between -60 and 60 (excluding 0), got {v}")
+            raise ValueError(
+                f"UTM zone must be between -60 and 60 (excluding 0), got {v}"
+            )
         return v
 
     @field_validator("datum", mode="before")
@@ -173,12 +177,12 @@ class UTMLocation(BaseModel):
     def to_latlon(self) -> tuple[float, float]:
         """
         Convert this UTM location to GPS coordinates (latitude, longitude).
-        
+
         NOTE: This method takes the decision to exclusively use DATUM WGS 1984 for uniformity
         and ignore the datum from the MAK project file.
         This allows for a consistent and predictable conversion of UTM coordinates to GPS coordinates.
         And inter-operability with other software that uses WGS 1984 for GPS coordinates.
-        
+
         The hemisphere is determined by the sign of the zone:
         - Positive zone (1-60): Northern hemisphere
         - Negative zone (-1 to -60): Southern hemisphere
@@ -188,7 +192,7 @@ class UTMLocation(BaseModel):
 
         Returns:
             (lat, lon) in decimal degrees
-        """
+        """  # noqa: E501
 
         WGS_1984_EPSG = 4326
         geographic_crs = CRS.from_epsg(WGS_1984_EPSG)
@@ -198,7 +202,7 @@ class UTMLocation(BaseModel):
         # Note: pyproj requires positive zone number and hemisphere specified separately
         hemisphere = "+north" if self.is_northern_hemisphere else "+south"
         utm_crs = CRS.from_proj4(
-            f"+proj=utm +zone={self.zone_number} {hemisphere} +datum=WGS84 +units=m +no_defs"
+            f"+proj=utm +zone={self.zone_number} {hemisphere} +datum=WGS84 +units=m +no_defs"  # noqa: E501
         )
 
         transformer = Transformer.from_crs(

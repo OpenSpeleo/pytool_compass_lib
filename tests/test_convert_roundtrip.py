@@ -19,10 +19,9 @@ from deepdiff import DeepDiff
 from compass_scratchpad.commands.convert import ConversionError
 from compass_scratchpad.commands.convert import _convert
 from compass_scratchpad.commands.convert import detect_file_format
-from compass_scratchpad.constants import FORMAT_COMPASS_DAT
-from compass_scratchpad.constants import FORMAT_COMPASS_MAK
 from compass_scratchpad.enums import CompassFileType
 from compass_scratchpad.enums import FileFormat
+from compass_scratchpad.enums import FormatIdentifier
 from compass_scratchpad.geojson import convert_mak_to_geojson
 from compass_scratchpad.io import load_project
 from compass_scratchpad.io import read_dat_file
@@ -227,7 +226,7 @@ class TestBaselineConsistency:
         dat_file_obj = CompassDatFile(trips=trips)
         result = {
             "version": "1.0",
-            "format": FORMAT_COMPASS_DAT,
+            "format": FormatIdentifier.COMPASS_DAT.value,
             "trips": json.loads(dat_file_obj.model_dump_json(by_alias=True))["trips"],
         }
 
@@ -291,7 +290,7 @@ class TestConvertToStdout:
 
         assert result is not None
         assert isinstance(result, str)
-        assert f'"format": "{FORMAT_COMPASS_DAT}"' in result
+        assert f'"format": "{FormatIdentifier.COMPASS_DAT.value}"' in result
 
     @pytest.mark.parametrize("mak_path", ALL_MAK_FILES[:5])
     def test_mak_to_json_stdout(self, mak_path):
@@ -300,7 +299,7 @@ class TestConvertToStdout:
 
         assert result is not None
         assert isinstance(result, str)
-        assert f'"format": "{FORMAT_COMPASS_MAK}"' in result
+        assert f'"format": "{FormatIdentifier.COMPASS_MAK.value}"' in result
 
     @pytest.mark.parametrize("json_file", ALL_DAT_JSON_FILES[:5])
     def test_json_to_compass_stdout(self, json_file):
@@ -327,7 +326,7 @@ class TestAutoFormatDetection:
         result = _convert(dat_path, output_path=None)
 
         assert result is not None
-        assert f'"format": "{FORMAT_COMPASS_DAT}"' in result
+        assert f'"format": "{FormatIdentifier.COMPASS_DAT.value}"' in result
 
     @pytest.mark.parametrize("json_file", ALL_DAT_JSON_FILES[:5])
     def test_auto_format_json_to_compass(self, json_file):
@@ -427,7 +426,7 @@ class TestProjectLoading:
         project = load_project(mak_path)
 
         # Basic structure checks
-        assert project.format == FORMAT_COMPASS_MAK
+        assert project.format == FormatIdentifier.COMPASS_MAK.value
         assert len(project.directives) > 0
 
         # Check file directives have data loaded

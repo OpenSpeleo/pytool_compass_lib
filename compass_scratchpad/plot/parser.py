@@ -9,7 +9,6 @@ import re
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
-from typing import Optional
 
 from compass_scratchpad.constants import ASCII_ENCODING
 from compass_scratchpad.constants import NULL_LRUD_VALUES
@@ -145,16 +144,16 @@ class CompassPlotParser:
         commands: list[CompassPlotCommand] = []
 
         for line_num, line in enumerate(file_obj):
-            line = line.strip()
-            if not line:
+            _line = line.strip()
+            if not _line:
                 continue
 
             try:
-                command = self._parse_command(line, line_num)
+                command = self._parse_command(_line, line_num)
                 if command:
                     commands.append(command)
-            except Exception as e:
-                self._add_error(str(e), line, line_num)
+            except Exception as e:  # noqa: BLE001
+                self._add_error(str(e), _line, line_num)
 
         self.commands.extend(commands)
         return commands
@@ -169,25 +168,25 @@ class CompassPlotParser:
         commands: list[CompassPlotCommand] = []
 
         for line_num, line in enumerate(lines):
-            line = line.strip()
-            if not line:
+            _line = line.strip()
+            if not _line:
                 continue
 
             try:
-                command = self._parse_command(line, line_num)
+                command = self._parse_command(_line, line_num)
                 if command:
                     commands.append(command)
-            except Exception as e:
-                self._add_error(str(e), line, line_num)
+            except Exception as e:  # noqa: BLE001
+                self._add_error(str(e), _line, line_num)
 
         self.commands.extend(commands)
         return commands
 
-    def _parse_command(
+    def _parse_command(  # noqa: PLR0911
         self,
         line: str,
         line_num: int,
-    ) -> Optional[CompassPlotCommand]:
+    ) -> CompassPlotCommand | None:
         """Parse a single command line.
 
         Args:
@@ -230,7 +229,7 @@ class CompassPlotParser:
         text: str,
         line_num: int,
         field_name: str,
-    ) -> Optional[float]:
+    ) -> float | None:
         """Parse a number, returning None on failure."""
         text = text.strip()
         try:
@@ -244,7 +243,7 @@ class CompassPlotParser:
         text: str,
         line_num: int,
         field_name: str,
-    ) -> Optional[float]:
+    ) -> float | None:
         """Parse LRUD measurement.
 
         Returns None for missing data indicators (negative or 999/999.9).
@@ -264,7 +263,7 @@ class CompassPlotParser:
         parts: list[str],
         start_idx: int,
         line_num: int,
-    ) -> tuple[Optional[date], int]:
+    ) -> tuple[date | None, int]:
         """Parse date from parts (month day year).
 
         Returns (date, new_index) tuple.
@@ -298,7 +297,7 @@ class CompassPlotParser:
         cmd: str,
         rest: str,
         line_num: int,
-    ) -> Optional[DrawSurveyCommand]:
+    ) -> DrawSurveyCommand | None:
         """Parse M (move) or D (draw) command."""
         operation = DrawOperation.MOVE_TO if cmd == "M" else DrawOperation.LINE_TO
         parts = rest.split()
@@ -375,7 +374,7 @@ class CompassPlotParser:
         self,
         rest: str,
         line_num: int,
-    ) -> Optional[FeatureCommand]:
+    ) -> FeatureCommand | None:
         """Parse L (feature) command."""
         parts = rest.split()
 
@@ -429,7 +428,7 @@ class CompassPlotParser:
                 if idx < len(parts):
                     try:
                         command.value = Decimal(parts[idx])
-                    except Exception:
+                    except Exception:  # noqa: BLE001
                         self._add_error(
                             f"invalid value: {parts[idx]}",
                             parts[idx],
@@ -509,7 +508,7 @@ class CompassPlotParser:
                     idx += 1
                     command.max_value = Decimal(parts[idx])
                     idx += 1
-                except Exception:
+                except Exception:  # noqa: BLE001
                     self._add_error("invalid feature range", rest, line_num)
             else:
                 idx += 1
@@ -598,7 +597,7 @@ class CompassPlotParser:
         line_num: int,
     ) -> DatumCommand:
         """Parse O (datum) command."""
-        datum = rest.split()[0] if rest.split() else rest.strip()
+        datum = rest.split(maxsplit=1)[0] if rest.split() else rest.strip()
         return DatumCommand(datum=datum)
 
     def _parse_utm_zone(
@@ -607,5 +606,5 @@ class CompassPlotParser:
         line_num: int,
     ) -> UtmZoneCommand:
         """Parse G (UTM zone) command."""
-        utm_zone = rest.split()[0] if rest.split() else rest.strip()
+        utm_zone = rest.split(maxsplit=1)[0] if rest.split() else rest.strip()
         return UtmZoneCommand(utm_zone=utm_zone)

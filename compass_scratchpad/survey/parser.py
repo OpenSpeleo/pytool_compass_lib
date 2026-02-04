@@ -13,7 +13,6 @@ import re
 from datetime import date
 from pathlib import Path
 from typing import Any
-from typing import Optional
 
 from compass_scratchpad.constants import ASCII_ENCODING
 from compass_scratchpad.constants import MISSING_ANGLE_THRESHOLD
@@ -27,6 +26,7 @@ from compass_scratchpad.enums import Severity
 from compass_scratchpad.enums import ShotItem
 from compass_scratchpad.errors import CompassParseError
 from compass_scratchpad.errors import SourceLocation
+from compass_scratchpad.survey.models import CompassDatFile
 from compass_scratchpad.validation import days_in_month
 
 
@@ -120,7 +120,7 @@ class CompassSurveyParser:
             Dictionary with "trips" key containing list of trip dicts
         """
         self._source = str(path)
-        with open(path, encoding=ASCII_ENCODING, errors="replace") as f:
+        with path.open(mode="r", encoding=ASCII_ENCODING, errors="replace") as f:
             data = f.read()
         return self.parse_string_to_dict(data, str(path))
 
@@ -144,9 +144,9 @@ class CompassSurveyParser:
         # Split on form feed character
         sections = data.split("\f")
         for section in sections:
-            section = section.strip()
-            if section:
-                trip = self._parse_trip_to_dict(section)
+            _section = section.strip()
+            if _section:
+                trip = self._parse_trip_to_dict(_section)
                 if trip:
                     trips.append(trip)
 
@@ -167,7 +167,6 @@ class CompassSurveyParser:
         Returns:
             List of parsed trips
         """
-        from compass_scratchpad.survey.models import CompassDatFile
 
         data = self.parse_file_to_dict(path)
         dat_file = CompassDatFile.model_validate(data)
@@ -189,7 +188,6 @@ class CompassSurveyParser:
         Returns:
             List of parsed trips
         """
-        from compass_scratchpad.survey.models import CompassDatFile
 
         parsed = self.parse_string_to_dict(data, source)
         dat_file = CompassDatFile.model_validate(parsed)
@@ -210,7 +208,7 @@ class CompassSurveyParser:
             return text[:header_end].strip(), text[header_end:].strip()
         return text.strip(), ""
 
-    def _parse_trip_to_dict(self, text: str) -> Optional[dict[str, Any]]:
+    def _parse_trip_to_dict(self, text: str) -> dict[str, Any] | None:
         """Parse a single trip from text to dictionary.
 
         Args:
@@ -228,15 +226,14 @@ class CompassSurveyParser:
         shots: list[dict[str, Any]] = []
         if data_text:
             for line in self.EOL.split(data_text):
-                line = line.strip()
-                if line:
-                    shot = self._parse_shot_to_dict(line, header)
-                    if shot:
+                _line = line.strip()
+                if _line:
+                    if shot := self._parse_shot_to_dict(_line, header):
                         shots.append(shot)
 
         return {"header": header, "shots": shots}
 
-    def _parse_trip_header_to_dict(self, text: str) -> Optional[dict[str, Any]]:
+    def _parse_trip_header_to_dict(self, text: str) -> dict[str, Any] | None:
         """Parse trip header from text to dictionary.
 
         Args:
@@ -261,8 +258,17 @@ class CompassSurveyParser:
             "lrud_unit": LengthUnit.DECIMAL_FEET.value,
             "azimuth_unit": AzimuthUnit.DEGREES.value,
             "inclination_unit": InclinationUnit.DEGREES.value,
-            "lrud_order": [LrudItem.LEFT.value, LrudItem.RIGHT.value, LrudItem.UP.value, LrudItem.DOWN.value],
-            "shot_measurement_order": [ShotItem.LENGTH.value, ShotItem.FRONTSIGHT_AZIMUTH.value, ShotItem.FRONTSIGHT_INCLINATION.value],
+            "lrud_order": [
+                LrudItem.LEFT.value,
+                LrudItem.RIGHT.value,
+                LrudItem.UP.value,
+                LrudItem.DOWN.value,
+            ],
+            "shot_measurement_order": [
+                ShotItem.LENGTH.value,
+                ShotItem.FRONTSIGHT_AZIMUTH.value,
+                ShotItem.FRONTSIGHT_INCLINATION.value,
+            ],
             "has_backsights": True,
             "lrud_association": LrudAssociation.FROM.value,
             "length_correction": 0.0,
@@ -353,7 +359,7 @@ class CompassSurveyParser:
 
         return fields
 
-    def _parse_date(self, text: str) -> Optional[date]:
+    def _parse_date(self, text: str) -> date | None:  # noqa: PLR0911
         """Parse date from text (month day year format).
 
         Args:
@@ -401,7 +407,7 @@ class CompassSurveyParser:
             self._add_error(f"invalid date: {e}", text)
             return None
 
-    def _parse_measurement(self, text: str) -> Optional[float]:
+    def _parse_measurement(self, text: str) -> float | None:
         """Parse a numeric measurement from text.
 
         Values >= 990 indicate missing data.
@@ -416,11 +422,12 @@ class CompassSurveyParser:
             value = float(text)
             if value >= MISSING_VALUE_THRESHOLD:
                 return None
-            return value
         except ValueError:
             return None
 
-    def _parse_angle_measurement(self, text: str) -> Optional[float]:
+        return value
+
+    def _parse_angle_measurement(self, text: str) -> float | None:
         """Parse an angle measurement from text.
 
         Values < -900 or >= 990 indicate missing data.
@@ -437,11 +444,13 @@ class CompassSurveyParser:
                 return None
             if value >= MISSING_VALUE_THRESHOLD:
                 return None
-            return value
+
         except ValueError:
             return None
 
-    def _parse_azimuth(self, text: str) -> Optional[float]:
+        return value
+
+    def _parse_azimuth(self, text: str) -> float | None:
         """Parse azimuth measurement with validation.
 
         Args:
@@ -461,7 +470,7 @@ class CompassSurveyParser:
             # Still return the value for continued parsing
         return value
 
-    def _parse_inclination(self, text: str) -> Optional[float]:
+    def _parse_inclination(self, text: str) -> float | None:
         """Parse inclination measurement with validation.
 
         Args:
@@ -481,7 +490,7 @@ class CompassSurveyParser:
             # Still return the value for continued parsing
         return value
 
-    def _parse_distance(self, text: str) -> Optional[float]:
+    def _parse_distance(self, text: str) -> float | None:
         """Parse distance measurement with validation (must be >= 0).
 
         Args:
@@ -497,7 +506,7 @@ class CompassSurveyParser:
             self._add_error(f"distance must be >= 0, got {value}", text)
         return value
 
-    def _parse_lrud(self, text: str) -> Optional[float]:
+    def _parse_lrud(self, text: str) -> float | None:
         """Parse LRUD measurement with validation.
 
         Values < -1 or > 990 indicate missing data.
@@ -653,7 +662,7 @@ class CompassSurveyParser:
         self._add_error(f"unrecognized inclination unit: {char}", char)
         return InclinationUnit.DEGREES
 
-    def _parse_lrud_item(self, char: str) -> Optional[LrudItem]:
+    def _parse_lrud_item(self, char: str) -> LrudItem | None:
         """Parse LRUD item character."""
         char = char.upper()
         if char == "L":
@@ -667,7 +676,7 @@ class CompassSurveyParser:
         self._add_error(f"unrecognized LRUD item: {char}", char)
         return None
 
-    def _parse_shot_item(self, char: str) -> Optional[ShotItem]:
+    def _parse_shot_item(self, char: str) -> ShotItem | None:
         """Parse shot item character (case-sensitive for backsights)."""
         if char == "L":
             return ShotItem.LENGTH
@@ -682,7 +691,7 @@ class CompassSurveyParser:
         self._add_error(f"unrecognized shot item: {char}", char)
         return None
 
-    def _parse_lrud_association(self, char: str) -> Optional[LrudAssociation]:
+    def _parse_lrud_association(self, char: str) -> LrudAssociation | None:
         """Parse LRUD association character."""
         char = char.upper()
         if char == "F":
@@ -696,7 +705,7 @@ class CompassSurveyParser:
         self,
         line: str,
         header: dict[str, Any],
-    ) -> Optional[dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """Parse a single shot line to dictionary.
 
         Args:
@@ -808,10 +817,9 @@ class CompassSurveyParser:
             comment_start = flag_match.end()
             if comment_start < len(remaining):
                 comment = remaining[comment_start:].strip() or None
-        else:
-            # No flags, remaining is comment
-            if remaining.strip():
-                comment = remaining.strip()
+        # No flags, remaining is comment
+        elif remaining.strip():
+            comment = remaining.strip()
 
         # Return dictionary with alias names for Pydantic
         return {

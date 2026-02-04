@@ -14,9 +14,10 @@ from pathlib import Path
 from typing import Any
 
 from compass_scratchpad.constants import ASCII_ENCODING
-from compass_scratchpad.constants import FORMAT_COMPASS_MAK
+from compass_scratchpad.enums import FormatIdentifier
 from compass_scratchpad.errors import CompassParseException
 from compass_scratchpad.errors import SourceLocation
+from compass_scratchpad.project.models import CompassMakFile
 
 
 class CompassProjectParser:
@@ -62,7 +63,7 @@ class CompassProjectParser:
         Raises:
             CompassParseException: On parse errors
         """
-        with open(path, encoding=ASCII_ENCODING, errors="replace") as f:
+        with path.open(mode="r", encoding=ASCII_ENCODING, errors="replace") as f:
             data = f.read()
         return self.parse_string_to_dict(data, str(path))
 
@@ -124,7 +125,7 @@ class CompassProjectParser:
 
         return {
             "version": "1.0",
-            "format": FORMAT_COMPASS_MAK,
+            "format": FormatIdentifier.COMPASS_MAK.value,
             "directives": directives,
         }
 
@@ -146,7 +147,6 @@ class CompassProjectParser:
         Raises:
             CompassParseException: On parse errors
         """
-        from compass_scratchpad.project.models import CompassMakFile
 
         data = self.parse_file_to_dict(path)
         mak_file = CompassMakFile.model_validate(data)
@@ -171,7 +171,6 @@ class CompassProjectParser:
         Raises:
             CompassParseException: On parse errors
         """
-        from compass_scratchpad.project.models import CompassMakFile
 
         parsed = self.parse_string_to_dict(data, source)
         mak_file = CompassMakFile.model_validate(parsed)
@@ -306,20 +305,20 @@ class CompassProjectParser:
             )
 
         zone = int(text)
-        
+
         # Check if zone is valid
         if zone == 0 and not allow_zero:
             raise CompassParseException(
                 "UTM zone cannot be 0. Use 1-60 for north, -1 to -60 for south.",
                 self._location(text),
             )
-        
+
         if abs(zone) > 60:
             raise CompassParseException(
                 f"UTM zone must be between -60 and 60, got {zone}",
                 self._location(text),
             )
-        
+
         return zone
 
     def _parse_length_unit(self) -> str:

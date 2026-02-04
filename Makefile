@@ -112,4 +112,3 @@ regen-test-json:  ## rerun the json conversion to JSON of the test artifacts
 
 
 regen-test-files: regen-test-geojson regen-test-json encrypt
-

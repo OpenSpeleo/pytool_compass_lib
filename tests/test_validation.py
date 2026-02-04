@@ -112,4 +112,3 @@ class TestDaysInMonth:
     def test_december(self):
         """Test December has 31 days."""
         assert days_in_month(12, 2024) == 31
-

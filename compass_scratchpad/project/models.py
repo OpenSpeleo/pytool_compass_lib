@@ -22,13 +22,14 @@ from pydantic import Tag
 from pydantic import field_validator
 from pydantic import model_validator
 
-from compass_scratchpad.constants import FORMAT_COMPASS_MAK
-from compass_scratchpad.constants import FORMAT_COMPASS_PROJECT
 from compass_scratchpad.enums import Datum
+from compass_scratchpad.enums import FormatIdentifier
 from compass_scratchpad.models import NEVLocation  # noqa: TC001
+from compass_scratchpad.survey.models import CompassDatFile  # noqa: TC001
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
+
 
 # --- Directive Classes ---
 # Each directive has a `type` field that acts as a discriminator
@@ -104,7 +105,7 @@ class DatumDirective(BaseModel):
 
 class UTMZoneDirective(BaseModel):
     """UTM zone directive (lines starting with $).
-    
+
     Positive zones (1-60) indicate northern hemisphere.
     Negative zones (-1 to -60) indicate southern hemisphere.
     """
@@ -116,9 +117,13 @@ class UTMZoneDirective(BaseModel):
     @classmethod
     def validate_utm_zone(cls, v: int) -> int:
         if v == 0:
-            raise ValueError("UTM zone cannot be 0. Use 1-60 for north, -1 to -60 for south.")
+            raise ValueError(
+                "UTM zone cannot be 0. Use 1-60 for north, -1 to -60 for south."
+            )
         if abs(v) > 60:
-            raise ValueError(f"UTM zone must be between -60 and 60 (excluding 0), got {v}")
+            raise ValueError(
+                f"UTM zone must be between -60 and 60 (excluding 0), got {v}"
+            )
         return v
 
     def __str__(self) -> str:
@@ -306,7 +311,7 @@ class FileDirective(BaseModel):
 
 class LocationDirective(BaseModel):
     """Project location directive (lines starting with @).
-    
+
     Positive zones (1-60) indicate northern hemisphere.
     Negative zones (-1 to -60) indicate southern hemisphere.
     Zone 0 is allowed to indicate "no location specified".
@@ -399,16 +404,8 @@ class CompassMakFile(BaseModel):
 
     # Wrapper format fields (for JSON compatibility)
     version: str = "1.0"
-    format: str = Field(default=FORMAT_COMPASS_MAK)
+    format: str = Field(default=FormatIdentifier.COMPASS_MAK.value)
     directives: list[Directive] = Field(default_factory=list)
-
-    @field_validator("format", mode="before")
-    @classmethod
-    def normalize_format(cls, v: str) -> str:
-        """Accept both 'compass_mak' and 'compass_project', normalize to 'compass_mak'."""
-        if v in (FORMAT_COMPASS_MAK, FORMAT_COMPASS_PROJECT):
-            return FORMAT_COMPASS_MAK
-        return v
 
     @property
     def file_directives(self) -> list[FileDirective]:
@@ -492,7 +489,6 @@ class CompassMakFile(BaseModel):
 
 
 # Avoid circular import - import at end
-from compass_scratchpad.survey.models import CompassDatFile  # noqa: E402
 
 # Update forward reference
 FileDirective.model_rebuild()

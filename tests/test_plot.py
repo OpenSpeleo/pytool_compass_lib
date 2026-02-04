@@ -217,7 +217,7 @@ class TestCompassPlotParser:
         """Test parsing M/D commands."""
         parser = CompassPlotParser()
         line = "D   128.2   -65.9   -86.8  SZ7  P    0.0    3.0    1.0    2.0  I   21.8"
-        cmd = parser._parse_command(line, 0)
+        cmd = parser._parse_command(line, 0)  # noqa: SLF001
 
         assert isinstance(cmd, DrawSurveyCommand)
         assert cmd.operation == DrawOperation.LINE_TO
@@ -235,7 +235,7 @@ class TestCompassPlotParser:
         """Test parsing M command."""
         parser = CompassPlotParser()
         line = "M   123.5   -70.2   -87.1  SZ6  P    1.5    1.0    0.5    0.5  I    0.0"
-        cmd = parser._parse_command(line, 0)
+        cmd = parser._parse_command(line, 0)  # noqa: SLF001
 
         assert isinstance(cmd, DrawSurveyCommand)
         assert cmd.operation == DrawOperation.MOVE_TO
@@ -244,7 +244,7 @@ class TestCompassPlotParser:
         """Test parsing N command."""
         parser = CompassPlotParser()
         line = "NZ+ D 6 29 1994 CStream Passage"
-        cmd = parser._parse_command(line, 0)
+        cmd = parser._parse_command(line, 0)  # noqa: SLF001
 
         assert isinstance(cmd, BeginSurveyCommand)
         assert cmd.survey_name == "Z+"
@@ -255,7 +255,7 @@ class TestCompassPlotParser:
         """Test parsing S command."""
         parser = CompassPlotParser()
         line = "SFULFORD CAVE"
-        cmd = parser._parse_command(line, 0)
+        cmd = parser._parse_command(line, 0)  # noqa: SLF001
 
         assert isinstance(cmd, BeginSectionCommand)
         assert cmd.section_name == "FULFORD CAVE"
@@ -264,7 +264,7 @@ class TestCompassPlotParser:
         """Test parsing F command."""
         parser = CompassPlotParser()
         line = "FINSECTS"
-        cmd = parser._parse_command(line, 0)
+        cmd = parser._parse_command(line, 0)  # noqa: SLF001
 
         assert isinstance(cmd, BeginFeatureCommand)
         assert cmd.feature_name == "INSECTS"
@@ -273,7 +273,7 @@ class TestCompassPlotParser:
         """Test parsing F command with range."""
         parser = CompassPlotParser()
         line = "FWATER R 5.51234E2  8.12341E2"
-        cmd = parser._parse_command(line, 0)
+        cmd = parser._parse_command(line, 0)  # noqa: SLF001
 
         assert isinstance(cmd, BeginFeatureCommand)
         assert cmd.feature_name == "WATER"
@@ -284,7 +284,7 @@ class TestCompassPlotParser:
         """Test parsing L command."""
         parser = CompassPlotParser()
         line = "L     0.0     0.0     0.0  SA1 P -9.0 -9.0 -9.0 -9.0"
-        cmd = parser._parse_command(line, 0)
+        cmd = parser._parse_command(line, 0)  # noqa: SLF001
 
         assert isinstance(cmd, FeatureCommand)
         assert cmd.location.northing == pytest.approx(0.0)
@@ -297,7 +297,7 @@ class TestCompassPlotParser:
         """Test parsing L command with value."""
         parser = CompassPlotParser()
         line = "L     0.0     0.0     0.0  SA1 P -9.0 -9.0 -9.0 -9.0 V 5.51234E2"
-        cmd = parser._parse_command(line, 0)
+        cmd = parser._parse_command(line, 0)  # noqa: SLF001
 
         assert isinstance(cmd, FeatureCommand)
         assert cmd.value == Decimal("5.51234E2")
@@ -306,7 +306,7 @@ class TestCompassPlotParser:
         """Test parsing X command."""
         parser = CompassPlotParser()
         line = "X     118.78    138.22    -82.94    -63.34   -101.90    -82.53"
-        cmd = parser._parse_command(line, 0)
+        cmd = parser._parse_command(line, 0)  # noqa: SLF001
 
         assert isinstance(cmd, SurveyBoundsCommand)
         assert cmd.bounds.lower.northing == pytest.approx(118.78)
@@ -315,8 +315,10 @@ class TestCompassPlotParser:
     def test_parse_cave_bounds(self):
         """Test parsing Z command."""
         parser = CompassPlotParser()
-        line = "Z    -129.26    319.44    -94.30    439.00   -130.05    126.30  I 1357.3"
-        cmd = parser._parse_command(line, 0)
+        line = (
+            "Z    -129.26    319.44    -94.30    439.00   -130.05    126.30  I 1357.3"
+        )
+        cmd = parser._parse_command(line, 0)  # noqa: SLF001
 
         assert isinstance(cmd, CaveBoundsCommand)
         assert cmd.bounds.lower.northing == pytest.approx(-129.26)
@@ -327,7 +329,7 @@ class TestCompassPlotParser:
         """Test parsing O command."""
         parser = CompassPlotParser()
         line = "OAdindan"
-        cmd = parser._parse_command(line, 0)
+        cmd = parser._parse_command(line, 0)  # noqa: SLF001
 
         assert isinstance(cmd, DatumCommand)
         assert cmd.datum == Datum.ADINDAN
@@ -337,7 +339,7 @@ class TestCompassPlotParser:
         """Test parsing G command."""
         parser = CompassPlotParser()
         line = "G13"
-        cmd = parser._parse_command(line, 0)
+        cmd = parser._parse_command(line, 0)  # noqa: SLF001
 
         assert isinstance(cmd, UtmZoneCommand)
         assert cmd.utm_zone == "13"
@@ -367,7 +369,7 @@ class TestCompassPlotParser:
 SFULFORD CAVE
 
 NZ+ D 6 29 1994
-"""
+"""  # noqa: E501
         commands = parser.parse_string(data)
 
         assert len(commands) == 3
@@ -377,30 +379,34 @@ NZ+ D 6 29 1994
         """Test that invalid LRUD values generate errors."""
         parser = CompassPlotParser()
         line = "D   128.2   -65.9   -86.8  SZ7  P    abc    3.0    1.0    2.0  I   21.8"
-        cmd = parser._parse_command(line, 0)
+        cmd = parser._parse_command(line, 0)  # noqa: SLF001
 
         assert cmd is not None
         assert len(parser.errors) >= 1
-        assert any(Severity.ERROR == e.severity for e in parser.errors)
+        assert any(e.severity == Severity.ERROR for e in parser.errors)
 
     def test_parse_negative_distance_generates_warning(self):
         """Test that negative distance from entrance generates warning."""
         parser = CompassPlotParser()
-        line = "D   128.2   -65.9   -86.8  SZ7  P    0.0    3.0    1.0    2.0  I   -21.8"
-        cmd = parser._parse_command(line, 0)
+        line = (
+            "D   128.2   -65.9   -86.8  SZ7  P    0.0    3.0    1.0    2.0  I   -21.8"
+        )
+        cmd = parser._parse_command(line, 0)  # noqa: SLF001
 
         assert cmd is not None
         # Should have a warning about negative distance
         assert any(
-            Severity.WARNING == e.severity and "negative" in e.message.lower()
+            e.severity == Severity.WARNING and "negative" in e.message.lower()
             for e in parser.errors
         )
 
     def test_null_lrud_values(self):
         """Test that 999 and 999.9 are treated as null LRUD values."""
         parser = CompassPlotParser()
-        line = "D   128.2   -65.9   -86.8  SZ7  P    999    999.9    0.0    0.0  I   21.8"
-        cmd = parser._parse_command(line, 0)
+        line = (
+            "D   128.2   -65.9   -86.8  SZ7  P    999    999.9    0.0    0.0  I   21.8"
+        )
+        cmd = parser._parse_command(line, 0)  # noqa: SLF001
 
         assert isinstance(cmd, DrawSurveyCommand)
         assert cmd.left is None  # 999 is null
@@ -418,7 +424,7 @@ NZ+ D 6 29 1994
 
         # Draw command: P <left> <up> <down> <right>
         draw_line = "D   0   0   0  SA1  P    1.0    2.0    3.0    4.0  I   0"
-        draw_cmd = parser._parse_command(draw_line, 0)
+        draw_cmd = parser._parse_command(draw_line, 0)  # noqa: SLF001
 
         assert isinstance(draw_cmd, DrawSurveyCommand)
         assert draw_cmd.left == pytest.approx(1.0)
@@ -429,7 +435,7 @@ NZ+ D 6 29 1994
         # Feature command: P <left> <right> <up> <down>
         feature_line = "L   0   0   0  SA1  P    1.0    2.0    3.0    4.0"
         parser2 = CompassPlotParser()
-        feature_cmd = parser2._parse_command(feature_line, 0)
+        feature_cmd = parser2._parse_command(feature_line, 0)  # noqa: SLF001
 
         assert isinstance(feature_cmd, FeatureCommand)
         assert feature_cmd.left == pytest.approx(1.0)
@@ -440,7 +446,7 @@ NZ+ D 6 29 1994
     def test_unknown_command_ignored(self):
         """Test that unknown commands are silently ignored."""
         parser = CompassPlotParser()
-        cmd = parser._parse_command("UNKNOWN COMMAND", 0)
+        cmd = parser._parse_command("UNKNOWN COMMAND", 0)  # noqa: SLF001
 
         assert cmd is None
         assert len(parser.errors) == 0

@@ -49,9 +49,7 @@ from geojson import Polygon
 
 from compass_scratchpad.constants import FEET_TO_METERS
 from compass_scratchpad.constants import GEOJSON_COORDINATE_PRECISION
-from compass_scratchpad.constants import GEOJSON_ELEVATION_PRECISION
 from compass_scratchpad.constants import JSON_ENCODING
-from compass_scratchpad.constants import UTM_SOUTHERN_HEMISPHERE_OFFSET
 from compass_scratchpad.enums import Datum
 from compass_scratchpad.geo_utils import GeoLocation
 from compass_scratchpad.geo_utils import get_declination
@@ -262,11 +260,11 @@ def get_station_location_wgs84(
     utm_northern: bool,
 ) -> GeoLocation:
     """Convert a station's UTM coordinates to WGS84 lat/lon for declination calculation.
-    
+
     IMPORTANT: Compass stores ALL UTM coordinates in northern hemisphere format,
     regardless of the zone sign. The zone sign only indicates which hemisphere
     the cave is in for grid orientation purposes (convergence corrections).
-    
+
     Therefore, we ALWAYS use northern=True when converting coordinates to get
     the actual geographic location for declination calculation.
 
@@ -609,15 +607,15 @@ def propagate_coordinates(
                     if anchor_station.file == file_name:
                         trip_anchor = anchor_station
                         break
-                
+
                 # Use trip anchor if found, otherwise use current station (priority 2)
                 location_station = trip_anchor if trip_anchor else current_station
-                
+
                 # Convert station to WGS84 for declination calculation
                 station_wgs84 = get_station_location_wgs84(
                     location_station, result.utm_zone, result.utm_northern
                 )
-                
+
                 logger.debug(
                     "Trip %s: using station %s at UTM(%.1f, %.1f) zone=%d northern=%s -> WGS84(%.4f, %.4f)",
                     trip_key,
@@ -629,7 +627,7 @@ def propagate_coordinates(
                     station_wgs84.latitude,
                     station_wgs84.longitude,
                 )
-                
+
                 declination = calculate_trip_declination(
                     station_wgs84, trip.header.date
                 )

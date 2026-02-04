@@ -7,10 +7,8 @@ from pathlib import Path
 import pytest
 
 from compass_scratchpad.enums import AzimuthUnit
-from compass_scratchpad.enums import InclinationUnit
 from compass_scratchpad.enums import LengthUnit
 from compass_scratchpad.enums import LrudAssociation
-from compass_scratchpad.enums import LrudItem
 from compass_scratchpad.enums import Severity
 from compass_scratchpad.enums import ShotItem
 from compass_scratchpad.survey.models import CompassShot
@@ -156,7 +154,7 @@ class TestCompassSurveyParser:
         parser = CompassSurveyParser()
         header = {"has_backsights": False}
 
-        shot_dict = parser._parse_shot_to_dict(
+        shot_dict = parser._parse_shot_to_dict(  # noqa: SLF001
             "A3 A4 4.25 15.00 -85.00 5.00 3.50 0.75 0.50",
             header,
         )
@@ -178,7 +176,7 @@ class TestCompassSurveyParser:
         parser = CompassSurveyParser()
         header = {"has_backsights": True}
 
-        shot_dict = parser._parse_shot_to_dict(
+        shot_dict = parser._parse_shot_to_dict(  # noqa: SLF001
             "A3 A4 4.25 15.00 -85.00 5.00 3.50 0.75 0.50 195.0 85.00",
             header,
         )
@@ -194,7 +192,7 @@ class TestCompassSurveyParser:
         header = {"has_backsights": False}
 
         # Test L flag
-        shot_dict = parser._parse_shot_to_dict(
+        shot_dict = parser._parse_shot_to_dict(  # noqa: SLF001
             "A3 A4 4.25 15.00 -85.00 5.00 3.50 0.75 0.50 #|L#",
             header,
         )
@@ -204,7 +202,7 @@ class TestCompassSurveyParser:
 
         # Test P flag
         parser = CompassSurveyParser()
-        shot_dict = parser._parse_shot_to_dict(
+        shot_dict = parser._parse_shot_to_dict(  # noqa: SLF001
             "A3 A4 4.25 15.00 -85.00 5.00 3.50 0.75 0.50 #|P#",
             header,
         )
@@ -213,7 +211,7 @@ class TestCompassSurveyParser:
 
         # Test X flag
         parser = CompassSurveyParser()
-        shot_dict = parser._parse_shot_to_dict(
+        shot_dict = parser._parse_shot_to_dict(  # noqa: SLF001
             "A3 A4 4.25 15.00 -85.00 5.00 3.50 0.75 0.50 #|X#",
             header,
         )
@@ -222,7 +220,7 @@ class TestCompassSurveyParser:
 
         # Test C flag
         parser = CompassSurveyParser()
-        shot_dict = parser._parse_shot_to_dict(
+        shot_dict = parser._parse_shot_to_dict(  # noqa: SLF001
             "A3 A4 4.25 15.00 -85.00 5.00 3.50 0.75 0.50 #|C#",
             header,
         )
@@ -231,7 +229,7 @@ class TestCompassSurveyParser:
 
         # Test combined flags
         parser = CompassSurveyParser()
-        shot_dict = parser._parse_shot_to_dict(
+        shot_dict = parser._parse_shot_to_dict(  # noqa: SLF001
             "A3 A4 4.25 15.00 -85.00 5.00 3.50 0.75 0.50 #|LCP#",
             header,
         )
@@ -245,7 +243,7 @@ class TestCompassSurveyParser:
         parser = CompassSurveyParser()
         header = {"has_backsights": False}
 
-        shot_dict = parser._parse_shot_to_dict(
+        shot_dict = parser._parse_shot_to_dict(  # noqa: SLF001
             "A3 A4 4.25 15.00 -85.00 5.00 3.50 0.75 0.50 Big Room",
             header,
         )
@@ -257,7 +255,7 @@ class TestCompassSurveyParser:
         parser = CompassSurveyParser()
         header = {"has_backsights": False}
 
-        shot_dict = parser._parse_shot_to_dict(
+        shot_dict = parser._parse_shot_to_dict(  # noqa: SLF001
             "A3 A4 4.25 15.00 -85.00 5.00 3.50 0.75 0.50 #|LX# blah blah",
             header,
         )
@@ -275,7 +273,7 @@ class TestCompassSurveyParser:
         parser = CompassSurveyParser()
         header = {"has_backsights": True}
 
-        shot_dict = parser._parse_shot_to_dict(
+        _ = parser._parse_shot_to_dict(  # noqa: SLF001
             "A3 A4 4.25 -15.00 -85.00 5.00 3.50 0.75 0.50 360.0 85.0",
             header,
         )
@@ -293,7 +291,7 @@ class TestCompassSurveyParser:
         parser = CompassSurveyParser()
         header = {"has_backsights": True}
 
-        shot_dict = parser._parse_shot_to_dict(
+        _ = parser._parse_shot_to_dict(  # noqa: SLF001
             "A3 A4 4.25 15.00 -91.00 5.00 3.50 0.75 0.50 195.0 92.0",
             header,
         )
@@ -307,7 +305,7 @@ class TestCompassSurveyParser:
         parser = CompassSurveyParser()
         header = {"has_backsights": False}
 
-        shot_dict = parser._parse_shot_to_dict(
+        _ = parser._parse_shot_to_dict(  # noqa: SLF001
             "A3 A4 -4.25 15.00 -85.00 5.00 3.50 0.75 0.50",
             header,
         )
@@ -322,9 +320,9 @@ SURVEY NAME: A
 SURVEY DATE: 7 10 1979  COMMENT:Entrance Passage
 SURVEY TEAM:
 D.SMITH,R.BROWN,S.MURRAY
-DECLINATION: 1.00  FORMAT: DDDDLUDRADLBF  CORRECTIONS: 2.00 3.00 4.00 CORRECTIONS2: 5.0 6.0"""
+DECLINATION: 1.00  FORMAT: DDDDLUDRADLBF  CORRECTIONS: 2.00 3.00 4.00 CORRECTIONS2: 5.0 6.0"""  # noqa: E501
 
-        header_dict = parser._parse_trip_header_to_dict(header_text)
+        header_dict = parser._parse_trip_header_to_dict(header_text)  # noqa: SLF001
         header = CompassTripHeader.model_validate(header_dict)
 
         assert header.cave_name == "SECRET CAVE"
@@ -347,7 +345,7 @@ SURVEY NAME: A
 SURVEY DATE: 7 10 1979
 DECLINATION: 1.00  FORMAT: DDDDLUDRADLNT"""
 
-        header_dict = parser._parse_trip_header_to_dict(header_text)
+        header_dict = parser._parse_trip_header_to_dict(header_text)  # noqa: SLF001
         header = CompassTripHeader.model_validate(header_dict)
 
         assert header.has_backsights is False
@@ -361,7 +359,7 @@ SURVEY NAME: A
 SURVEY DATE: 7 10 1979
 DECLINATION: 1.00  FORMAT: DDDDLUDRADLadBF"""
 
-        header_dict = parser._parse_trip_header_to_dict(header_text)
+        header_dict = parser._parse_trip_header_to_dict(header_text)  # noqa: SLF001
         header = CompassTripHeader.model_validate(header_dict)
 
         assert len(header.shot_measurement_order) == 5
@@ -396,14 +394,14 @@ DECLINATION: 1.00  FORMAT: DDDDLUDRADLadBF"""
     def test_parse_date_2_digit_year(self):
         """Test parsing date with 2-digit year."""
         parser = CompassSurveyParser()
-        parsed = parser._parse_date("7 10 79")
+        parsed = parser._parse_date("7 10 79")  # noqa: SLF001
 
         assert parsed == date(1979, 7, 10)
 
     def test_parse_date_4_digit_year(self):
         """Test parsing date with 4-digit year."""
         parser = CompassSurveyParser()
-        parsed = parser._parse_date("7 10 2024")
+        parsed = parser._parse_date("7 10 2024")  # noqa: SLF001
 
         assert parsed == date(2024, 7, 10)
 
@@ -412,7 +410,7 @@ DECLINATION: 1.00  FORMAT: DDDDLUDRADLadBF"""
         parser = CompassSurveyParser()
         header = {"has_backsights": False}
 
-        shot_dict = parser._parse_shot_to_dict(
+        _ = parser._parse_shot_to_dict(  # noqa: SLF001
             "A3 A4 4.25 15.00 -85.00 5.00 3.50 0.75 0.50 #|Q#",
             header,
         )
@@ -426,7 +424,7 @@ DECLINATION: 1.00  FORMAT: DDDDLUDRADLadBF"""
         parser = CompassSurveyParser()
         header = {"has_backsights": False}
 
-        shot_dict = parser._parse_shot_to_dict(
+        shot_dict = parser._parse_shot_to_dict(  # noqa: SLF001
             "A3 A4 4.25 15.00 -85.00 999.00 999.00 999.00 999.00",
             header,
         )

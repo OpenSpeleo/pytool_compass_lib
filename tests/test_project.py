@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from compass_scratchpad.errors import CompassParseException
+from compass_scratchpad.models import NEVLocation
 from compass_scratchpad.project.models import CommentDirective
 from compass_scratchpad.project.models import DatumDirective
 from compass_scratchpad.project.models import DeclinationMode
@@ -15,6 +16,7 @@ from compass_scratchpad.project.models import FolderEndDirective
 from compass_scratchpad.project.models import FolderStartDirective
 from compass_scratchpad.project.models import LinkStation
 from compass_scratchpad.project.models import LocationDirective
+from compass_scratchpad.project.models import UnknownDirective
 from compass_scratchpad.project.models import UTMConvergenceDirective
 from compass_scratchpad.project.models import UTMZoneDirective
 from compass_scratchpad.project.parser import CompassProjectParser
@@ -108,7 +110,10 @@ class TestUTMZoneDirective:
 
     def test_zone_too_negative(self):
         """Test that zone < -60 raises ValueError."""
-        with pytest.raises(ValueError):
+        with pytest.raises(
+            ValueError,
+            match=r".*UTM zone must be between -60 and 60 \(excluding 0\), got -61.*",
+        ):
             UTMZoneDirective(utm_zone=-61)
 
 
@@ -314,7 +319,6 @@ class TestFileDirective:
 
     def test_creation_with_link_stations(self):
         """Test creating a file directive with link stations."""
-        from compass_scratchpad.models import NEVLocation
 
         link_stations = [
             LinkStation(
@@ -665,7 +669,6 @@ class TestCompassProjectParser:
         parser = CompassProjectParser()
 
         # Unknown directives are now parsed and preserved for roundtrip
-        from compass_scratchpad.project.models import UnknownDirective
 
         directives = parser.parse_string("Xinvalid;")
         assert len(directives) == 1

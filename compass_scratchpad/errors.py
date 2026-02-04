@@ -58,7 +58,7 @@ class CompassParseError:
         return base
 
 
-class CompassParseException(Exception):
+class CompassParseException(Exception):  # noqa: N818
     """Exception raised for critical parsing errors.
 
     Attributes:

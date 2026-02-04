@@ -9,8 +9,6 @@ from pydantic_extra_types.coordinate import Longitude  # noqa: TC002
 
 from compass_scratchpad.constants import GEOJSON_COORDINATE_PRECISION
 
-# ruff: noqa: T201
-
 
 class GeoLocation(BaseModel):
     latitude: Latitude
@@ -27,10 +25,10 @@ class GeoLocation(BaseModel):
 
 
 def decimal_year(dt: datetime.datetime) -> float:
-    dt_start = datetime.datetime(
+    dt_start = datetime.datetime(  # noqa: DTZ001
         year=dt.year, month=1, day=1, hour=0, minute=0, second=0
     )
-    dt_end = datetime.datetime(
+    dt_end = datetime.datetime(  # noqa: DTZ001
         year=dt.year + 1, month=1, day=1, hour=0, minute=0, second=0
     )
     return round(
@@ -47,11 +45,3 @@ def get_declination(location: GeoLocation, dt: datetime.datetime) -> float:
         year=decimal_year(dt),
     )
     return round(declination, 2)
-
-
-if __name__ == "__main__":
-    dt = datetime.datetime(2025, 7, 1)
-
-    d1 = get_declination(GeoLocation(latitude=20.6296, longitude=-87.0739), dt)
-
-    print(f"pyIGRF declination : {d1:.6f}°")

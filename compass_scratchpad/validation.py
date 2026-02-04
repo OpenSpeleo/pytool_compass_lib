@@ -72,4 +72,3 @@ def days_in_month(month: int, year: int) -> int:
     # monthrange returns (weekday_of_first_day, num_days_in_month)
     _, num_days = calendar.monthrange(year, month)
     return num_days
-

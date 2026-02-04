@@ -9,11 +9,6 @@ from enum import Enum
 from math import radians
 from math import tan
 
-from compass_scratchpad.constants import EXT_DAT
-from compass_scratchpad.constants import EXT_GEOJSON
-from compass_scratchpad.constants import EXT_JSON
-from compass_scratchpad.constants import EXT_MAK
-from compass_scratchpad.constants import EXT_PLT
 from compass_scratchpad.constants import FEET_TO_METERS
 
 
@@ -48,9 +43,9 @@ class CompassFileType(str, Enum):
     def extension(self) -> str:
         """Get the file extension for this type (with dot)."""
         return {
-            CompassFileType.DAT: EXT_DAT,
-            CompassFileType.MAK: EXT_MAK,
-            CompassFileType.PLT: EXT_PLT,
+            CompassFileType.DAT: FileExtension.DAT.value,
+            CompassFileType.MAK: FileExtension.MAK.value,
+            CompassFileType.PLT: FileExtension.PLT.value,
         }[self]
 
     @classmethod
@@ -70,6 +65,36 @@ class CompassFileType(str, Enum):
             "plt": cls.PLT,
         }
         return mapping.get(ext_lower)
+
+
+class FileExtension(str, Enum):
+    """File extensions for various file formats (with dot).
+
+    Attributes:
+        DAT: Compass survey data file extension
+        MAK: Compass project/make file extension
+        PLT: Compass plot file extension
+        JSON: JSON file extension
+        GEOJSON: GeoJSON file extension
+    """
+
+    DAT = ".dat"
+    MAK = ".mak"
+    PLT = ".plt"
+    JSON = ".json"
+    GEOJSON = ".geojson"
+
+
+class FormatIdentifier(str, Enum):
+    """Format identifiers used in JSON files.
+
+    Attributes:
+        COMPASS_DAT: Format identifier for DAT files in JSON
+        COMPASS_MAK: Format identifier for MAK/project files in JSON
+    """
+
+    COMPASS_DAT = "compass_dat"
+    COMPASS_MAK = "compass_mak"
 
 
 class AzimuthUnit(str, Enum):

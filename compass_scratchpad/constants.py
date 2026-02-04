@@ -61,38 +61,6 @@ GEOJSON_COORDINATE_PRECISION: int = 7
 GEOJSON_ELEVATION_PRECISION: int = 2
 
 # -----------------------------------------------------------------------------
-# File Extensions (lowercase, with dot)
-# -----------------------------------------------------------------------------
-
-#: Compass survey data file extension
-EXT_DAT: str = ".dat"
-
-#: Compass project/make file extension
-EXT_MAK: str = ".mak"
-
-#: Compass plot file extension
-EXT_PLT: str = ".plt"
-
-#: JSON file extension
-EXT_JSON: str = ".json"
-
-#: GeoJSON file extension
-EXT_GEOJSON: str = ".geojson"
-
-# -----------------------------------------------------------------------------
-# Format Identifiers (used in JSON files)
-# -----------------------------------------------------------------------------
-
-#: Format identifier for DAT files in JSON
-FORMAT_COMPASS_DAT: str = "compass_dat"
-
-#: Format identifier for MAK/project files in JSON
-FORMAT_COMPASS_MAK: str = "compass_mak"
-
-#: Alternative format identifier for MAK files (legacy)
-FORMAT_COMPASS_PROJECT: str = "compass_project"
-
-# -----------------------------------------------------------------------------
 # Shot Flag Characters
 # -----------------------------------------------------------------------------
 
