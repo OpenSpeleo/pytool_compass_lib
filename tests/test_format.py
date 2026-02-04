@@ -326,6 +326,12 @@ class TestFormatMakDirective:
         result = format_directive(directive)
         assert result == "$13;\r\n"
 
+    def test_utm_zone_directive_negative(self):
+        """Test formatting negative UTM zone directive (southern hemisphere)."""
+        directive = UTMZoneDirective(utm_zone=-13)
+        result = format_directive(directive)
+        assert result == "$-13;\r\n"
+
     def test_utm_convergence_directive(self):
         """Test formatting UTM convergence directive."""
         directive = UTMConvergenceDirective(utm_convergence=-0.26)

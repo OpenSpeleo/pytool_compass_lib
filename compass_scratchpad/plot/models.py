@@ -10,7 +10,9 @@ from decimal import Decimal
 
 from pydantic import BaseModel
 from pydantic import Field
+from pydantic import field_validator
 
+from compass_scratchpad.enums import Datum
 from compass_scratchpad.enums import DrawOperation
 from compass_scratchpad.models import Bounds
 from compass_scratchpad.models import Location
@@ -222,11 +224,29 @@ class DatumCommand(CompassPlotCommand):
         datum: Datum identifier
     """
 
-    datum: str
+    datum: Datum
+
+    @field_validator("datum", mode="before")
+    @classmethod
+    def normalize_datum(cls, value: str | Datum) -> Datum:
+        """Validate and normalize datum string to Datum enum.
+
+        Args:
+            value: Datum as string or Datum enum
+
+        Returns:
+            Datum enum value
+
+        Raises:
+            ValueError: If datum string is not recognized
+        """
+        if isinstance(value, Datum):
+            return value
+        return Datum.normalize(value)
 
     def __str__(self) -> str:
         """Format as PLT file syntax."""
-        return f"O{self.datum}"
+        return f"O{self.datum.value}"
 
 
 class UtmZoneCommand(CompassPlotCommand):

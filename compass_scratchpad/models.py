@@ -15,6 +15,8 @@ from pydantic import field_validator
 from pyproj import CRS
 from pyproj import Transformer
 
+from compass_scratchpad.enums import Datum
+
 
 class NEVLocation(BaseModel):
     """3D location with Northing, Easting, and Vertical (elevation) components.
@@ -70,7 +72,14 @@ class UTMLocation(BaseModel):
         ),
     ]
 
-    zone: Annotated[int, Field(ge=1, le=60, description="UTM zone number (1-60)")]
+    zone: Annotated[
+        int,
+        Field(
+            ge=-60,
+            le=60,
+            description="UTM zone number (1-60 north, -1 to -60 south, 0 not allowed)",
+        ),
+    ]
 
     convergence: Annotated[
         float,
@@ -78,10 +87,10 @@ class UTMLocation(BaseModel):
     ]
 
     datum: Annotated[
-        str | None,
+        Datum | None,
         Field(
             default=None,
-            description="Datum (e.g., 'NAD27', 'WGS84', 'North American 1927')",
+            description="Datum (e.g., Datum.NORTH_AMERICAN_1927, Datum.WGS_1984)",
         ),
     ]
 
@@ -89,26 +98,73 @@ class UTMLocation(BaseModel):
     # Validators
     # -----------------------------
 
-    @field_validator("datum")
+    @field_validator("zone")
     @classmethod
-    def normalize_datum(cls, value: str | None) -> str | None:
-        """Validate and normalize datum string"""
-        if value is None:
-            return None
+    def validate_zone(cls, v: int) -> int:
+        """Validate UTM zone number.
 
-        value = value.strip().upper()
+        Positive values (1-60) indicate northern hemisphere.
+        Negative values (-1 to -60) indicate southern hemisphere.
+        Zero is not allowed.
 
-        # normalize common datum names
-        aliases = {
-            "NORTH AMERICAN 1927": "NAD27",
-            "NORTH AMERICAN 1983": "NAD83",
-            "NORTH AMERICAN DATUM 1927": "NAD27",
-            "NORTH AMERICAN DATUM 1983": "NAD83",
-            "WGS 1984": "WGS84",
-            "WORLD GEODETIC SYSTEM 1984": "WGS84",
-        }
+        Args:
+            v: Zone number
 
-        return aliases.get(value, value)
+        Returns:
+            Validated zone number
+
+        Raises:
+            ValueError: If zone is 0 or abs(zone) > 60
+        """
+        if v == 0:
+            raise ValueError("UTM zone cannot be 0. Use 1-60 for north, -1 to -60 for south.")
+        if abs(v) > 60:
+            raise ValueError(f"UTM zone must be between -60 and 60 (excluding 0), got {v}")
+        return v
+
+    @field_validator("datum", mode="before")
+    @classmethod
+    def normalize_datum(cls, value: str | Datum | None) -> Datum | None:
+        """Validate and normalize datum string to Datum enum.
+
+        Accepts either a string (which will be normalized) or a Datum enum value.
+
+        Args:
+            value: Datum as string or Datum enum, or None
+
+        Returns:
+            Datum enum value or None
+
+        Raises:
+            ValueError: If datum string is not recognized
+        """
+        if value is None or isinstance(value, Datum):
+            return value
+
+        # Normalize string to Datum enum
+        return Datum.normalize(value)
+
+    # -----------------------------
+    # Properties
+    # -----------------------------
+
+    @property
+    def is_northern_hemisphere(self) -> bool:
+        """Check if this location is in the northern hemisphere.
+
+        Returns:
+            True if northern hemisphere (zone > 0), False if southern (zone < 0)
+        """
+        return self.zone > 0
+
+    @property
+    def zone_number(self) -> int:
+        """Get the absolute zone number (1-60).
+
+        Returns:
+            Absolute value of the zone number
+        """
+        return abs(self.zone)
 
     # -----------------------------
     # Methods
@@ -117,28 +173,32 @@ class UTMLocation(BaseModel):
     def to_latlon(self) -> tuple[float, float]:
         """
         Convert this UTM location to GPS coordinates (latitude, longitude).
+        
+        NOTE: This method takes the decision to exclusively use DATUM WGS 1984 for uniformity
+        and ignore the datum from the MAK project file.
+        This allows for a consistent and predictable conversion of UTM coordinates to GPS coordinates.
+        And inter-operability with other software that uses WGS 1984 for GPS coordinates.
+        
+        The hemisphere is determined by the sign of the zone:
+        - Positive zone (1-60): Northern hemisphere
+        - Negative zone (-1 to -60): Southern hemisphere
+
+        Args:
+            None
 
         Returns:
             (lat, lon) in decimal degrees
         """
-        # ---- Datum → EPSG mapping ----
-        datum_epsg_map = {
-            None: 4326,  # default to WGS84 if unspecified
-            "WGS84": 4326,
-            "NAD83": 4269,
-            "NAD27": 4267,
-        }
 
-        datum = self.datum or "WGS84"
-
-        try:
-            geographic_crs = CRS.from_epsg(datum_epsg_map[datum])
-        except KeyError as e:
-            raise ValueError(f"Unsupported datum for GPS conversion: {datum!r}") from e
+        WGS_1984_EPSG = 4326
+        geographic_crs = CRS.from_epsg(WGS_1984_EPSG)
 
         # ---- Build UTM CRS ----
+        # Note: pyproj expects "WGS84" (no space) in proj4 strings, not "WGS 1984"
+        # Note: pyproj requires positive zone number and hemisphere specified separately
+        hemisphere = "+north" if self.is_northern_hemisphere else "+south"
         utm_crs = CRS.from_proj4(
-            f"+proj=utm +zone={self.zone} +datum={datum} +units=m +no_defs"
+            f"+proj=utm +zone={self.zone_number} {hemisphere} +datum=WGS84 +units=m +no_defs"
         )
 
         transformer = Transformer.from_crs(

@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import logging
 import os
 from pathlib import Path
 
-from cryptography.fernet import Fernet
+from cryptography.hazmat.primitives.ciphers.aead import AESSIV
 from dotenv import load_dotenv
 
 logger = logging.getLogger(__name__)
@@ -39,7 +40,7 @@ def encrypt(args: list[str]) -> int:
         type=str,
         default=None,
         required=True,
-        help="Path of the environment file containing the Fernet key.",
+        help="Path of the environment file containing the AES-SIV key.",
     )
 
     parser.add_argument(
@@ -68,22 +69,24 @@ def encrypt(args: list[str]) -> int:
     load_dotenv(envfile, verbose=True, override=True)
     logger.info("Loaded environment variables from: `%s`", envfile)
 
-    if (fernet_key := os.getenv("ARTIFACT_ENCRYPTION_KEY")) is None:
+    if (key_str := os.getenv("ARTIFACT_ENCRYPTION_KEY")) is None:
         raise ValueError(
-            "No Fernet key found in the environment file. "
+            "No AES-SIV key found in the environment file. "
             "Check if `ARTIFACT_ENCRYPTION_KEY` is set."
         )
-    fernet_key = Fernet(fernet_key)
+
+    key_bytes = base64.urlsafe_b64decode(key_str.encode("ascii"))
+    aead = AESSIV(key_bytes)
 
     with input_file.open("rb") as f:
         clear_data = f.read()
 
     with output_file.open("wb") as f:
-        f.write(fernet_key.encrypt(clear_data))
+        f.write(aead.encrypt(clear_data, None))
 
     # Round Trip Check:
     with output_file.open("rb") as f:
-        roundtrip_data = fernet_key.decrypt(f.read())
+        roundtrip_data = aead.decrypt(f.read(), None)
         assert clear_data == roundtrip_data
 
     return 0

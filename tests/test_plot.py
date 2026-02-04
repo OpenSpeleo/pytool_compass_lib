@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 
+from compass_scratchpad.enums import Datum
 from compass_scratchpad.enums import DrawOperation
 from compass_scratchpad.enums import Severity
 from compass_scratchpad.plot.models import BeginFeatureCommand
@@ -185,13 +186,14 @@ class TestDatumCommand:
 
     def test_creation(self):
         """Test creating a datum command."""
-        cmd = DatumCommand(datum="WGS84")
-        assert cmd.datum == "WGS84"
+        cmd = DatumCommand(datum="WGS 1984")
+        assert cmd.datum == Datum.WGS_1984
+        assert isinstance(cmd.datum, Datum)
 
     def test_str(self):
         """Test string representation."""
-        cmd = DatumCommand(datum="WGS84")
-        assert str(cmd) == "OWGS84"
+        cmd = DatumCommand(datum="WGS 1984")
+        assert str(cmd) == "OWGS 1984"
 
 
 class TestUtmZoneCommand:
@@ -324,11 +326,12 @@ class TestCompassPlotParser:
     def test_parse_datum(self):
         """Test parsing O command."""
         parser = CompassPlotParser()
-        line = "OWGS84"
+        line = "OAdindan"
         cmd = parser._parse_command(line, 0)
 
         assert isinstance(cmd, DatumCommand)
-        assert cmd.datum == "WGS84"
+        assert cmd.datum == Datum.ADINDAN
+        assert isinstance(cmd.datum, Datum)
 
     def test_parse_utm_zone(self):
         """Test parsing G command."""

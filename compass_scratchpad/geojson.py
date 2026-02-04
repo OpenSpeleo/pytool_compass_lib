@@ -52,6 +52,7 @@ from compass_scratchpad.constants import GEOJSON_COORDINATE_PRECISION
 from compass_scratchpad.constants import GEOJSON_ELEVATION_PRECISION
 from compass_scratchpad.constants import JSON_ENCODING
 from compass_scratchpad.constants import UTM_SOUTHERN_HEMISPHERE_OFFSET
+from compass_scratchpad.enums import Datum
 from compass_scratchpad.geo_utils import GeoLocation
 from compass_scratchpad.geo_utils import get_declination
 from compass_scratchpad.io import load_project
@@ -115,7 +116,9 @@ class SurveyLeg:
     right: float | None = None
     up: float | None = None
     down: float | None = None
-    lruds_at_to_station: bool = False  # Controls which station LRUDs are associated with
+    lruds_at_to_station: bool = (
+        False  # Controls which station LRUDs are associated with
+    )
 
 
 @dataclass
@@ -126,7 +129,7 @@ class ComputedSurvey:
     legs: list[SurveyLeg] = field(default_factory=list)
     utm_zone: int | None = None
     utm_northern: bool = True
-    datum: str | None = None
+    datum: Datum | None = None
 
 
 # -----------------------------------------------------------------------------
@@ -150,7 +153,7 @@ def utm_to_wgs84(
     Args:
         easting: UTM easting in meters
         northing: UTM northing in meters
-        zone: UTM zone number (1-60)
+        zone: UTM zone number (1-60 north, -1 to -60 south; absolute value used)
         northern: True if northern hemisphere
 
     Returns:
@@ -160,7 +163,8 @@ def utm_to_wgs84(
         InvalidCoordinateError: If conversion fails
     """
     try:
-        lat, lon = utm.to_latlon(easting, northing, zone, northern=northern)
+        # utm.to_latlon requires positive zone number
+        lat, lon = utm.to_latlon(easting, northing, abs(zone), northern=northern)
         return (
             round(float(lon), GEOJSON_COORDINATE_PRECISION),
             round(float(lat), GEOJSON_COORDINATE_PRECISION),
@@ -190,27 +194,30 @@ def get_project_location_wgs84(project: CompassMakFile) -> GeoLocation | None:
     Returns:
         GeoLocation with lat/lon, or None if no valid location found
     """
-    zone = project.utm_zone
-    if not zone:
+    if not project.utm_zone:
         logger.warning("No UTM zone found in project")
         return None
+
+    # Determine hemisphere from zone sign (positive = north, negative = south)
+    northern = project.utm_zone > 0
+    utm_zone = abs(project.utm_zone)
 
     # Try 1: Use project location (@) if valid
     loc = project.location
     if loc and loc.has_location:
-        # Determine hemisphere from northing
-        northern = loc.northing < UTM_SOUTHERN_HEMISPHERE_OFFSET
-
         try:
-            lat, lon = utm.to_latlon(loc.easting, loc.northing, zone, northern=northern)
+            lat, lon = utm.to_latlon(
+                loc.easting, loc.northing, utm_zone, northern=northern
+            )
             return GeoLocation(latitude=lat, longitude=lon)
-        except Exception:
+        except Exception:  # noqa: BLE001
             logger.warning(
                 "Failed to convert project location to lat/lon: "
-                "easting=%.2f, northing=%.2f, zone=%d",
+                "easting=%.2f, northing=%.2f, zone=%d, northern=%b",
                 loc.easting,
                 loc.northing,
-                zone,
+                utm_zone,
+                northern,
             )
 
     # Try 2: Use first fixed station with coordinates
@@ -221,14 +228,12 @@ def get_project_location_wgs84(project: CompassMakFile) -> GeoLocation | None:
         if fixed_loc:
             # Convert feet to meters if needed
             factor = FEET_TO_METERS if fixed_loc.unit.lower() == "f" else 1.0
+
             easting = fixed_loc.easting * factor
             northing = fixed_loc.northing * factor
 
-            # Determine hemisphere from northing
-            northern = northing < UTM_SOUTHERN_HEMISPHERE_OFFSET
-
             try:
-                lat, lon = utm.to_latlon(easting, northing, zone, northern=northern)
+                lat, lon = utm.to_latlon(easting, northing, utm_zone, northern=northern)
                 logger.info(
                     "Using fixed station '%s' as anchor location: (%.4f, %.4f)",
                     first_fixed.name,
@@ -236,52 +241,89 @@ def get_project_location_wgs84(project: CompassMakFile) -> GeoLocation | None:
                     lon,
                 )
                 return GeoLocation(latitude=lat, longitude=lon)
-            except Exception:
+            except Exception:  # noqa: BLE001
                 logger.warning(
                     "Failed to convert fixed station '%s' to lat/lon: "
-                    "easting=%.2f, northing=%.2f, zone=%d",
+                    "easting=%.2f, northing=%.2f, zone=%d, northern=%b",
                     first_fixed.name,
                     easting,
                     northing,
-                    zone,
+                    utm_zone,
+                    northern,
                 )
 
     logger.warning("No valid anchor location found for declination calculation")
     return None
 
 
+def get_station_location_wgs84(
+    station: Station,
+    utm_zone: int,
+    utm_northern: bool,
+) -> GeoLocation:
+    """Convert a station's UTM coordinates to WGS84 lat/lon for declination calculation.
+    
+    IMPORTANT: Compass stores ALL UTM coordinates in northern hemisphere format,
+    regardless of the zone sign. The zone sign only indicates which hemisphere
+    the cave is in for grid orientation purposes (convergence corrections).
+    
+    Therefore, we ALWAYS use northern=True when converting coordinates to get
+    the actual geographic location for declination calculation.
+
+    Args:
+        station: Station with UTM coordinates
+        utm_zone: UTM zone number (can be negative for southern hemisphere)
+        utm_northern: Hemisphere flag (parameter kept for API consistency but not used)
+
+    Returns:
+        GeoLocation with actual WGS84 lat/lon coordinates
+
+    Raises:
+        InvalidCoordinateError: If conversion fails
+    """
+    # Always use northern=True because Compass stores all coordinates in northern format
+    # The zone sign is only used for convergence/grid orientation, not coordinate storage
+    lon, lat = utm_to_wgs84(station.easting, station.northing, utm_zone, northern=True)
+    return GeoLocation(latitude=lat, longitude=lon)
+
+
 def calculate_trip_declination(
-    project_location: GeoLocation | None,
+    station_location: GeoLocation,
     trip_date: datetime.date | None,
 ) -> float:
     """Calculate magnetic declination for a survey trip.
 
-    Uses the project anchor location and the survey date to calculate
-    the magnetic declination using the IGRF model.
+    Uses a station location from the trip and the survey date to calculate
+    the magnetic declination using the IGRF model. The station location should
+    be from an anchor station in the trip's file, or from the current station
+    being processed.
 
     Args:
-        project_location: Project anchor location in WGS84
+        station_location: Location of a station from the trip in WGS84
         trip_date: Date of the survey trip
 
     Returns:
         Declination in degrees (positive = east, negative = west)
-        Returns 0.0 if location or date is not available
-    """
-    if project_location is None or trip_date is None:
-        return 0.0
 
+    Raises:
+        Exception: If declination calculation fails
+    """
     try:
+        if trip_date is None:
+            raise ValueError("Impossible to determine the trip date")  # noqa: TRY301
+
         # Convert date to datetime for the IGRF calculation
-        dt = datetime.datetime(trip_date.year, trip_date.month, trip_date.day)
-        return get_declination(project_location, dt)
+        dt = datetime.datetime(trip_date.year, trip_date.month, trip_date.day)  # noqa: DTZ001
+        return get_declination(station_location, dt)
+
     except Exception:
-        logger.warning(
+        logger.exception(
             "Failed to calculate declination for date %s at location (%.4f, %.4f)",
             trip_date,
-            project_location.latitude,
-            project_location.longitude,
+            station_location.latitude,
+            station_location.longitude,
         )
-        return 0.0
+        raise
 
 
 # -----------------------------------------------------------------------------
@@ -477,22 +519,9 @@ def propagate_coordinates(
     result.datum = project.datum
     result.utm_zone = project.utm_zone
 
-    loc = project.location
-    if loc and loc.has_location:
-        result.utm_northern = loc.northing < UTM_SOUTHERN_HEMISPHERE_OFFSET
-
-    # Get project location for declination calculation (WGS84)
-    project_location = get_project_location_wgs84(project)
-    if project_location:
-        logger.info(
-            "Project anchor location: (%.4f, %.4f)",
-            project_location.latitude,
-            project_location.longitude,
-        )
-    else:
-        logger.warning(
-            "No valid project location found - declination will default to 0.0"
-        )
+    # Determine hemisphere from zone sign (positive = north, negative = south)
+    if result.utm_zone:
+        result.utm_northern = result.utm_zone > 0
 
     # Get convergence angle from project (always applied)
     convergence = project.utm_convergence
@@ -510,6 +539,7 @@ def propagate_coordinates(
 
     if not result.stations:
         # No anchors - use project location or origin for first station
+        loc = project.location
         if loc and loc.has_location:
             origin = Station(
                 name="__ORIGIN__",
@@ -573,15 +603,43 @@ def propagate_coordinates(
             # Calculate declination for this trip (cached)
             trip_key = f"{file_name}:{trip_name}"
             if trip_key not in trip_declinations:
+                # Find anchor station for this trip's file (priority 1)
+                trip_anchor = None
+                for anchor_name, anchor_station in anchors.items():
+                    if anchor_station.file == file_name:
+                        trip_anchor = anchor_station
+                        break
+                
+                # Use trip anchor if found, otherwise use current station (priority 2)
+                location_station = trip_anchor if trip_anchor else current_station
+                
+                # Convert station to WGS84 for declination calculation
+                station_wgs84 = get_station_location_wgs84(
+                    location_station, result.utm_zone, result.utm_northern
+                )
+                
+                logger.debug(
+                    "Trip %s: using station %s at UTM(%.1f, %.1f) zone=%d northern=%s -> WGS84(%.4f, %.4f)",
+                    trip_key,
+                    location_station.name,
+                    location_station.easting,
+                    location_station.northing,
+                    result.utm_zone,
+                    result.utm_northern,
+                    station_wgs84.latitude,
+                    station_wgs84.longitude,
+                )
+                
                 declination = calculate_trip_declination(
-                    project_location, trip.header.date
+                    station_wgs84, trip.header.date
                 )
                 trip_declinations[trip_key] = declination
                 logger.debug(
-                    "Trip %s declination: %.2f° (date: %s)",
+                    "Trip %s declination: %.2f° (date: %s, station: %s)",
                     trip_key,
                     declination,
                     trip.header.date,
+                    location_station.name,
                 )
             else:
                 declination = trip_declinations[trip_key]
@@ -889,7 +947,9 @@ def survey_to_geojson(
     if survey.utm_zone:
         fc_properties["source_utm_zone"] = survey.utm_zone
     if survey.datum:
-        fc_properties["source_datum"] = survey.datum
+        fc_properties["source_datum"] = (
+            survey.datum.value if isinstance(survey.datum, Datum) else survey.datum
+        )
     if properties:
         fc_properties.update(properties)
 

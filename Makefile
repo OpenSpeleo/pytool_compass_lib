@@ -68,14 +68,18 @@ install: clean
 	uv sync --all-extras --dev
 
 # ============================================================================ #
+# Private Data Directory
+# ============================================================================ #
+
+PRIVATE_DATA_DIRS := tests/artifacts/private
+
+# ============================================================================ #
 # Encryption
 # ============================================================================ #
 
-ENCRYPTED_FILES_DIR := tests/artifacts/private
-
 encrypt:
 	@shopt -s nocaseglob; \
-	for file in $(ENCRYPTED_FILES_DIR)/*.{mak,dat,kml,geojson,json}; do \
+	for file in $(PRIVATE_DATA_DIRS)/*.{mak,dat,kml,geojson,json}; do \
 		if [ -f "$$file" ]; then \
 			echo "Encrypting $$file -> $$file.encrypted"; \
 			compass_cli encrypt -i "$$file" -o "$$file.encrypted" -e .env -w; \
@@ -85,8 +89,6 @@ encrypt:
 # ============================================================================ #
 # Test File Generation
 # ============================================================================ #
-
-PRIVATE_DATA_DIRS := tests/artifacts/private
 
 regen-test-geojson:  ## rerun the json conversion to JSON of the test artifacts
 	@shopt -s nocaseglob; \
@@ -100,7 +102,7 @@ regen-test-geojson:  ## rerun the json conversion to JSON of the test artifacts
 
 regen-test-json:  ## rerun the json conversion to JSON of the test artifacts
 	@shopt -s nocaseglob; \
-	for file in $(ENCRYPTED_FILES_DIR)/*.{mak,dat}; do \
+	for file in $(PRIVATE_DATA_DIRS)/*.{mak,dat}; do \
 		[ -f "$$file" ] || continue; \
 		out=$$file.json; \
 		echo "Converting $$file → $$out"; \

@@ -7,12 +7,13 @@ All test files in the private directory are automatically discovered.
 
 from __future__ import annotations
 
+import base64
 import logging
 import os
 from pathlib import Path
 
 import pytest
-from cryptography.fernet import Fernet
+from cryptography.hazmat.primitives.ciphers.aead import AESSIV
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -32,13 +33,14 @@ PRIVATE_DIR = ARTIFACTS_DIR / "private"
 
 
 def _decrypt_artifacts() -> None:
-    if (fernet_key := os.environ.get("ARTIFACT_ENCRYPTION_KEY")) is None:
+    if (key_str := os.environ.get("ARTIFACT_ENCRYPTION_KEY")) is None:
         return
 
     try:
-        fernet_key = Fernet(fernet_key)
+        key_bytes = base64.urlsafe_b64decode(key_str.encode("ascii"))
+        aead = AESSIV(key_bytes)
     except ValueError:
-        logger.exception("Invalid Fernet key provided.")
+        logger.exception("Invalid AES-SIV key provided.")
         return
 
     for enc_f in Path("tests/artifacts/private").rglob(pattern="*.encrypted"):
@@ -46,7 +48,7 @@ def _decrypt_artifacts() -> None:
             enc_data = f.read()
 
         try:
-            dec_data = fernet_key.decrypt(enc_data)
+            dec_data = aead.decrypt(enc_data, None)
         except Exception:
             logger.exception("Failed to decrypt: `%s`.", enc_f)
             continue
@@ -138,7 +140,10 @@ def discover_geojson_files() -> list[pytest.param]:
     if not PRIVATE_DIR.exists():
         return []
     geojson_files = sorted(PRIVATE_DIR.glob("*.geojson"))
-    return [pytest.param(geojson_file, id=geojson_file.stem) for geojson_file in geojson_files]
+    return [
+        pytest.param(geojson_file, id=geojson_file.stem)
+        for geojson_file in geojson_files
+    ]
 
 
 def discover_mak_with_json_baseline() -> list[pytest.param]:

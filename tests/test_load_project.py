@@ -5,15 +5,12 @@ This module tests the hierarchical project loading where MAK files
 include and load their referenced DAT files.
 """
 
-from pathlib import Path
-
 import pytest
 
 from compass_scratchpad import load_project
 from compass_scratchpad import save_project
 from compass_scratchpad.io import CancellationToken
 from compass_scratchpad.project.models import CompassMakFile
-from compass_scratchpad.project.models import DatumDirective
 from compass_scratchpad.project.models import FileDirective
 from compass_scratchpad.project.models import LocationDirective
 from compass_scratchpad.survey.models import CompassDatFile
@@ -219,6 +216,8 @@ class TestPrivateProjects:
 
         # Check that DAT files are loaded (at least one should have data)
         loaded_count = sum(1 for fd in project.file_directives if fd.data)
+        assert loaded_count >= 1
+
         # Some projects may have missing DAT files, just ensure no errors
 
         # trips/shots properties should work (may be 0 for some projects)

@@ -239,3 +239,93 @@ class DrawOperation(str, Enum):
 
     MOVE_TO = "M"
     LINE_TO = "D"
+
+
+class Datum(str, Enum):
+    """Geodetic datum values supported by Compass.
+
+    These are the standard datum values that can be used in MAK project files.
+    The enum values match the exact strings used in Compass MAK files.
+
+    Attributes:
+        ADINDAN: Adindan datum
+        ARC_1950: Arc 1950 datum
+        ARC_1960: Arc 1960 datum
+        AUSTRALIAN_1966: Australian 1966 datum
+        AUSTRALIAN_1984: Australian 1984 datum
+        CAMP_AREA_ASTRO: Camp Area Astro datum
+        CAPE: Cape datum
+        EUROPEAN_1950: European 1950 datum
+        EUROPEAN_1979: European 1979 datum
+        GEODETIC_1949: Geodetic 1949 datum
+        HONG_KONG_1963: Hong Kong 1963 datum
+        HU_TZU_SHAN: Hu Tzu Shan datum
+        INDIAN: Indian datum
+        NORTH_AMERICAN_1927: North American 1927 datum (NAD27)
+        NORTH_AMERICAN_1983: North American 1983 datum (NAD83)
+        OMAN: Oman datum
+        ORDNANCE_SURVEY_1936: Ordnance Survey 1936 datum
+        PULKOVO_1942: Pulkovo 1942 datum
+        SOUTH_AMERICAN_1956: South American 1956 datum
+        SOUTH_AMERICAN_1969: South American 1969 datum
+        TOKYO: Tokyo datum
+        WGS_1972: WGS 1972 datum
+        WGS_1984: WGS 1984 datum
+    """
+
+    ADINDAN = "Adindan"
+    ARC_1950 = "Arc 1950"
+    ARC_1960 = "Arc 1960"
+    AUSTRALIAN_1966 = "Australian 1966"
+    AUSTRALIAN_1984 = "Australian 1984"
+    CAMP_AREA_ASTRO = "Camp Area Astro"
+    CAPE = "Cape"
+    EUROPEAN_1950 = "European 1950"
+    EUROPEAN_1979 = "European 1979"
+    GEODETIC_1949 = "Geodetic 1949"
+    HONG_KONG_1963 = "Hong Kong 1963"
+    HU_TZU_SHAN = "Hu Tzu Shan"
+    INDIAN = "Indian"
+    NORTH_AMERICAN_1927 = "North American 1927"
+    NORTH_AMERICAN_1983 = "North American 1983"
+    OMAN = "Oman"
+    ORDNANCE_SURVEY_1936 = "Ordnance Survey 1936"
+    PULKOVO_1942 = "Pulkovo 1942"
+    SOUTH_AMERICAN_1956 = "South American 1956"
+    SOUTH_AMERICAN_1969 = "South American 1969"
+    TOKYO = "Tokyo"
+    WGS_1972 = "WGS 1972"
+    WGS_1984 = "WGS 1984"
+
+    @classmethod
+    def normalize(cls, value: str | None) -> "Datum | None":
+        """Normalize and validate a datum string to a Datum enum value.
+
+        Performs case-insensitive matching with whitespace normalization.
+
+        Args:
+            value: The datum string to normalize (case-insensitive)
+
+        Returns:
+            The corresponding Datum enum value, or None if value is None
+
+        Raises:
+            ValueError: If the datum string is not recognized
+        """
+        if value is None:
+            return None
+
+        # Normalize: lowercase, strip whitespace, collapse multiple spaces
+        normalized = " ".join(value.strip().lower().split())
+
+        # Match against enum values (case-insensitive)
+        for datum in cls:
+            if datum.value.lower() == normalized:
+                return datum
+
+        raise ValueError(f"Unknown datum: {value!r}")
+
+    @classmethod
+    def from_string(cls, value: str | None) -> "Datum | None":
+        """Alias for normalize() for backwards compatibility."""
+        return cls.normalize(value)

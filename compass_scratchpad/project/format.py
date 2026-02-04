@@ -33,7 +33,7 @@ def format_directive(directive: CompassProjectDirective) -> str:  # noqa: PLR091
             return f"/{directive.comment}\r\n"
 
         case DatumDirective():
-            return f"&{directive.datum};\r\n"
+            return f"&{directive.datum.value};\r\n"
 
         case UTMZoneDirective():
             return f"${directive.utm_zone};\r\n"

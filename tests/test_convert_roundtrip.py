@@ -14,19 +14,19 @@ from pathlib import Path
 
 import orjson
 import pytest
+from deepdiff import DeepDiff
 
-from compass_scratchpad.commands.convert import _convert
 from compass_scratchpad.commands.convert import ConversionError
+from compass_scratchpad.commands.convert import _convert
 from compass_scratchpad.commands.convert import detect_file_format
 from compass_scratchpad.constants import FORMAT_COMPASS_DAT
 from compass_scratchpad.constants import FORMAT_COMPASS_MAK
 from compass_scratchpad.enums import CompassFileType
 from compass_scratchpad.enums import FileFormat
+from compass_scratchpad.geojson import convert_mak_to_geojson
 from compass_scratchpad.io import load_project
 from compass_scratchpad.io import read_dat_file
 from compass_scratchpad.survey.models import CompassDatFile
-
-from deepdiff import DeepDiff
 
 # Import fixtures from conftest
 from tests.conftest import ALL_DAT_FILES
@@ -36,7 +36,6 @@ from tests.conftest import ALL_MAK_JSON_FILES
 from tests.conftest import DAT_WITH_JSON_BASELINE
 from tests.conftest import MAK_WITH_GEOJSON
 from tests.conftest import MAK_WITH_JSON_BASELINE
-
 
 # =============================================================================
 # Test: File Format Detection
@@ -91,13 +90,17 @@ class TestConversionValidation:
     @pytest.mark.parametrize("dat_path", ALL_DAT_FILES[:3])
     def test_compass_to_compass_raises_error(self, dat_path):
         """Test that compass -> compass conversion raises error."""
-        with pytest.raises(ConversionError, match="Source and target formats must be different"):
+        with pytest.raises(
+            ConversionError, match="Source and target formats must be different"
+        ):
             _convert(dat_path, target_format="compass")
 
     @pytest.mark.parametrize("json_file", ALL_DAT_JSON_FILES[:3])
     def test_json_to_json_raises_error(self, json_file):
         """Test that json -> json conversion raises error."""
-        with pytest.raises(ConversionError, match="Source and target formats must be different"):
+        with pytest.raises(
+            ConversionError, match="Source and target formats must be different"
+        ):
             _convert(json_file, target_format="json")
 
     def test_file_not_found_raises_error(self):
@@ -143,11 +146,7 @@ class TestMakRoundtrip:
         json1 = orjson.loads(json1_path.read_bytes())
         json2 = orjson.loads(json2_path.read_bytes())
 
-        ddiff = DeepDiff(
-            json1,
-            json2,
-            ignore_order=True
-        )
+        ddiff = DeepDiff(json1, json2, ignore_order=True)
         assert ddiff == {}, ddiff
 
 
@@ -193,11 +192,7 @@ class TestDatRoundtrip:
         json1 = orjson.loads(json1_path.read_bytes())
         json2 = orjson.loads(json2_path.read_bytes())
 
-        ddiff = DeepDiff(
-            json1,
-            json2,
-            ignore_order=True
-        )
+        ddiff = DeepDiff(json1, json2, ignore_order=True)
         assert ddiff == {}, ddiff
 
 
@@ -209,7 +204,7 @@ class TestDatRoundtrip:
 class TestBaselineConsistency:
     """Tests that compare generated output to stored baseline files."""
 
-    @pytest.mark.parametrize("mak_path,json_baseline", MAK_WITH_JSON_BASELINE)
+    @pytest.mark.parametrize(("mak_path", "json_baseline"), MAK_WITH_JSON_BASELINE)
     def test_mak_to_json_matches_baseline(self, mak_path, json_baseline):
         """Test MAK to JSON conversion matches stored baseline."""
         # Load and convert MAK
@@ -219,14 +214,10 @@ class TestBaselineConsistency:
         # Load baseline
         baseline = orjson.loads(json_baseline.read_bytes())
 
-        ddiff = DeepDiff(
-            baseline,
-            result,
-            ignore_order=True
-        )
+        ddiff = DeepDiff(baseline, result, ignore_order=True)
         assert ddiff == {}, ddiff
 
-    @pytest.mark.parametrize("dat_path,json_baseline", DAT_WITH_JSON_BASELINE)
+    @pytest.mark.parametrize(("dat_path", "json_baseline"), DAT_WITH_JSON_BASELINE)
     def test_dat_to_json_matches_baseline(self, dat_path, json_baseline):
         """Test DAT to JSON conversion matches stored baseline."""
         # Read the DAT file
@@ -243,11 +234,7 @@ class TestBaselineConsistency:
         # Load baseline
         baseline = orjson.loads(json_baseline.read_bytes())
 
-        ddiff = DeepDiff(
-            baseline,
-            result,
-            ignore_order=True
-        )
+        ddiff = DeepDiff(baseline, result, ignore_order=True)
         assert ddiff == {}, ddiff
 
 
@@ -363,7 +350,6 @@ class TestGeoJSONGeneration:
     @pytest.mark.parametrize("mak_path", ALL_MAK_FILES)
     def test_geojson_generation_succeeds(self, mak_path):
         """Test that GeoJSON generation completes without errors."""
-        from compass_scratchpad.geojson import convert_mak_to_geojson
 
         # Generate GeoJSON - should not raise
         result_str = convert_mak_to_geojson(
@@ -399,7 +385,7 @@ class TestGeoJSONGeneration:
 class TestGeoJSONBaselineComparison:
     """Tests that compare generated GeoJSON against stored baseline files."""
 
-    @pytest.mark.parametrize("mak_path,geojson_baseline", MAK_WITH_GEOJSON)
+    @pytest.mark.parametrize(("mak_path", "geojson_baseline"), MAK_WITH_GEOJSON)
     def test_geojson_matches_baseline(self, mak_path, geojson_baseline):
         """Test GeoJSON generation matches stored baseline.
 
@@ -410,7 +396,6 @@ class TestGeoJSONBaselineComparison:
         file size and focus on the coordinate computation which is the main
         area of concern for regression testing.
         """
-        from compass_scratchpad.geojson import convert_mak_to_geojson
 
         # Generate GeoJSON - must match options used to generate baselines
         result_str = convert_mak_to_geojson(
@@ -424,11 +409,7 @@ class TestGeoJSONBaselineComparison:
         # Load baseline
         baseline = orjson.loads(geojson_baseline.read_bytes())
 
-        ddiff = DeepDiff(
-            baseline,
-            result,
-            ignore_order=True
-        )
+        ddiff = DeepDiff(baseline, result, ignore_order=True)
         assert ddiff == {}, ddiff
 
 

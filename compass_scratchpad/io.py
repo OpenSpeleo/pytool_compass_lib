@@ -15,20 +15,19 @@ The functions in this module are thin wrappers maintained for API stability.
 
 from pathlib import Path
 
+from compass_scratchpad.interface import DEFAULT_ENCODING
 from compass_scratchpad.interface import CancellationToken
 from compass_scratchpad.interface import CompassInterface
-from compass_scratchpad.interface import DEFAULT_ENCODING
 from compass_scratchpad.interface import ProgressCallback
 from compass_scratchpad.project.models import CompassMakFile
 from compass_scratchpad.project.models import CompassProjectDirective
 from compass_scratchpad.survey.models import CompassDatFile
 from compass_scratchpad.survey.models import CompassTrip
 
-
 # Re-export for API compatibility
 __all__ = [
-    "CancellationToken",
     "DEFAULT_ENCODING",
+    "CancellationToken",
     "ProgressCallback",
     "load_dat_json",
     "load_project",

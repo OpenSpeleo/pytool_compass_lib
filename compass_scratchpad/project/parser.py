@@ -284,7 +284,10 @@ class CompassProjectParser:
         return float(text)
 
     def _expect_utm_zone(self, *, allow_zero: bool = False) -> int:
-        """Parse UTM zone (integer 1-60, or 0 if allow_zero).
+        """Parse UTM zone (integer 1-60 or -1 to -60, or 0 if allow_zero).
+
+        Positive zones indicate northern hemisphere.
+        Negative zones indicate southern hemisphere.
 
         Args:
             allow_zero: If True, allows zone 0 (meaning "not specified")
@@ -303,12 +306,20 @@ class CompassProjectParser:
             )
 
         zone = int(text)
-        min_zone = 0 if allow_zero else 1
-        if zone < min_zone or zone > 60:
+        
+        # Check if zone is valid
+        if zone == 0 and not allow_zero:
             raise CompassParseException(
-                f"UTM zone must be between {min_zone} and 60, got {zone}",
+                "UTM zone cannot be 0. Use 1-60 for north, -1 to -60 for south.",
                 self._location(text),
             )
+        
+        if abs(zone) > 60:
+            raise CompassParseException(
+                f"UTM zone must be between -60 and 60, got {zone}",
+                self._location(text),
+            )
+        
         return zone
 
     def _parse_length_unit(self) -> str:

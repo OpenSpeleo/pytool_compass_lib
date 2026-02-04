@@ -100,6 +100,17 @@ class TestUTMZoneDirective:
         with pytest.raises(ValueError, match="UTM zone"):
             UTMZoneDirective(utm_zone=61)
 
+    def test_southern_hemisphere_zone(self):
+        """Test creating directive with negative zone (southern hemisphere)."""
+        directive = UTMZoneDirective(utm_zone=-13)
+        assert directive.utm_zone == -13
+        assert str(directive) == "$-13;"
+
+    def test_zone_too_negative(self):
+        """Test that zone < -60 raises ValueError."""
+        with pytest.raises(ValueError):
+            UTMZoneDirective(utm_zone=-61)
+
 
 class TestUTMConvergenceDirective:
     """Tests for UTMConvergenceDirective model."""
@@ -391,6 +402,25 @@ class TestCompassProjectParser:
         assert isinstance(directives[0], UTMZoneDirective)
         assert directives[0].utm_zone == 13
 
+    def test_parse_negative_utm_zone(self):
+        """Test parsing negative UTM zone (southern hemisphere)."""
+        parser = CompassProjectParser()
+        directives = parser.parse_string("$-13;")
+
+        assert len(directives) == 1
+        assert isinstance(directives[0], UTMZoneDirective)
+        assert directives[0].utm_zone == -13
+
+    def test_parse_location_with_negative_zone(self):
+        """Test parsing location with negative zone (southern hemisphere)."""
+        parser = CompassProjectParser()
+        data = "@500000.0,6000000.0,100.0,-33,-1.5;"
+        directives = parser.parse_string(data)
+
+        assert len(directives) == 1
+        assert isinstance(directives[0], LocationDirective)
+        assert directives[0].utm_zone == -33
+
     def test_parse_utm_convergence_enabled(self):
         """Test parsing UTM convergence directive with % (enabled)."""
         parser = CompassProjectParser()
@@ -624,7 +654,7 @@ class TestCompassProjectParser:
         """Test that invalid UTM zone raises exception."""
         parser = CompassProjectParser()
 
-        with pytest.raises(CompassParseException, match="UTM zone must be between"):
+        with pytest.raises(CompassParseException, match="cannot be 0"):
             parser.parse_string("$0;")
 
         with pytest.raises(CompassParseException, match="UTM zone must be between"):

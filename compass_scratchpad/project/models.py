@@ -24,6 +24,7 @@ from pydantic import model_validator
 
 from compass_scratchpad.constants import FORMAT_COMPASS_MAK
 from compass_scratchpad.constants import FORMAT_COMPASS_PROJECT
+from compass_scratchpad.enums import Datum
 from compass_scratchpad.models import NEVLocation  # noqa: TC001
 
 if TYPE_CHECKING:
@@ -77,14 +78,36 @@ class DatumDirective(BaseModel):
     """Datum directive (lines starting with &)."""
 
     type: Literal["datum"] = "datum"
-    datum: str
+    datum: Datum
+
+    @field_validator("datum", mode="before")
+    @classmethod
+    def normalize_datum(cls, value: str | Datum) -> Datum:
+        """Validate and normalize datum string to Datum enum.
+
+        Args:
+            value: Datum as string or Datum enum
+
+        Returns:
+            Datum enum value
+
+        Raises:
+            ValueError: If datum string is not recognized
+        """
+        if isinstance(value, Datum):
+            return value
+        return Datum.normalize(value)
 
     def __str__(self) -> str:
-        return f"&{self.datum};"
+        return f"&{self.datum.value};"
 
 
 class UTMZoneDirective(BaseModel):
-    """UTM zone directive (lines starting with $)."""
+    """UTM zone directive (lines starting with $).
+    
+    Positive zones (1-60) indicate northern hemisphere.
+    Negative zones (-1 to -60) indicate southern hemisphere.
+    """
 
     type: Literal["utm_zone"] = "utm_zone"
     utm_zone: int
@@ -92,8 +115,10 @@ class UTMZoneDirective(BaseModel):
     @field_validator("utm_zone")
     @classmethod
     def validate_utm_zone(cls, v: int) -> int:
-        if v < 1 or v > 60:
-            raise ValueError(f"UTM zone must be 1-60, got {v}")
+        if v == 0:
+            raise ValueError("UTM zone cannot be 0. Use 1-60 for north, -1 to -60 for south.")
+        if abs(v) > 60:
+            raise ValueError(f"UTM zone must be between -60 and 60 (excluding 0), got {v}")
         return v
 
     def __str__(self) -> str:
@@ -280,7 +305,12 @@ class FileDirective(BaseModel):
 
 
 class LocationDirective(BaseModel):
-    """Project location directive (lines starting with @)."""
+    """Project location directive (lines starting with @).
+    
+    Positive zones (1-60) indicate northern hemisphere.
+    Negative zones (-1 to -60) indicate southern hemisphere.
+    Zone 0 is allowed to indicate "no location specified".
+    """
 
     type: Literal["location"] = "location"
     easting: float
@@ -292,8 +322,8 @@ class LocationDirective(BaseModel):
     @field_validator("utm_zone")
     @classmethod
     def validate_utm_zone(cls, v: int) -> int:
-        if v < 0 or v > 60:
-            raise ValueError(f"UTM zone must be 0-60, got {v}")
+        if abs(v) > 60:
+            raise ValueError(f"UTM zone must be between -60 and 60, got {v}")
         return v
 
     @property
@@ -392,7 +422,7 @@ class CompassMakFile(BaseModel):
         return None
 
     @property
-    def datum(self) -> str | None:
+    def datum(self) -> Datum | None:
         for d in self.directives:
             if isinstance(d, DatumDirective):
                 return d.datum

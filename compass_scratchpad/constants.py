@@ -108,5 +108,9 @@ FLAG_CHARS: dict[str, str] = {
 # UTM Constants
 # -----------------------------------------------------------------------------
 
-#: Southern hemisphere UTM northing offset
+#: Southern hemisphere UTM northing offset (10 million meters)
+#: Note: This constant represents the false northing added to southern hemisphere
+#: UTM coordinates. However, in Compass, hemisphere is determined by the ZONE SIGN
+#: (positive = north, negative = south), NOT by comparing northing to this threshold.
+#: This constant is kept for reference and potential future use.
 UTM_SOUTHERN_HEMISPHERE_OFFSET: float = 10_000_000.0

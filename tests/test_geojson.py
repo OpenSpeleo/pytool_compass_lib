@@ -41,9 +41,10 @@ class TestComputeSurveyCoordinates:
         project = load_project(mak_path)
         survey = compute_survey_coordinates(project)
 
-        # Should have a valid UTM zone (1-60)
+        # Should have a valid UTM zone (1-60 for north, -1 to -60 for south)
         assert survey.utm_zone is not None
-        assert 1 <= survey.utm_zone <= 60, f"Invalid UTM zone: {survey.utm_zone}"
+        assert survey.utm_zone != 0, "UTM zone cannot be 0"
+        assert abs(survey.utm_zone) <= 60, f"Invalid UTM zone: {survey.utm_zone}"
 
 
 class TestSurveyToGeoJSON:
@@ -274,6 +275,7 @@ class TestPrivateProjectsGeoJSON:
         project = load_project(mak_path)
         survey = compute_survey_coordinates(project)
 
-        # Should have a valid UTM zone
+        # Should have a valid UTM zone (1-60 for north, -1 to -60 for south)
         assert survey.utm_zone is not None
-        assert 1 <= survey.utm_zone <= 60, f"Invalid UTM zone: {survey.utm_zone}"
+        assert survey.utm_zone != 0, "UTM zone cannot be 0"
+        assert abs(survey.utm_zone) <= 60, f"Invalid UTM zone: {survey.utm_zone}"
