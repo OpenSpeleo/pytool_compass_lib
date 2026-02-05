@@ -7,19 +7,19 @@ from pathlib import Path
 
 import pytest
 
-from compass_scratchpad.enums import Datum
-from compass_scratchpad.enums import DrawOperation
-from compass_scratchpad.enums import Severity
-from compass_scratchpad.plot.models import BeginFeatureCommand
-from compass_scratchpad.plot.models import BeginSectionCommand
-from compass_scratchpad.plot.models import BeginSurveyCommand
-from compass_scratchpad.plot.models import CaveBoundsCommand
-from compass_scratchpad.plot.models import DatumCommand
-from compass_scratchpad.plot.models import DrawSurveyCommand
-from compass_scratchpad.plot.models import FeatureCommand
-from compass_scratchpad.plot.models import SurveyBoundsCommand
-from compass_scratchpad.plot.models import UtmZoneCommand
-from compass_scratchpad.plot.parser import CompassPlotParser
+from compass_lib.enums import Datum
+from compass_lib.enums import DrawOperation
+from compass_lib.enums import Severity
+from compass_lib.plot.models import BeginFeatureCommand
+from compass_lib.plot.models import BeginSectionCommand
+from compass_lib.plot.models import BeginSurveyCommand
+from compass_lib.plot.models import CaveBoundsCommand
+from compass_lib.plot.models import DatumCommand
+from compass_lib.plot.models import DrawSurveyCommand
+from compass_lib.plot.models import FeatureCommand
+from compass_lib.plot.models import SurveyBoundsCommand
+from compass_lib.plot.models import UtmZoneCommand
+from compass_lib.plot.parser import CompassPlotParser
 
 
 class TestBeginSurveyCommand:

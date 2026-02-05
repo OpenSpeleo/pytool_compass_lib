@@ -41,26 +41,25 @@ from typing import Any
 
 import orjson
 import utm
+from compass_lib.constants import FEET_TO_METERS
+from compass_lib.constants import GEOJSON_COORDINATE_PRECISION
+from compass_lib.constants import JSON_ENCODING
+from compass_lib.enums import Datum
+from compass_lib.geo_utils import GeoLocation
+from compass_lib.geo_utils import get_declination
+from compass_lib.io import load_project
 from geojson import Feature
 from geojson import FeatureCollection
 from geojson import LineString
 from geojson import Point
 from geojson import Polygon
 
-from compass_scratchpad.constants import FEET_TO_METERS
-from compass_scratchpad.constants import GEOJSON_COORDINATE_PRECISION
-from compass_scratchpad.constants import JSON_ENCODING
-from compass_scratchpad.enums import Datum
-from compass_scratchpad.geo_utils import GeoLocation
-from compass_scratchpad.geo_utils import get_declination
-from compass_scratchpad.io import load_project
-
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from compass_scratchpad.project.models import CompassMakFile
-    from compass_scratchpad.survey.models import CompassShot
-    from compass_scratchpad.survey.models import CompassTrip
+    from compass_lib.project.models import CompassMakFile
+    from compass_lib.survey.models import CompassShot
+    from compass_lib.survey.models import CompassTrip
 
 logger = logging.getLogger(__name__)
 

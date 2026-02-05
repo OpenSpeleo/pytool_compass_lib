@@ -13,11 +13,11 @@ import re
 from pathlib import Path
 from typing import Any
 
-from compass_scratchpad.constants import ASCII_ENCODING
-from compass_scratchpad.enums import FormatIdentifier
-from compass_scratchpad.errors import CompassParseException
-from compass_scratchpad.errors import SourceLocation
-from compass_scratchpad.project.models import CompassMakFile
+from compass_lib.constants import ASCII_ENCODING
+from compass_lib.enums import FormatIdentifier
+from compass_lib.errors import CompassParseException
+from compass_lib.errors import SourceLocation
+from compass_lib.project.models import CompassMakFile
 
 
 class CompassProjectParser:

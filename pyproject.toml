@@ -18,7 +18,7 @@ dev = [
 ]
 
 [project]
-name = "compass_scratchpad"
+name = "compass_lib"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
@@ -86,17 +86,17 @@ test = [
 "Source" = "https://github.com/OpenSpeleo/pytool_compass_lib"
 
 [project.scripts]
-compass_cli = "compass_scratchpad.commands.main:main"
+compass = "compass_lib.commands.main:main"
 
-[project.entry-points."compass_scratchpad.actions"]
-encrypt = "compass_scratchpad.commands.encrypt:encrypt"
-convert = "compass_scratchpad.commands.convert:convert"
-geojson = "compass_scratchpad.commands.geojson:geojson"
+[project.entry-points."compass_lib.actions"]
+encrypt = "compass_lib.commands.encrypt:encrypt"
+convert = "compass_lib.commands.convert:convert"
+geojson = "compass_lib.commands.geojson:geojson"
 
 [tool.pytest.ini_options]
 env_files = [".env"]
 testpaths = ["tests/"]
-addopts = "-vvv --cov=compass_scratchpad --cov-report=term-missing"
+addopts = "-vvv --cov=compass_lib --cov-report=term-missing"
 # addopts = "-vvv --cov=compass_lib --cov-report=term-missing --capture=no"
 
 # # This is configuration specific to the `setuptools` build backend.

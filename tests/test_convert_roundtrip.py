@@ -16,16 +16,16 @@ import orjson
 import pytest
 from deepdiff import DeepDiff
 
-from compass_scratchpad.commands.convert import ConversionError
-from compass_scratchpad.commands.convert import _convert
-from compass_scratchpad.commands.convert import detect_file_format
-from compass_scratchpad.enums import CompassFileType
-from compass_scratchpad.enums import FileFormat
-from compass_scratchpad.enums import FormatIdentifier
-from compass_scratchpad.geojson import convert_mak_to_geojson
-from compass_scratchpad.io import load_project
-from compass_scratchpad.io import read_dat_file
-from compass_scratchpad.survey.models import CompassDatFile
+from compass_lib.commands.convert import ConversionError
+from compass_lib.commands.convert import _convert
+from compass_lib.commands.convert import detect_file_format
+from compass_lib.enums import CompassFileType
+from compass_lib.enums import FileFormat
+from compass_lib.enums import FormatIdentifier
+from compass_lib.geojson import convert_mak_to_geojson
+from compass_lib.io import load_project
+from compass_lib.io import read_dat_file
+from compass_lib.survey.models import CompassDatFile
 
 # Import fixtures from conftest
 from tests.conftest import ALL_DAT_FILES

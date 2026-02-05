@@ -244,7 +244,7 @@ wheels = [
 ]
 
 [[package]]
-name = "compass-scratchpad"
+name = "compass-lib"
 source = { editable = "." }
 dependencies = [
     { name = "geojson" },

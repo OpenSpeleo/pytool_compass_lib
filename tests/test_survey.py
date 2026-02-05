@@ -6,15 +6,15 @@ from pathlib import Path
 
 import pytest
 
-from compass_scratchpad.enums import AzimuthUnit
-from compass_scratchpad.enums import LengthUnit
-from compass_scratchpad.enums import LrudAssociation
-from compass_scratchpad.enums import Severity
-from compass_scratchpad.enums import ShotItem
-from compass_scratchpad.survey.models import CompassShot
-from compass_scratchpad.survey.models import CompassTrip
-from compass_scratchpad.survey.models import CompassTripHeader
-from compass_scratchpad.survey.parser import CompassSurveyParser
+from compass_lib.enums import AzimuthUnit
+from compass_lib.enums import LengthUnit
+from compass_lib.enums import LrudAssociation
+from compass_lib.enums import Severity
+from compass_lib.enums import ShotItem
+from compass_lib.survey.models import CompassShot
+from compass_lib.survey.models import CompassTrip
+from compass_lib.survey.models import CompassTripHeader
+from compass_lib.survey.parser import CompassSurveyParser
 
 
 class TestCompassShot:

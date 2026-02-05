@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-"""Tests for compass_scratchpad library."""
+"""Tests for compass_lib library."""

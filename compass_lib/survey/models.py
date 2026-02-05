@@ -12,18 +12,17 @@ from __future__ import annotations
 
 import datetime  # noqa: TC003
 
+from compass_lib.enums import AzimuthUnit
+from compass_lib.enums import InclinationUnit
+from compass_lib.enums import LengthUnit
+from compass_lib.enums import LrudAssociation
+from compass_lib.enums import LrudItem
+from compass_lib.enums import ShotItem
 from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field
 from pydantic import field_serializer
 from pydantic import field_validator
-
-from compass_scratchpad.enums import AzimuthUnit
-from compass_scratchpad.enums import InclinationUnit
-from compass_scratchpad.enums import LengthUnit
-from compass_scratchpad.enums import LrudAssociation
-from compass_scratchpad.enums import LrudItem
-from compass_scratchpad.enums import ShotItem
 
 
 class CompassShot(BaseModel):

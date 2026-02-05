@@ -14,6 +14,10 @@ from typing import Any
 from typing import ClassVar
 from typing import Literal
 
+from compass_lib.enums import Datum
+from compass_lib.enums import FormatIdentifier
+from compass_lib.models import NEVLocation  # noqa: TC001
+from compass_lib.survey.models import CompassDatFile  # noqa: TC001
 from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Discriminator
@@ -21,11 +25,6 @@ from pydantic import Field
 from pydantic import Tag
 from pydantic import field_validator
 from pydantic import model_validator
-
-from compass_scratchpad.enums import Datum
-from compass_scratchpad.enums import FormatIdentifier
-from compass_scratchpad.models import NEVLocation  # noqa: TC001
-from compass_scratchpad.survey.models import CompassDatFile  # noqa: TC001
 
 if TYPE_CHECKING:
     from collections.abc import Iterator

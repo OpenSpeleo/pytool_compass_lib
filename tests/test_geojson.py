@@ -8,12 +8,11 @@ import json
 from pathlib import Path
 
 import pytest
-
-from compass_scratchpad import load_project
-from compass_scratchpad.geojson import compute_survey_coordinates
-from compass_scratchpad.geojson import convert_mak_to_geojson
-from compass_scratchpad.geojson import project_to_geojson
-from compass_scratchpad.geojson import survey_to_geojson
+from compass_lib import load_project
+from compass_lib.geojson import compute_survey_coordinates
+from compass_lib.geojson import convert_mak_to_geojson
+from compass_lib.geojson import project_to_geojson
+from compass_lib.geojson import survey_to_geojson
 
 # Import fixtures from conftest
 from tests.conftest import ALL_MAK_FILES
@@ -50,7 +49,9 @@ class TestComputeSurveyCoordinates:
 class TestSurveyToGeoJSON:
     """Tests for survey_to_geojson function."""
 
-    @pytest.mark.skipif(FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file")
+    @pytest.mark.skipif(
+        FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file"
+    )
     def test_geojson_structure(self):
         """Test that GeoJSON has correct structure."""
         project = load_project(FIRST_MAK)
@@ -61,7 +62,9 @@ class TestSurveyToGeoJSON:
         assert "features" in geojson
         assert isinstance(geojson["features"], list)
 
-    @pytest.mark.skipif(FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file")
+    @pytest.mark.skipif(
+        FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file"
+    )
     def test_geojson_with_stations_only(self):
         """Test that stations can be included exclusively."""
         project = load_project(FIRST_MAK)
@@ -73,7 +76,9 @@ class TestSurveyToGeoJSON:
             assert feature["geometry"]["type"] == "Point"
             assert feature["properties"]["type"] == "station"
 
-    @pytest.mark.skipif(FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file")
+    @pytest.mark.skipif(
+        FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file"
+    )
     def test_geojson_with_legs_only(self):
         """Test that legs can be included exclusively."""
         project = load_project(FIRST_MAK)
@@ -85,7 +90,9 @@ class TestSurveyToGeoJSON:
             assert feature["geometry"]["type"] == "LineString"
             assert feature["properties"]["type"] == "leg"
 
-    @pytest.mark.skipif(FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file")
+    @pytest.mark.skipif(
+        FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file"
+    )
     def test_geojson_without_stations(self):
         """Test that stations can be excluded."""
         project = load_project(FIRST_MAK)
@@ -96,7 +103,9 @@ class TestSurveyToGeoJSON:
         for feature in geojson["features"]:
             assert feature["geometry"]["type"] != "Point"
 
-    @pytest.mark.skipif(FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file")
+    @pytest.mark.skipif(
+        FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file"
+    )
     def test_geojson_without_legs(self):
         """Test that legs can be excluded."""
         project = load_project(FIRST_MAK)
@@ -107,7 +116,9 @@ class TestSurveyToGeoJSON:
         for feature in geojson["features"]:
             assert feature["geometry"]["type"] != "LineString"
 
-    @pytest.mark.skipif(FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file")
+    @pytest.mark.skipif(
+        FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file"
+    )
     def test_geojson_with_passages(self):
         """Test that passages can be included."""
         project = load_project(FIRST_MAK)
@@ -128,7 +139,9 @@ class TestSurveyToGeoJSON:
             # Just verify no error occurred
             assert isinstance(polygon_count, int)
 
-    @pytest.mark.skipif(FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file")
+    @pytest.mark.skipif(
+        FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file"
+    )
     def test_geojson_properties(self):
         """Test that metadata is included in properties."""
         project = load_project(FIRST_MAK)
@@ -184,7 +197,9 @@ class TestConvertMakToGeoJSON:
             # WGS84 latitude should be between -90 and 90
             assert -90 <= lat <= 90, f"Invalid latitude: {lat} in {mak_path.name}"
 
-    @pytest.mark.skipif(FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file")
+    @pytest.mark.skipif(
+        FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file"
+    )
     def test_convert_to_file(self, tmp_path):
         """Test conversion writes to file."""
         output_path = tmp_path / "output.geojson"
@@ -200,15 +215,16 @@ class TestConvertMakToGeoJSON:
 class TestGeoJSONFeatureProperties:
     """Tests for feature properties in GeoJSON output."""
 
-    @pytest.mark.skipif(FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file")
+    @pytest.mark.skipif(
+        FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file"
+    )
     def test_station_properties(self):
         """Test that station features have correct properties."""
         project = load_project(FIRST_MAK)
         geojson = project_to_geojson(project)
 
         stations = [
-            f for f in geojson["features"]
-            if f["properties"]["type"] == "station"
+            f for f in geojson["features"] if f["properties"]["type"] == "station"
         ]
 
         for station in stations:
@@ -217,16 +233,15 @@ class TestGeoJSONFeatureProperties:
             assert "file" in props
             assert "elevation_m" in props
 
-    @pytest.mark.skipif(FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file")
+    @pytest.mark.skipif(
+        FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file"
+    )
     def test_leg_properties(self):
         """Test that leg features have correct properties."""
         project = load_project(FIRST_MAK)
         geojson = project_to_geojson(project)
 
-        legs = [
-            f for f in geojson["features"]
-            if f["properties"]["type"] == "leg"
-        ]
+        legs = [f for f in geojson["features"] if f["properties"]["type"] == "leg"]
 
         for leg in legs:
             props = leg["properties"]
@@ -237,7 +252,9 @@ class TestGeoJSONFeatureProperties:
             assert "file" in props
             assert "trip" in props
 
-    @pytest.mark.skipif(FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file")
+    @pytest.mark.skipif(
+        FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file"
+    )
     def test_coordinates_are_3d(self):
         """Test that coordinates include elevation."""
         project = load_project(FIRST_MAK)
@@ -262,8 +279,7 @@ class TestPrivateProjectsGeoJSON:
         geojson = project_to_geojson(project)
 
         stations = [
-            f for f in geojson["features"]
-            if f["properties"]["type"] == "station"
+            f for f in geojson["features"] if f["properties"]["type"] == "station"
         ]
 
         # Should have at least some stations

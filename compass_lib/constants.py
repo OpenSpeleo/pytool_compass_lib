@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Constants used throughout the compass_scratchpad library.
+"""Constants used throughout the compass_lib library.
 
 This module centralizes all constant values to ensure consistency
 and avoid magic numbers/strings scattered across the codebase.

@@ -16,14 +16,14 @@ from pathlib import Path
 from typing import Any
 from typing import Protocol
 
-from compass_scratchpad.constants import COMPASS_ENCODING
-from compass_scratchpad.constants import JSON_ENCODING
-from compass_scratchpad.project.format import format_mak_file
-from compass_scratchpad.project.models import CompassMakFile
-from compass_scratchpad.project.parser import CompassProjectParser
-from compass_scratchpad.survey.format import format_dat_file
-from compass_scratchpad.survey.models import CompassDatFile
-from compass_scratchpad.survey.parser import CompassSurveyParser
+from compass_lib.constants import COMPASS_ENCODING
+from compass_lib.constants import JSON_ENCODING
+from compass_lib.project.format import format_mak_file
+from compass_lib.project.models import CompassMakFile
+from compass_lib.project.parser import CompassProjectParser
+from compass_lib.survey.format import format_dat_file
+from compass_lib.survey.models import CompassDatFile
+from compass_lib.survey.parser import CompassSurveyParser
 
 # Re-export for backwards compatibility
 DEFAULT_ENCODING = COMPASS_ENCODING

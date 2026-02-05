@@ -8,14 +8,13 @@ found in Compass .PLT plot files.
 import datetime
 from decimal import Decimal
 
+from compass_lib.enums import Datum
+from compass_lib.enums import DrawOperation
+from compass_lib.models import Bounds
+from compass_lib.models import Location
 from pydantic import BaseModel
 from pydantic import Field
 from pydantic import field_validator
-
-from compass_scratchpad.enums import Datum
-from compass_scratchpad.enums import DrawOperation
-from compass_scratchpad.models import Bounds
-from compass_scratchpad.models import Location
 
 
 class CompassPlotCommand(BaseModel):

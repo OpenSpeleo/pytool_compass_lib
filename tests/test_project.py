@@ -5,21 +5,21 @@ from pathlib import Path
 
 import pytest
 
-from compass_scratchpad.errors import CompassParseException
-from compass_scratchpad.models import NEVLocation
-from compass_scratchpad.project.models import CommentDirective
-from compass_scratchpad.project.models import DatumDirective
-from compass_scratchpad.project.models import DeclinationMode
-from compass_scratchpad.project.models import FileDirective
-from compass_scratchpad.project.models import FlagsDirective
-from compass_scratchpad.project.models import FolderEndDirective
-from compass_scratchpad.project.models import FolderStartDirective
-from compass_scratchpad.project.models import LinkStation
-from compass_scratchpad.project.models import LocationDirective
-from compass_scratchpad.project.models import UnknownDirective
-from compass_scratchpad.project.models import UTMConvergenceDirective
-from compass_scratchpad.project.models import UTMZoneDirective
-from compass_scratchpad.project.parser import CompassProjectParser
+from compass_lib.errors import CompassParseException
+from compass_lib.models import NEVLocation
+from compass_lib.project.models import CommentDirective
+from compass_lib.project.models import DatumDirective
+from compass_lib.project.models import DeclinationMode
+from compass_lib.project.models import FileDirective
+from compass_lib.project.models import FlagsDirective
+from compass_lib.project.models import FolderEndDirective
+from compass_lib.project.models import FolderStartDirective
+from compass_lib.project.models import LinkStation
+from compass_lib.project.models import LocationDirective
+from compass_lib.project.models import UnknownDirective
+from compass_lib.project.models import UTMConvergenceDirective
+from compass_lib.project.models import UTMZoneDirective
+from compass_lib.project.parser import CompassProjectParser
 
 
 class TestCommentDirective:

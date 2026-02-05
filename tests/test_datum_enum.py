@@ -10,12 +10,12 @@ This test module verifies:
 
 import pytest
 
-from compass_scratchpad.enums import Datum
-from compass_scratchpad.models import UTMLocation
-from compass_scratchpad.project.format import format_directive
-from compass_scratchpad.project.models import CompassMakFile
-from compass_scratchpad.project.models import DatumDirective
-from compass_scratchpad.project.parser import CompassProjectParser
+from compass_lib.enums import Datum
+from compass_lib.models import UTMLocation
+from compass_lib.project.format import format_directive
+from compass_lib.project.models import CompassMakFile
+from compass_lib.project.models import DatumDirective
+from compass_lib.project.parser import CompassProjectParser
 
 
 class TestDatumEnum:

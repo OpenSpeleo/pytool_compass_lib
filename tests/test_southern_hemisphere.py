@@ -10,16 +10,16 @@ This test module verifies end-to-end southern hemisphere functionality:
 
 import pytest
 
-from compass_scratchpad.enums import Datum
-from compass_scratchpad.models import UTMLocation
-from compass_scratchpad.project.format import format_project
-from compass_scratchpad.project.models import CompassMakFile
-from compass_scratchpad.project.models import DatumDirective
-from compass_scratchpad.project.models import FileDirective
-from compass_scratchpad.project.models import FlagsDirective
-from compass_scratchpad.project.models import LocationDirective
-from compass_scratchpad.project.models import UTMZoneDirective
-from compass_scratchpad.project.parser import CompassProjectParser
+from compass_lib.enums import Datum
+from compass_lib.models import UTMLocation
+from compass_lib.project.format import format_project
+from compass_lib.project.models import CompassMakFile
+from compass_lib.project.models import DatumDirective
+from compass_lib.project.models import FileDirective
+from compass_lib.project.models import FlagsDirective
+from compass_lib.project.models import LocationDirective
+from compass_lib.project.models import UTMZoneDirective
+from compass_lib.project.parser import CompassProjectParser
 
 
 class TestSouthernHemisphereMAKFiles:

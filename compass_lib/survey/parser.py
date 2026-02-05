@@ -14,20 +14,20 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
-from compass_scratchpad.constants import ASCII_ENCODING
-from compass_scratchpad.constants import MISSING_ANGLE_THRESHOLD
-from compass_scratchpad.constants import MISSING_VALUE_THRESHOLD
-from compass_scratchpad.enums import AzimuthUnit
-from compass_scratchpad.enums import InclinationUnit
-from compass_scratchpad.enums import LengthUnit
-from compass_scratchpad.enums import LrudAssociation
-from compass_scratchpad.enums import LrudItem
-from compass_scratchpad.enums import Severity
-from compass_scratchpad.enums import ShotItem
-from compass_scratchpad.errors import CompassParseError
-from compass_scratchpad.errors import SourceLocation
-from compass_scratchpad.survey.models import CompassDatFile
-from compass_scratchpad.validation import days_in_month
+from compass_lib.constants import ASCII_ENCODING
+from compass_lib.constants import MISSING_ANGLE_THRESHOLD
+from compass_lib.constants import MISSING_VALUE_THRESHOLD
+from compass_lib.enums import AzimuthUnit
+from compass_lib.enums import InclinationUnit
+from compass_lib.enums import LengthUnit
+from compass_lib.enums import LrudAssociation
+from compass_lib.enums import LrudItem
+from compass_lib.enums import Severity
+from compass_lib.enums import ShotItem
+from compass_lib.errors import CompassParseError
+from compass_lib.errors import SourceLocation
+from compass_lib.survey.models import CompassDatFile
+from compass_lib.validation import days_in_month
 
 
 class CompassSurveyParser:

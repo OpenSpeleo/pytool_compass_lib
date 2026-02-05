@@ -10,24 +10,24 @@ from datetime import date
 from decimal import Decimal
 from pathlib import Path
 
-from compass_scratchpad.constants import ASCII_ENCODING
-from compass_scratchpad.constants import NULL_LRUD_VALUES
-from compass_scratchpad.enums import DrawOperation
-from compass_scratchpad.enums import Severity
-from compass_scratchpad.errors import CompassParseError
-from compass_scratchpad.errors import SourceLocation
-from compass_scratchpad.models import Bounds
-from compass_scratchpad.models import Location
-from compass_scratchpad.plot.models import BeginFeatureCommand
-from compass_scratchpad.plot.models import BeginSectionCommand
-from compass_scratchpad.plot.models import BeginSurveyCommand
-from compass_scratchpad.plot.models import CaveBoundsCommand
-from compass_scratchpad.plot.models import CompassPlotCommand
-from compass_scratchpad.plot.models import DatumCommand
-from compass_scratchpad.plot.models import DrawSurveyCommand
-from compass_scratchpad.plot.models import FeatureCommand
-from compass_scratchpad.plot.models import SurveyBoundsCommand
-from compass_scratchpad.plot.models import UtmZoneCommand
+from compass_lib.constants import ASCII_ENCODING
+from compass_lib.constants import NULL_LRUD_VALUES
+from compass_lib.enums import DrawOperation
+from compass_lib.enums import Severity
+from compass_lib.errors import CompassParseError
+from compass_lib.errors import SourceLocation
+from compass_lib.models import Bounds
+from compass_lib.models import Location
+from compass_lib.plot.models import BeginFeatureCommand
+from compass_lib.plot.models import BeginSectionCommand
+from compass_lib.plot.models import BeginSurveyCommand
+from compass_lib.plot.models import CaveBoundsCommand
+from compass_lib.plot.models import CompassPlotCommand
+from compass_lib.plot.models import DatumCommand
+from compass_lib.plot.models import DrawSurveyCommand
+from compass_lib.plot.models import FeatureCommand
+from compass_lib.plot.models import SurveyBoundsCommand
+from compass_lib.plot.models import UtmZoneCommand
 
 
 class CompassPlotParser:

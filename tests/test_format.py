@@ -5,24 +5,24 @@ from datetime import date
 
 import pytest
 
-from compass_scratchpad.enums import AzimuthUnit
-from compass_scratchpad.enums import InclinationUnit
-from compass_scratchpad.enums import LengthUnit
-from compass_scratchpad.project.format import format_directive
-from compass_scratchpad.project.format import format_mak_file
-from compass_scratchpad.project.models import CommentDirective
-from compass_scratchpad.project.models import DatumDirective
-from compass_scratchpad.project.models import FileDirective
-from compass_scratchpad.project.models import FlagsDirective
-from compass_scratchpad.project.models import LocationDirective
-from compass_scratchpad.project.models import UTMConvergenceDirective
-from compass_scratchpad.project.models import UTMZoneDirective
-from compass_scratchpad.survey.format import format_dat_file
-from compass_scratchpad.survey.format import format_shot
-from compass_scratchpad.survey.format import format_trip_header
-from compass_scratchpad.survey.models import CompassShot
-from compass_scratchpad.survey.models import CompassTrip
-from compass_scratchpad.survey.models import CompassTripHeader
+from compass_lib.enums import AzimuthUnit
+from compass_lib.enums import InclinationUnit
+from compass_lib.enums import LengthUnit
+from compass_lib.project.format import format_directive
+from compass_lib.project.format import format_mak_file
+from compass_lib.project.models import CommentDirective
+from compass_lib.project.models import DatumDirective
+from compass_lib.project.models import FileDirective
+from compass_lib.project.models import FlagsDirective
+from compass_lib.project.models import LocationDirective
+from compass_lib.project.models import UTMConvergenceDirective
+from compass_lib.project.models import UTMZoneDirective
+from compass_lib.survey.format import format_dat_file
+from compass_lib.survey.format import format_shot
+from compass_lib.survey.format import format_trip_header
+from compass_lib.survey.models import CompassShot
+from compass_lib.survey.models import CompassTrip
+from compass_lib.survey.models import CompassTripHeader
 
 
 class TestFormatShot:

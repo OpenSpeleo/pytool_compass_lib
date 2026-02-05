@@ -7,7 +7,7 @@ source location information for helpful error messages.
 
 from dataclasses import dataclass
 
-from compass_scratchpad.enums import Severity
+from compass_lib.enums import Severity
 
 
 @dataclass(frozen=True)

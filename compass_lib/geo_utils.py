@@ -3,11 +3,10 @@ from __future__ import annotations
 import datetime
 
 import pyIGRF14 as pyIGRF
+from compass_lib.constants import GEOJSON_COORDINATE_PRECISION
 from pydantic import BaseModel
 from pydantic_extra_types.coordinate import Latitude  # noqa: TC002
 from pydantic_extra_types.coordinate import Longitude  # noqa: TC002
-
-from compass_scratchpad.constants import GEOJSON_COORDINATE_PRECISION
 
 
 class GeoLocation(BaseModel):

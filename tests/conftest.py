@@ -57,8 +57,9 @@ def _decrypt_artifacts() -> None:
             f.write(dec_data)
 
 
-def pytest_sessionstart(session) -> None:
-    _decrypt_artifacts()
+# Note: _decrypt_artifacts() is called at module level (before discovery)
+# rather than in pytest_sessionstart, because parametrize decorators need
+# the decrypted files to be available at import/collection time.
 
 
 # =============================================================================
@@ -197,6 +198,9 @@ def discover_mak_with_geojson() -> list[pytest.param]:
 # =============================================================================
 # Pre-computed Parameter Lists (for module-level parametrize decorators)
 # =============================================================================
+
+# Decrypt artifacts before discovery (must happen at import time, before parametrize)
+_decrypt_artifacts()
 
 # These are computed at import time for use with @pytest.mark.parametrize
 ALL_MAK_FILES = discover_mak_files()

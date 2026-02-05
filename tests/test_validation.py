@@ -3,9 +3,9 @@
 
 import pytest
 
-from compass_scratchpad.validation import days_in_month
-from compass_scratchpad.validation import is_valid_station_name
-from compass_scratchpad.validation import validate_station_name
+from compass_lib.validation import days_in_month
+from compass_lib.validation import is_valid_station_name
+from compass_lib.validation import validate_station_name
 
 
 class TestIsValidStationName:

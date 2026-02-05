@@ -3,10 +3,10 @@
 
 import pytest
 
-from compass_scratchpad.enums import Severity
-from compass_scratchpad.errors import CompassParseError
-from compass_scratchpad.errors import CompassParseException
-from compass_scratchpad.errors import SourceLocation
+from compass_lib.enums import Severity
+from compass_lib.errors import CompassParseError
+from compass_lib.errors import CompassParseException
+from compass_lib.errors import SourceLocation
 
 
 class TestSourceLocation:

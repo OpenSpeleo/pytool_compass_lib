@@ -3,11 +3,11 @@
 
 import pytest
 
-from compass_scratchpad.enums import Datum
-from compass_scratchpad.models import Bounds
-from compass_scratchpad.models import Location
-from compass_scratchpad.models import NEVLocation
-from compass_scratchpad.models import UTMLocation
+from compass_lib.enums import Datum
+from compass_lib.models import Bounds
+from compass_lib.models import Location
+from compass_lib.models import NEVLocation
+from compass_lib.models import UTMLocation
 
 
 class TestNEVLocation:

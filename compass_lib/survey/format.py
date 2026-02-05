@@ -7,15 +7,15 @@ the Compass .DAT file format string representation.
 
 from collections.abc import Callable
 
-from compass_scratchpad.constants import FLAG_CHARS
-from compass_scratchpad.constants import MISSING_VALUE_STRING
-from compass_scratchpad.constants import NUMBER_WIDTH
-from compass_scratchpad.constants import STATION_NAME_WIDTH
-from compass_scratchpad.enums import LrudAssociation
-from compass_scratchpad.survey.models import CompassShot
-from compass_scratchpad.survey.models import CompassTrip
-from compass_scratchpad.survey.models import CompassTripHeader
-from compass_scratchpad.validation import validate_station_name
+from compass_lib.constants import FLAG_CHARS
+from compass_lib.constants import MISSING_VALUE_STRING
+from compass_lib.constants import NUMBER_WIDTH
+from compass_lib.constants import STATION_NAME_WIDTH
+from compass_lib.enums import LrudAssociation
+from compass_lib.survey.models import CompassShot
+from compass_lib.survey.models import CompassTrip
+from compass_lib.survey.models import CompassTripHeader
+from compass_lib.validation import validate_station_name
 
 
 def _cell(value: str, width: int) -> str:

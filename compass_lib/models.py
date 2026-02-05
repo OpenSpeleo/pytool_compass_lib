@@ -9,13 +9,12 @@ from __future__ import annotations
 
 from typing import Annotated
 
+from compass_lib.enums import Datum
 from pydantic import BaseModel
 from pydantic import Field
 from pydantic import field_validator
 from pyproj import CRS
 from pyproj import Transformer
-
-from compass_scratchpad.enums import Datum
 
 
 class NEVLocation(BaseModel):

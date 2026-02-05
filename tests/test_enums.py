@@ -3,14 +3,14 @@
 
 import pytest
 
-from compass_scratchpad.enums import AzimuthUnit
-from compass_scratchpad.enums import DrawOperation
-from compass_scratchpad.enums import InclinationUnit
-from compass_scratchpad.enums import LengthUnit
-from compass_scratchpad.enums import LrudAssociation
-from compass_scratchpad.enums import LrudItem
-from compass_scratchpad.enums import Severity
-from compass_scratchpad.enums import ShotItem
+from compass_lib.enums import AzimuthUnit
+from compass_lib.enums import DrawOperation
+from compass_lib.enums import InclinationUnit
+from compass_lib.enums import LengthUnit
+from compass_lib.enums import LrudAssociation
+from compass_lib.enums import LrudItem
+from compass_lib.enums import Severity
+from compass_lib.enums import ShotItem
 
 
 class TestAzimuthUnit:

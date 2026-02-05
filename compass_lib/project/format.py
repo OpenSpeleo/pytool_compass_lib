@@ -7,16 +7,16 @@ the Compass .MAK file format string representation.
 
 from collections.abc import Callable
 
-from compass_scratchpad.project.models import CommentDirective
-from compass_scratchpad.project.models import CompassMakFile
-from compass_scratchpad.project.models import CompassProjectDirective
-from compass_scratchpad.project.models import DatumDirective
-from compass_scratchpad.project.models import FileDirective
-from compass_scratchpad.project.models import FlagsDirective
-from compass_scratchpad.project.models import LocationDirective
-from compass_scratchpad.project.models import UnknownDirective
-from compass_scratchpad.project.models import UTMConvergenceDirective
-from compass_scratchpad.project.models import UTMZoneDirective
+from compass_lib.project.models import CommentDirective
+from compass_lib.project.models import CompassMakFile
+from compass_lib.project.models import CompassProjectDirective
+from compass_lib.project.models import DatumDirective
+from compass_lib.project.models import FileDirective
+from compass_lib.project.models import FlagsDirective
+from compass_lib.project.models import LocationDirective
+from compass_lib.project.models import UnknownDirective
+from compass_lib.project.models import UTMConvergenceDirective
+from compass_lib.project.models import UTMZoneDirective
 
 
 def format_directive(directive: CompassProjectDirective) -> str:  # noqa: PLR0911

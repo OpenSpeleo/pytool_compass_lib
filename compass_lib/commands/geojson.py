@@ -9,8 +9,8 @@ import argparse
 import logging
 from pathlib import Path
 
-from compass_scratchpad.enums import FileExtension
-from compass_scratchpad.geojson import convert_mak_to_geojson
+from compass_lib.enums import FileExtension
+from compass_lib.geojson import convert_mak_to_geojson
 
 logger = logging.getLogger(__name__)
 
@@ -83,7 +83,9 @@ Notes:
         return 1
 
     if parsed_args.input_file.suffix.lower() != FileExtension.MAK.value:
-        logger.error("Error: Input file must be a .MAK file: %s", parsed_args.input_file)
+        logger.error(
+            "Error: Input file must be a .MAK file: %s", parsed_args.input_file
+        )
         return 1
 
     try:
@@ -101,7 +103,9 @@ Notes:
 
         else:
             # Print status to stderr
-            logger.info("Converted %s -> %s", parsed_args.input_file, parsed_args.output_file)
+            logger.info(
+                "Converted %s -> %s", parsed_args.input_file, parsed_args.output_file
+            )
 
     except FileNotFoundError:
         logger.exception("FileNotFoundError")

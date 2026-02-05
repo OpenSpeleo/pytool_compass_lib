@@ -5,7 +5,7 @@ This module provides backwards-compatible wrappers around CompassInterface.
 
 For new code, prefer using CompassInterface directly:
 
-    from compass_scratchpad.interface import CompassInterface
+    from compass_lib.interface import CompassInterface
 
     project = CompassInterface.load_project(Path("cave.mak"))
     CompassInterface.save_json(project, Path("cave.json"))
@@ -15,14 +15,14 @@ The functions in this module are thin wrappers maintained for API stability.
 
 from pathlib import Path
 
-from compass_scratchpad.interface import DEFAULT_ENCODING
-from compass_scratchpad.interface import CancellationToken
-from compass_scratchpad.interface import CompassInterface
-from compass_scratchpad.interface import ProgressCallback
-from compass_scratchpad.project.models import CompassMakFile
-from compass_scratchpad.project.models import CompassProjectDirective
-from compass_scratchpad.survey.models import CompassDatFile
-from compass_scratchpad.survey.models import CompassTrip
+from compass_lib.interface import DEFAULT_ENCODING
+from compass_lib.interface import CancellationToken
+from compass_lib.interface import CompassInterface
+from compass_lib.interface import ProgressCallback
+from compass_lib.project.models import CompassMakFile
+from compass_lib.project.models import CompassProjectDirective
+from compass_lib.survey.models import CompassDatFile
+from compass_lib.survey.models import CompassTrip
 
 # Re-export for API compatibility
 __all__ = [

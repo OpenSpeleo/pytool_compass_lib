@@ -9,7 +9,7 @@ from enum import Enum
 from math import radians
 from math import tan
 
-from compass_scratchpad.constants import FEET_TO_METERS
+from compass_lib.constants import FEET_TO_METERS
 
 
 class FileFormat(str, Enum):

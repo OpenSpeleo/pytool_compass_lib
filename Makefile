@@ -82,7 +82,7 @@ encrypt:
 	for file in $(PRIVATE_DATA_DIRS)/*.{mak,dat,kml,geojson,json}; do \
 		if [ -f "$$file" ]; then \
 			echo "Encrypting $$file -> $$file.encrypted"; \
-			compass_cli encrypt -i "$$file" -o "$$file.encrypted" -e .env -w; \
+			compass encrypt -i "$$file" -o "$$file.encrypted" -e .env -w; \
 		fi; \
 	done
 
@@ -96,7 +96,7 @@ regen-test-geojson:  ## rerun the json conversion to JSON of the test artifacts
 		[ -f "$$file" ] || continue; \
 		out=$${file%.[mM][aA][kK]}.geojson; \
 		echo "Converting $$file → $$out"; \
-		compass_cli geojson -i "$$file" -o "$$out" --passages; \
+		compass geojson -i "$$file" -o "$$out" --passages; \
 	done; \
 	shopt -u nocaseglob;
 
@@ -106,7 +106,7 @@ regen-test-json:  ## rerun the json conversion to JSON of the test artifacts
 		[ -f "$$file" ] || continue; \
 		out=$$file.json; \
 		echo "Converting $$file → $$out"; \
-		compass_cli convert -i "$$file" -o "$$out" -f json; \
+		compass convert -i "$$file" -o "$$out" -f json; \
 	done; \
 	shopt -u nocaseglob;
 

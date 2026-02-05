@@ -7,13 +7,13 @@ include and load their referenced DAT files.
 
 import pytest
 
-from compass_scratchpad import load_project
-from compass_scratchpad import save_project
-from compass_scratchpad.io import CancellationToken
-from compass_scratchpad.project.models import CompassMakFile
-from compass_scratchpad.project.models import FileDirective
-from compass_scratchpad.project.models import LocationDirective
-from compass_scratchpad.survey.models import CompassDatFile
+from compass_lib import load_project
+from compass_lib import save_project
+from compass_lib.io import CancellationToken
+from compass_lib.project.models import CompassMakFile
+from compass_lib.project.models import FileDirective
+from compass_lib.project.models import LocationDirective
+from compass_lib.survey.models import CompassDatFile
 
 # Import fixtures from conftest
 from tests.conftest import ALL_MAK_FILES

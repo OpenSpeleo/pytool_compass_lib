@@ -9,18 +9,18 @@ import argparse
 import json
 from pathlib import Path
 
-from compass_scratchpad.constants import COMPASS_ENCODING
-from compass_scratchpad.constants import JSON_ENCODING
-from compass_scratchpad.enums import CompassFileType
-from compass_scratchpad.enums import FileExtension
-from compass_scratchpad.enums import FileFormat
-from compass_scratchpad.enums import FormatIdentifier
-from compass_scratchpad.io import load_project
-from compass_scratchpad.io import read_dat_file
-from compass_scratchpad.project.format import format_mak_file
-from compass_scratchpad.project.models import CompassMakFile
-from compass_scratchpad.survey.format import format_dat_file
-from compass_scratchpad.survey.models import CompassDatFile
+from compass_lib.constants import COMPASS_ENCODING
+from compass_lib.constants import JSON_ENCODING
+from compass_lib.enums import CompassFileType
+from compass_lib.enums import FileExtension
+from compass_lib.enums import FileFormat
+from compass_lib.enums import FormatIdentifier
+from compass_lib.io import load_project
+from compass_lib.io import read_dat_file
+from compass_lib.project.format import format_mak_file
+from compass_lib.project.models import CompassMakFile
+from compass_lib.survey.format import format_dat_file
+from compass_lib.survey.models import CompassDatFile
 
 
 class ConversionError(Exception):
