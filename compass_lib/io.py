@@ -22,7 +22,7 @@ from compass_lib.interface import ProgressCallback
 from compass_lib.project.models import CompassMakFile
 from compass_lib.project.models import CompassProjectDirective
 from compass_lib.survey.models import CompassDatFile
-from compass_lib.survey.models import CompassTrip
+from compass_lib.survey.models import CompassSurvey
 
 # Re-export for API compatibility
 __all__ = [
@@ -50,7 +50,7 @@ def read_dat_file(
     path: Path,
     *,
     encoding: str = DEFAULT_ENCODING,
-) -> list[CompassTrip]:
+) -> list[CompassSurvey]:
     """Read a Compass .DAT survey file.
 
     Args:
@@ -58,10 +58,10 @@ def read_dat_file(
         encoding: Character encoding (default: Windows-1252)
 
     Returns:
-        List of parsed trips
+        List of parsed surveys
     """
     dat_file = CompassInterface.load_dat(path, encoding=encoding)
-    return dat_file.trips
+    return dat_file.surveys
 
 
 def read_mak_file(
@@ -156,7 +156,7 @@ def read_mak_and_dat_files(
 
 def write_dat_file(
     path: Path,
-    trips: list[CompassTrip],
+    surveys: list[CompassSurvey],
     *,
     encoding: str = DEFAULT_ENCODING,
 ) -> None:
@@ -164,10 +164,10 @@ def write_dat_file(
 
     Args:
         path: Path to write to
-        trips: List of trips to write
+        surveys: List of surveys to write
         encoding: Character encoding (default: Windows-1252)
     """
-    dat_file = CompassDatFile(trips=trips)
+    dat_file = CompassDatFile(surveys=surveys)
     CompassInterface.save_dat(dat_file, path, encoding=encoding)
 
 

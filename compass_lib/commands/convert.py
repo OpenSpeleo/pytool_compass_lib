@@ -120,13 +120,15 @@ def _convert(
     if source_format == FileFormat.COMPASS and target_format == FileFormat.JSON:
         # Compass -> JSON using Pydantic
         if file_type == CompassFileType.DAT:
-            trips = read_dat_file(input_path)
-            dat_file = CompassDatFile(trips=trips)
+            surveys = read_dat_file(input_path)
+            dat_file = CompassDatFile(surveys=surveys)
             # Wrap in format envelope for DAT files
             envelope = {
                 "version": "1.0",
                 "format": FormatIdentifier.COMPASS_DAT.value,
-                "trips": json.loads(dat_file.model_dump_json(by_alias=True))["trips"],
+                "surveys": json.loads(dat_file.model_dump_json(by_alias=True))[
+                    "surveys"
+                ],
             }
             result = json.dumps(envelope, indent=2, sort_keys=True)
         else:  # mak
@@ -139,9 +141,9 @@ def _convert(
         if file_type == CompassFileType.DAT:
             data = json.loads(json_str)
             # Handle both envelope format and raw format
-            trips_data = data.get("trips", [])
-            dat_file = CompassDatFile.model_validate({"trips": trips_data})
-            result = format_dat_file(dat_file.trips) or ""
+            surveys_data = data.get("surveys", [])
+            dat_file = CompassDatFile.model_validate({"surveys": surveys_data})
+            result = format_dat_file(dat_file.surveys) or ""
         else:  # mak
             project = CompassMakFile.model_validate_json(json_str)
             result = format_mak_file(project.directives) or ""

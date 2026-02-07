@@ -85,10 +85,9 @@ class TestSurveyToGeoJSON:
         survey = compute_survey_coordinates(project)
         geojson = survey_to_geojson(survey, include_stations=False, include_legs=True)
 
-        # All features should be legs
+        # All features should be legs or misclosure indicators
         for feature in geojson["features"]:
-            assert feature["geometry"]["type"] == "LineString"
-            assert feature["properties"]["type"] == "leg"
+            assert feature["properties"]["type"] in ("leg", "misclosure", "misclosure_station")
 
     @pytest.mark.skipif(
         FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file"
@@ -207,7 +206,7 @@ class TestConvertMakToGeoJSON:
         convert_mak_to_geojson(FIRST_MAK, output_path)
 
         assert output_path.exists()
-        with open(output_path) as f:
+        with output_path.open(mode="r", encoding="utf-8") as f:
             parsed = json.load(f)
         assert parsed["type"] == "FeatureCollection"
 
@@ -250,7 +249,7 @@ class TestGeoJSONFeatureProperties:
             assert "distance_ft" in props
             assert "distance_m" in props
             assert "file" in props
-            assert "trip" in props
+            assert "survey" in props
 
     @pytest.mark.skipif(
         FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file"
@@ -267,6 +266,54 @@ class TestGeoJSONFeatureProperties:
             elif feature["geometry"]["type"] == "LineString":
                 for coord in feature["geometry"]["coordinates"]:
                     assert len(coord) == 3, "LineString coords should be 3D"
+
+
+class TestAnchorValidation:
+    """Tests for disconnected anchor detection and orphan warnings."""
+
+    PROJECT022 = Path("tests/artifacts/private/project022.mak")
+
+    @pytest.mark.skipif(
+        not Path("tests/artifacts/private/project022.mak").exists(),
+        reason="project022 test files not available",
+    )
+    def test_disconnected_anchor_excluded_from_stations(self):
+        """Anchor 'lc0' in project022 has no shots -- it must be excluded."""
+        project = load_project(self.PROJECT022)
+        survey = compute_survey_coordinates(project)
+
+        # lc0 should NOT be in the computed stations (it is disconnected)
+        assert "lc0" not in survey.stations
+        assert "lc0" not in survey.anchors
+
+    @pytest.mark.skipif(
+        not Path("tests/artifacts/private/project022.mak").exists(),
+        reason="project022 test files not available",
+    )
+    def test_disconnected_anchor_logged_as_warning(self, caplog):
+        """A disconnected anchor must produce a warning."""
+        import logging
+
+        with caplog.at_level(logging.WARNING):
+            project = load_project(self.PROJECT022)
+            compute_survey_coordinates(project)
+
+        # Should warn about lc0
+        assert any("lc0" in record.message for record in caplog.records)
+
+    @pytest.mark.skipif(
+        not Path("tests/artifacts/private/project022.mak").exists(),
+        reason="project022 test files not available",
+    )
+    def test_connected_anchors_still_present(self):
+        """Anchors that DO appear in shots must remain."""
+        project = load_project(self.PROJECT022)
+        survey = compute_survey_coordinates(project)
+
+        # These anchors exist in project022-1.dat shots
+        for name in ("FF_Up0", "FF_A27", "U0", "c1", "FF_F22", "d20"):
+            assert name in survey.stations, f"Anchor {name} should be present"
+            assert name in survey.anchors, f"Anchor {name} should be in anchors set"
 
 
 class TestPrivateProjectsGeoJSON:

@@ -25,6 +25,7 @@ from compass_lib.enums import FormatIdentifier
 from compass_lib.geojson import convert_mak_to_geojson
 from compass_lib.io import load_project
 from compass_lib.io import read_dat_file
+from compass_lib.solver.sparse import SparseSolver
 from compass_lib.survey.models import CompassDatFile
 
 # Import fixtures from conftest
@@ -220,14 +221,16 @@ class TestBaselineConsistency:
     def test_dat_to_json_matches_baseline(self, dat_path, json_baseline):
         """Test DAT to JSON conversion matches stored baseline."""
         # Read the DAT file
-        trips = read_dat_file(dat_path)
+        surveys = read_dat_file(dat_path)
 
         # Serialize to JSON using Pydantic
-        dat_file_obj = CompassDatFile(trips=trips)
+        dat_file_obj = CompassDatFile(surveys=surveys)
         result = {
             "version": "1.0",
             "format": FormatIdentifier.COMPASS_DAT.value,
-            "trips": json.loads(dat_file_obj.model_dump_json(by_alias=True))["trips"],
+            "surveys": json.loads(dat_file_obj.model_dump_json(by_alias=True))[
+                "surveys"
+            ],
         }
 
         # Load baseline
@@ -353,9 +356,11 @@ class TestGeoJSONGeneration:
         # Generate GeoJSON - should not raise
         result_str = convert_mak_to_geojson(
             mak_path,
-            include_stations=True,
+            include_stations=False,
             include_legs=True,
             include_passages=False,
+            include_anchors=True,
+            solver=SparseSolver(),
         )
 
         # Parse result
@@ -399,9 +404,12 @@ class TestGeoJSONBaselineComparison:
         # Generate GeoJSON - must match options used to generate baselines
         result_str = convert_mak_to_geojson(
             mak_path,
-            include_stations=True,
+            include_stations=False,
             include_legs=True,
-            include_passages=True,
+            include_passages=False,
+            include_anchors=True,
+            color_by_origin=False,
+            solver=SparseSolver(),
         )
         result = orjson.loads(result_str)
 
@@ -437,7 +445,7 @@ class TestProjectLoading:
             if file_dir.data:
                 loaded_count += 1
                 # Verify data structure
-                assert len(file_dir.data.trips) >= 0
+                assert len(file_dir.data.surveys) >= 0
 
         # At least some files should have been loaded
         assert file_count > 0, "No file directives found"

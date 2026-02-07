@@ -11,6 +11,10 @@ from pathlib import Path
 
 from compass_lib.enums import FileExtension
 from compass_lib.geojson import convert_mak_to_geojson
+from compass_lib.solver.ariane import ArianeSolver
+from compass_lib.solver.lse import LSESolver
+from compass_lib.solver.proportional import ProportionalSolver
+from compass_lib.solver.sparse import SparseSolver
 
 logger = logging.getLogger(__name__)
 
@@ -74,6 +78,32 @@ Notes:
         action="store_true",
         help="Include passage polygon features (from LRUD data)",
     )
+    parser.add_argument(
+        "--anchors",
+        action="store_true",
+        help="Include anchor point features (fixed reference stations)",
+    )
+    parser.add_argument(
+        "--no-colors",
+        action="store_true",
+        help="Disable origin-based coloring of stations and legs",
+    )
+    parser.add_argument(
+        "--solver",
+        choices=["proportional", "sparse", "lse", "ariane", "none"],
+        default="proportional",
+        help="Survey adjustment solver: "
+        "proportional (L2, spreads error evenly), "
+        "sparse (L1, fewest/smallest changes), "
+        "lse (blunder-aware, protects good data), "
+        "ariane (sparse CG + blunder-aware, scales to large caves), "
+        "none (raw BFS, shows misclosure gaps)",
+    )
+    parser.add_argument(
+        "--minify",
+        action="store_true",
+        help="Compact output without indentation (smaller file size)",
+    )
 
     parsed_args = parser.parse_args(args)
 
@@ -89,12 +119,25 @@ Notes:
         return 1
 
     try:
+        solvers = {
+            "proportional": ProportionalSolver,
+            "sparse": SparseSolver,
+            "lse": LSESolver,
+            "ariane": ArianeSolver,
+            "none": lambda: None,
+        }
+        solver = solvers[parsed_args.solver]()
+
         result = convert_mak_to_geojson(
             parsed_args.input_file,
             output_path=parsed_args.output_file,
             include_stations=not parsed_args.no_stations,
             include_legs=not parsed_args.no_legs,
             include_passages=parsed_args.passages,
+            include_anchors=parsed_args.anchors,
+            color_by_origin=not parsed_args.no_colors,
+            solver=solver,
+            minify=parsed_args.minify,
         )
 
         if parsed_args.output_file is None:

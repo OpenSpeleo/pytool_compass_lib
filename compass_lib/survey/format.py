@@ -3,6 +3,10 @@
 
 This module provides functions to convert survey data models back to
 the Compass .DAT file format string representation.
+
+All data is written in Compass's fixed internal units (feet, degrees)
+and fixed column order. The FORMAT string is purely display metadata
+for the Compass editor and is stored/output as a raw string.
 """
 
 from collections.abc import Callable
@@ -11,11 +15,16 @@ from compass_lib.constants import FLAG_CHARS
 from compass_lib.constants import MISSING_VALUE_STRING
 from compass_lib.constants import NUMBER_WIDTH
 from compass_lib.constants import STATION_NAME_WIDTH
-from compass_lib.enums import LrudAssociation
 from compass_lib.survey.models import CompassShot
-from compass_lib.survey.models import CompassTrip
-from compass_lib.survey.models import CompassTripHeader
+from compass_lib.survey.models import CompassSurvey
+from compass_lib.survey.models import CompassSurveyHeader
 from compass_lib.validation import validate_station_name
+
+# Default FORMAT strings used when no format_string is stored on the header.
+# These use degrees for all angles, decimal feet for lengths, standard LRUD
+# order (LUDR), and standard shot order (LAD).
+_DEFAULT_FORMAT_WITH_BACKSIGHTS = "DDDDLUDRLADadBF"
+_DEFAULT_FORMAT_WITHOUT_BACKSIGHTS = "DDDDLUDRLAD"
 
 
 def _cell(value: str, width: int) -> str:
@@ -56,36 +65,41 @@ def _format_number(value: float | None, width: int = NUMBER_WIDTH) -> str:
     return _cell(f"{value:.2f}", width)
 
 
-def format_shot(shot: CompassShot, header: CompassTripHeader) -> str:
+def format_shot(shot: CompassShot, header: CompassSurveyHeader) -> str:
     """Format a single shot as a line of text.
+
+    All values are output in Compass's fixed internal units (feet, degrees)
+    in fixed column order:
+    FROM TO LENGTH AZIMUTH INCLINATION LEFT UP DOWN RIGHT [BS_AZ BS_INC] [FLAGS] [COMMENT]
 
     Args:
         shot: Shot data
-        header: Trip header (for format settings)
+        header: Survey header (for has_backsights flag)
 
     Returns:
         Formatted shot line with CRLF
-    """
+    """  # noqa: E501
     # Validate station names
     validate_station_name(shot.from_station_name)
     validate_station_name(shot.to_station_name)
 
-    # Handle depth gauge inclination unit
-    # (would need Length unit instead of Angle, but we store as float)
-
     columns = [
         _cell(shot.from_station_name, STATION_NAME_WIDTH),
         _cell(shot.to_station_name, STATION_NAME_WIDTH),
-        _format_number(shot.length),
-        _format_number(shot.frontsight_azimuth),
-        _format_number(shot.frontsight_inclination),
-        _format_number(shot.left),
-        _format_number(shot.up),
-        _format_number(shot.down),
-        _format_number(shot.right),
     ]
 
-    # Add backsights if present
+    # Shot measurements in FIXED order: LENGTH, AZIMUTH, INCLINATION
+    columns.append(_format_number(shot.length))
+    columns.append(_format_number(shot.frontsight_azimuth))
+    columns.append(_format_number(shot.frontsight_inclination))
+
+    # LRUD values in FIXED order: LEFT, UP, DOWN, RIGHT
+    columns.append(_format_number(shot.left))
+    columns.append(_format_number(shot.up))
+    columns.append(_format_number(shot.down))
+    columns.append(_format_number(shot.right))
+
+    # Add backsights if present (always after LRUD, before flags)
     if header.has_backsights:
         columns.append(_format_number(shot.backsight_azimuth))
         columns.append(_format_number(shot.backsight_inclination))
@@ -115,15 +129,15 @@ def format_shot(shot: CompassShot, header: CompassTripHeader) -> str:
     return "".join(columns)
 
 
-def format_trip_header(
-    header: CompassTripHeader,
+def format_survey_header(
+    header: CompassSurveyHeader,
     *,
     include_column_headers: bool = True,
 ) -> str:
-    """Format a trip header as text.
+    """Format a survey header as text.
 
     Args:
-        header: Trip header data
+        header: Survey header data
         include_column_headers: Whether to include column header line
 
     Returns:
@@ -134,7 +148,7 @@ def format_trip_header(
     # Cave name (no truncation to preserve data)
     lines.append(header.cave_name or "")
 
-    # Survey name (preserve full name for roundtrip, Compass may use longer names)
+    # Survey name (preserve full name for round-trip, Compass may use longer names)
     survey_name = header.survey_name or ""
     lines.append(f"SURVEY NAME: {survey_name}")
 
@@ -153,24 +167,15 @@ def format_trip_header(
     lines.append("SURVEY TEAM:")
     lines.append(header.team or "")
 
-    # Declination and format
+    # FORMAT string -- use stored value or generate a sensible default
+    if header.format_string:
+        format_str = header.format_string
+    elif header.has_backsights:
+        format_str = _DEFAULT_FORMAT_WITH_BACKSIGHTS
+    else:
+        format_str = _DEFAULT_FORMAT_WITHOUT_BACKSIGHTS
+
     declination = header.declination
-    format_items = [
-        header.azimuth_unit.value,
-        header.length_unit.value,
-        header.lrud_unit.value,
-        header.inclination_unit.value,
-    ]
-    format_items.extend(item.value for item in header.lrud_order)
-    format_items.extend(item.value for item in header.shot_measurement_order)
-
-    # Backsight indicator
-    if header.has_backsights or header.lrud_association:
-        format_items.append("B" if header.has_backsights else "N")
-        assoc = header.lrud_association or LrudAssociation.FROM
-        format_items.append(assoc.value)
-
-    format_str = "".join(format_items)
     decl_line = f"DECLINATION: {declination:.2f}  FORMAT: {format_str}"
 
     # Corrections
@@ -236,34 +241,36 @@ def format_trip_header(
     return "\r\n".join(lines) + "\r\n"
 
 
-def format_trip(trip: CompassTrip, *, include_column_headers: bool = True) -> str:
-    """Format a complete trip (header + shots).
+def format_survey(survey: CompassSurvey, *, include_column_headers: bool = True) -> str:
+    """Format a complete survey (header + shots).
 
     Args:
-        trip: Trip data
+        survey: Survey data
         include_column_headers: Whether to include column headers
 
     Returns:
-        Formatted trip text
+        Formatted survey text
     """
     parts = [
-        format_trip_header(trip.header, include_column_headers=include_column_headers)
+        format_survey_header(
+            survey.header, include_column_headers=include_column_headers
+        )
     ]
 
-    parts.extend(format_shot(shot, trip.header) for shot in trip.shots)
+    parts.extend(format_shot(shot, survey.header) for shot in survey.shots)
 
     return "".join(parts)
 
 
 def format_dat_file(
-    trips: list[CompassTrip],
+    surveys: list[CompassSurvey],
     *,
     write: Callable[[str], None] | None = None,
 ) -> str | None:
-    """Format a complete DAT file from trips.
+    """Format a complete DAT file from surveys.
 
     Args:
-        trips: List of trips
+        surveys: List of surveys
         write: Optional callback for streaming output. If provided,
                chunks are written via this callback and None is returned.
 
@@ -273,12 +280,12 @@ def format_dat_file(
     """
     if write is not None:
         # Streaming mode
-        for trip in trips:
-            write(format_trip(trip))
+        for survey in surveys:
+            write(format_survey(survey))
             write("\f\r\n")
         return None
 
     # Return mode
     chunks: list[str] = []
-    format_dat_file(trips, write=chunks.append)
+    format_dat_file(surveys, write=chunks.append)
     return "".join(chunks)

@@ -5,14 +5,14 @@ This module contains all enumerations used in Compass survey data formats,
 including units for measurements, file types, and various classification types.
 """
 
-from enum import Enum
+from enum import StrEnum
 from math import radians
 from math import tan
 
 from compass_lib.constants import FEET_TO_METERS
 
 
-class FileFormat(str, Enum):
+class FileFormat(StrEnum):
     """File format types for conversion operations.
 
     Attributes:
@@ -26,7 +26,7 @@ class FileFormat(str, Enum):
     GEOJSON = "geojson"
 
 
-class CompassFileType(str, Enum):
+class CompassFileType(StrEnum):
     """Types of Compass files.
 
     Attributes:
@@ -67,7 +67,7 @@ class CompassFileType(str, Enum):
         return mapping.get(ext_lower)
 
 
-class FileExtension(str, Enum):
+class FileExtension(StrEnum):
     """File extensions for various file formats (with dot).
 
     Attributes:
@@ -85,7 +85,7 @@ class FileExtension(str, Enum):
     GEOJSON = ".geojson"
 
 
-class FormatIdentifier(str, Enum):
+class FormatIdentifier(StrEnum):
     """Format identifiers used in JSON files.
 
     Attributes:
@@ -97,7 +97,7 @@ class FormatIdentifier(str, Enum):
     COMPASS_MAK = "compass_mak"
 
 
-class AzimuthUnit(str, Enum):
+class AzimuthUnit(StrEnum):
     """Unit for compass azimuth (bearing) measurements.
 
     Attributes:
@@ -128,7 +128,7 @@ class AzimuthUnit(str, Enum):
         return degrees
 
 
-class InclinationUnit(str, Enum):
+class InclinationUnit(StrEnum):
     """Unit for vertical angle (inclination) measurements.
 
     Attributes:
@@ -136,7 +136,9 @@ class InclinationUnit(str, Enum):
         PERCENT_GRADE: Percentage gradient (tan(angle) * 100)
         DEGREES_AND_MINUTES: Degrees with minutes notation
         GRADS: Gradians
-        DEPTH_GAUGE: Depth gauge reading
+        DEPTH_GAUGE: Delta depth (From_depth - To_depth) for underwater surveys.
+            Negative = descending (going deeper), positive = ascending.
+            Uses the same units as length measurements.
     """
 
     DEGREES = "D"
@@ -165,7 +167,7 @@ class InclinationUnit(str, Enum):
         return value
 
 
-class LengthUnit(str, Enum):
+class LengthUnit(StrEnum):
     """Unit for distance measurements.
 
     Attributes:
@@ -196,7 +198,7 @@ class LengthUnit(str, Enum):
         return feet
 
 
-class LrudAssociation(str, Enum):
+class LrudAssociation(StrEnum):
     """Indicates which station LRUD measurements are associated with.
 
     Attributes:
@@ -208,7 +210,7 @@ class LrudAssociation(str, Enum):
     TO = "T"
 
 
-class LrudItem(str, Enum):
+class LrudItem(StrEnum):
     """Individual LRUD dimension identifiers.
 
     Attributes:
@@ -224,7 +226,7 @@ class LrudItem(str, Enum):
     DOWN = "D"
 
 
-class ShotItem(str, Enum):
+class ShotItem(StrEnum):
     """Components of a shot measurement for format ordering.
 
     Attributes:
@@ -242,7 +244,7 @@ class ShotItem(str, Enum):
     BACKSIGHT_INCLINATION = "d"
 
 
-class Severity(str, Enum):
+class Severity(StrEnum):
     """Severity level for parse errors.
 
     Attributes:
@@ -254,7 +256,7 @@ class Severity(str, Enum):
     WARNING = "warning"
 
 
-class DrawOperation(str, Enum):
+class DrawOperation(StrEnum):
     """Drawing operations for plot commands.
 
     Attributes:
@@ -266,7 +268,7 @@ class DrawOperation(str, Enum):
     LINE_TO = "D"
 
 
-class Datum(str, Enum):
+class Datum(StrEnum):
     """Geodetic datum values supported by Compass.
 
     These are the standard datum values that can be used in MAK project files.
@@ -321,6 +323,42 @@ class Datum(str, Enum):
     TOKYO = "Tokyo"
     WGS_1972 = "WGS 1972"
     WGS_1984 = "WGS 1984"
+
+    def get_utm_epsg(self, zone: int, northern: bool) -> str:
+        """Get the EPSG code for a UTM zone with this datum.
+
+        Args:
+            zone: UTM zone number (1-60)
+            northern: True for northern hemisphere
+
+        Returns:
+            EPSG code string (e.g., "EPSG:26717" for NAD27 UTM Zone 17N)
+        """
+        zone = abs(zone)
+
+        match self:
+            case Datum.NORTH_AMERICAN_1927:
+                # NAD27 / UTM: EPSG:26701-26722 (zones 1-22 north)
+                return f"EPSG:{26700 + zone}"
+
+            case Datum.NORTH_AMERICAN_1983:
+                # NAD83 / UTM: EPSG:26901-26923 (zones 1-23 north)
+                return f"EPSG:{26900 + zone}"
+
+            case Datum.WGS_1972:
+                # WGS72 / UTM: EPSG:32201-32260 (north), EPSG:32301-32360 (south)
+                if northern:
+                    return f"EPSG:{32200 + zone}"
+                return f"EPSG:{32300 + zone}"
+
+            case Datum.WGS_1984:
+                # WGS84 / UTM: EPSG:32601-32660 (north), EPSG:32701-32760 (south)
+                if northern:
+                    return f"EPSG:{32600 + zone}"
+                return f"EPSG:{32700 + zone}"
+
+            case _:
+                raise NotImplementedError(f"This DATUM: `{self}` is not supported")
 
     @classmethod
     def normalize(cls, value: str | None) -> "Datum | None":

@@ -3,22 +3,22 @@
 
 from compass_lib.survey.format import format_dat_file
 from compass_lib.survey.format import format_shot
-from compass_lib.survey.format import format_trip
-from compass_lib.survey.format import format_trip_header
+from compass_lib.survey.format import format_survey
+from compass_lib.survey.format import format_survey_header
 from compass_lib.survey.models import CompassDatFile
 from compass_lib.survey.models import CompassShot
-from compass_lib.survey.models import CompassTrip
-from compass_lib.survey.models import CompassTripHeader
+from compass_lib.survey.models import CompassSurvey
+from compass_lib.survey.models import CompassSurveyHeader
 from compass_lib.survey.parser import CompassSurveyParser
 
 __all__ = [
     "CompassDatFile",
     "CompassShot",
+    "CompassSurvey",
+    "CompassSurveyHeader",
     "CompassSurveyParser",
-    "CompassTrip",
-    "CompassTripHeader",
     "format_dat_file",
     "format_shot",
-    "format_trip",
-    "format_trip_header",
+    "format_survey",
+    "format_survey_header",
 ]

@@ -7,7 +7,7 @@ All serialization is handled by Pydantic's built-in methods.
 
 from __future__ import annotations
 
-from enum import Enum
+from enum import StrEnum
 from typing import TYPE_CHECKING
 from typing import Annotated
 from typing import Any
@@ -151,7 +151,7 @@ FLAGS_OVERRIDE_LRUDS: int = 0x1
 FLAGS_LRUDS_AT_TO_STATION: int = 0x2
 
 
-class DeclinationMode(str, Enum):
+class DeclinationMode(StrEnum):
     """How declinations are derived and processed."""
 
     IGNORE = "I"  # Declinations are ignored
@@ -480,8 +480,10 @@ class CompassMakFile(BaseModel):
         ]
 
     @property
-    def total_trips(self) -> int:
-        return sum(len(fd.data.trips) if fd.data else 0 for fd in self.file_directives)
+    def total_surveys(self) -> int:
+        return sum(
+            len(fd.data.surveys) if fd.data else 0 for fd in self.file_directives
+        )
 
     @property
     def total_shots(self) -> int:
