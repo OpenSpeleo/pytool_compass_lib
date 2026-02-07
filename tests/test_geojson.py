@@ -250,7 +250,7 @@ class TestGeoJSONFeatureProperties:
             assert "distance_ft" in props
             assert "distance_m" in props
             assert "file" in props
-            assert "trip" in props
+            assert "survey" in props
 
     @pytest.mark.skipif(
         FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file"

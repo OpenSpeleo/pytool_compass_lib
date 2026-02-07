@@ -73,8 +73,8 @@ class CompassInterface:
         # Access nested data
         for file_dir in project.file_directives:
             if file_dir.data:
-                for trip in file_dir.data.trips:
-                    print(trip.header.survey_name)
+                for survey in file_dir.data.surveys:
+                    print(survey.header.survey_name)
 
         # Save to JSON
         CompassInterface.save_json(project, Path("cave.json"))
@@ -180,7 +180,7 @@ class CompassInterface:
             encoding: Character encoding
 
         Returns:
-            CompassDatFile with all trips
+            CompassDatFile with all surveys
         """
         parser = CompassSurveyParser()
         with path.open(encoding=encoding, errors="replace") as f:
@@ -280,7 +280,7 @@ class CompassInterface:
             path: Path to write to
             encoding: Character encoding
         """
-        content = format_dat_file(dat_file.trips)
+        content = format_dat_file(dat_file.surveys)
         with path.open(mode="w", encoding=encoding, newline="") as f:
             f.write(content or "")
 

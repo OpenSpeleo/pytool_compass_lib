@@ -136,7 +136,9 @@ class InclinationUnit(str, Enum):
         PERCENT_GRADE: Percentage gradient (tan(angle) * 100)
         DEGREES_AND_MINUTES: Degrees with minutes notation
         GRADS: Gradians
-        DEPTH_GAUGE: Depth gauge reading
+        DEPTH_GAUGE: Delta depth (From_depth - To_depth) for underwater surveys.
+            Negative = descending (going deeper), positive = ascending.
+            Uses the same units as length measurements.
     """
 
     DEGREES = "D"

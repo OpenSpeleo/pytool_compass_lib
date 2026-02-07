@@ -259,7 +259,8 @@ $16;
             assert directive.datum == expected_datum
 
     def test_roundtrip_datum_preservation(self):
-        """Test that datum values are preserved in roundtrip parsing and formatting."""
+        """Test that datum values are preserved in roundtrip parsing and
+        formatting."""
         # Test roundtrip for each datum
         for datum in Datum:
             directive = DatumDirective(datum=datum)

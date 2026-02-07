@@ -60,25 +60,25 @@ class TestLoadProject:
         # Check the data structure
         for fd in loaded_files:
             assert isinstance(fd.data, CompassDatFile)
-            assert hasattr(fd.data, "trips")
-            assert len(fd.data.trips) >= 1
+            assert hasattr(fd.data, "surveys")
+            assert len(fd.data.surveys) >= 1
 
-    def test_load_project_nested_trips(self):
-        """Test accessing trips through the nested structure."""
+    def test_load_project_nested_surveys(self):
+        """Test accessing surveys through the nested structure."""
         mak_path = ARTIFACTS_DIR / "simple.mak"
         project = load_project(mak_path)
 
-        total_trips = 0
+        total_surveys = 0
         total_shots = 0
 
         for fd in project.file_directives:
             if fd.data:
-                for trip in fd.data.trips:
-                    total_trips += 1
-                    total_shots += len(trip.shots)
-                    assert trip.header.survey_name is not None
+                for survey in fd.data.surveys:
+                    total_surveys += 1
+                    total_shots += len(survey.shots)
+                    assert survey.header.survey_name is not None
 
-        assert total_trips >= 1
+        assert total_surveys >= 1
         assert total_shots >= 1
 
     def test_load_project_with_link_stations(self):
@@ -120,12 +120,12 @@ class TestLoadProject:
             assert isinstance(datum, str)
             assert len(datum) > 0
 
-    def test_project_total_trips(self):
-        """Test the total_trips property."""
+    def test_project_total_surveys(self):
+        """Test the total_surveys property."""
         mak_path = ARTIFACTS_DIR / "simple.mak"
         project = load_project(mak_path)
 
-        total = project.total_trips
+        total = project.total_surveys
         assert isinstance(total, int)
         assert total >= 1
 
@@ -172,7 +172,7 @@ class TestCompassDatFile:
             if fd.data:
                 dat = fd.data
                 assert isinstance(dat.total_shots, int)
-                assert isinstance(dat.trip_names, list)
+                assert isinstance(dat.survey_names, list)
                 assert isinstance(dat.get_all_stations(), set)
 
 
@@ -220,8 +220,8 @@ class TestPrivateProjects:
 
         # Some projects may have missing DAT files, just ensure no errors
 
-        # trips/shots properties should work (may be 0 for some projects)
-        assert project.total_trips >= 0
+        # surveys/shots properties should work (may be 0 for some projects)
+        assert project.total_surveys >= 0
         assert project.total_shots >= 0
 
     @pytest.mark.parametrize("mak_path", ALL_MAK_FILES)

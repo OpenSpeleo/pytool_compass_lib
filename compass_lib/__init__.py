@@ -12,12 +12,12 @@ Usage:
     for file_dir in project.file_directives:
         print(f"File: {file_dir.file}")
         if file_dir.data:
-            for trip in file_dir.data.trips:
-                print(f"  Survey: {trip.header.survey_name}")
+            for survey in file_dir.data.surveys:
+                print(f"  Survey: {survey.header.survey_name}")
 
     # Or load individual files
     from compass_lib import read_dat_file, read_mak_file
-    trips = read_dat_file(Path("survey.DAT"))
+    surveys = read_dat_file(Path("survey.DAT"))
     directives = read_mak_file(Path("project.MAK"))
 """
 
@@ -60,8 +60,8 @@ from compass_lib.project.models import FileDirective
 from compass_lib.project.models import LinkStation
 from compass_lib.survey.models import CompassDatFile
 from compass_lib.survey.models import CompassShot
-from compass_lib.survey.models import CompassTrip
-from compass_lib.survey.models import CompassTripHeader
+from compass_lib.survey.models import CompassSurvey
+from compass_lib.survey.models import CompassSurveyHeader
 from compass_lib.validation import days_in_month
 from compass_lib.validation import is_valid_station_name
 from compass_lib.validation import validate_station_name
@@ -88,8 +88,8 @@ __all__ = [
     "CompassParseError",
     "CompassParseException",
     "CompassShot",
-    "CompassTrip",
-    "CompassTripHeader",
+    "CompassSurvey",
+    "CompassSurveyHeader",
     "DrawOperation",
     "FileDirective",
     "FileFormat",

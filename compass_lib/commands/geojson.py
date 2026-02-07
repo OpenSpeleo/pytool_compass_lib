@@ -11,6 +11,7 @@ from pathlib import Path
 
 from compass_lib.enums import FileExtension
 from compass_lib.geojson import convert_mak_to_geojson
+from compass_lib.solver.proportional import ProportionalSolver
 
 logger = logging.getLogger(__name__)
 
@@ -74,6 +75,11 @@ Notes:
         action="store_true",
         help="Include passage polygon features (from LRUD data)",
     )
+    parser.add_argument(
+        "--anchors",
+        action="store_true",
+        help="Include anchor point features (fixed reference stations)",
+    )
 
     parsed_args = parser.parse_args(args)
 
@@ -95,6 +101,8 @@ Notes:
             include_stations=not parsed_args.no_stations,
             include_legs=not parsed_args.no_legs,
             include_passages=parsed_args.passages,
+            include_anchors=parsed_args.anchors,
+            solver=ProportionalSolver(),
         )
 
         if parsed_args.output_file is None:

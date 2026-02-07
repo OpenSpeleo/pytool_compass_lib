@@ -3,9 +3,16 @@
 
 This module contains Pydantic models for representing survey data:
 - CompassShot: A single shot between two stations
-- CompassTripHeader: Metadata and settings for a survey trip
-- CompassTrip: A complete trip with header and shots
-- CompassDatFile: A DAT file containing one or more trips
+- CompassSurveyHeader: Metadata and settings for a survey
+- CompassSurvey: A complete survey with header and shots
+- CompassDatFile: A DAT file containing one or more surveys
+
+All measurements are stored in Compass's fixed internal units:
+- Length/LRUD: decimal feet
+- Bearing/Inclination/Backsights: degrees
+
+The FORMAT string from the DAT file is purely display metadata for the
+Compass editor and is stored as a raw string on the header.
 """
 
 from __future__ import annotations
@@ -16,14 +23,6 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field
 from pydantic import field_serializer
-from pydantic import field_validator
-
-from compass_lib.enums import AzimuthUnit
-from compass_lib.enums import InclinationUnit
-from compass_lib.enums import LengthUnit
-from compass_lib.enums import LrudAssociation
-from compass_lib.enums import LrudItem
-from compass_lib.enums import ShotItem
 
 
 class CompassShot(BaseModel):
@@ -59,8 +58,18 @@ class CompassShot(BaseModel):
     # Strict validation can be performed separately if needed.
 
 
-class CompassTripHeader(BaseModel):
-    """Metadata and settings for a survey trip."""
+class CompassSurveyHeader(BaseModel):
+    """Metadata and settings for a survey.
+
+    The FORMAT string is stored as a raw string (``format_string``).
+    It is purely display metadata for the Compass editor -- it does NOT
+    affect how shot data is parsed or stored. All data in a .DAT file
+    uses fixed internal units (feet, degrees) and fixed column order.
+
+    The only structural information extracted from the FORMAT string is
+    ``has_backsights``, which determines whether backsight columns are
+    present in the shot data.
+    """
 
     model_config = ConfigDict(populate_by_name=True)
 
@@ -70,27 +79,8 @@ class CompassTripHeader(BaseModel):
     comment: str | None = None
     team: str | None = None
     declination: float = 0.0
-    length_unit: LengthUnit = LengthUnit.DECIMAL_FEET
-    lrud_unit: LengthUnit = LengthUnit.DECIMAL_FEET
-    azimuth_unit: AzimuthUnit = AzimuthUnit.DEGREES
-    inclination_unit: InclinationUnit = InclinationUnit.DEGREES
-    lrud_order: list[LrudItem] = Field(
-        default_factory=lambda: [
-            LrudItem.LEFT,
-            LrudItem.RIGHT,
-            LrudItem.UP,
-            LrudItem.DOWN,
-        ]
-    )
-    shot_measurement_order: list[ShotItem] = Field(
-        default_factory=lambda: [
-            ShotItem.LENGTH,
-            ShotItem.FRONTSIGHT_AZIMUTH,
-            ShotItem.FRONTSIGHT_INCLINATION,
-        ]
-    )
+    format_string: str | None = None
     has_backsights: bool = True
-    lrud_association: LrudAssociation = LrudAssociation.FROM
     length_correction: float = 0.0
     frontsight_azimuth_correction: float = 0.0
     frontsight_inclination_correction: float = 0.0
@@ -102,59 +92,35 @@ class CompassTripHeader(BaseModel):
     def serialize_empty_as_none(cls, v: str | None) -> str | None:
         return None if v == "" else v
 
-    @field_serializer("lrud_order")
-    @classmethod
-    def serialize_lrud_order(cls, v: list[LrudItem]) -> list[str]:
-        return [item.value for item in v]
 
-    @field_serializer("shot_measurement_order")
-    @classmethod
-    def serialize_shot_order(cls, v: list[ShotItem]) -> list[str]:
-        return [item.value for item in v]
-
-    @field_validator("lrud_order", mode="before")
-    @classmethod
-    def parse_lrud_order(cls, v: list) -> list[LrudItem]:
-        if v and isinstance(v[0], str):
-            return [LrudItem(item) for item in v]
-        return v
-
-    @field_validator("shot_measurement_order", mode="before")
-    @classmethod
-    def parse_shot_order(cls, v: list) -> list[ShotItem]:
-        if v and isinstance(v[0], str):
-            return [ShotItem(item) for item in v]
-        return v
-
-
-class CompassTrip(BaseModel):
-    """A complete survey trip with header and shots."""
+class CompassSurvey(BaseModel):
+    """A complete survey with header and shots."""
 
     model_config = ConfigDict(populate_by_name=True)
 
-    header: CompassTripHeader
+    header: CompassSurveyHeader
     shots: list[CompassShot] = Field(default_factory=list)
 
 
 class CompassDatFile(BaseModel):
-    """A Compass .DAT file containing one or more survey trips."""
+    """A Compass .DAT file containing one or more surveys."""
 
     model_config = ConfigDict(populate_by_name=True)
 
-    trips: list[CompassTrip] = Field(default_factory=list)
+    surveys: list[CompassSurvey] = Field(default_factory=list)
 
     @property
     def total_shots(self) -> int:
-        return sum(len(trip.shots) for trip in self.trips)
+        return sum(len(survey.shots) for survey in self.surveys)
 
     @property
-    def trip_names(self) -> list[str]:
-        return [trip.header.survey_name or "<unnamed>" for trip in self.trips]
+    def survey_names(self) -> list[str]:
+        return [survey.header.survey_name or "<unnamed>" for survey in self.surveys]
 
     def get_all_stations(self) -> set[str]:
         stations: set[str] = set()
-        for trip in self.trips:
-            for shot in trip.shots:
+        for survey in self.surveys:
+            for shot in survey.shots:
                 stations.add(shot.from_station_name)
                 stations.add(shot.to_station_name)
         return stations

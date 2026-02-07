@@ -2,13 +2,18 @@
 """Parser for Compass .DAT survey data files.
 
 This module implements the parser for reading Compass survey data files,
-which contain cave survey measurements organized into trips.
+which contain cave survey measurements organized into surveys.
 
 Architecture: The parser produces dictionaries (like loading JSON) which are
 then fed to Pydantic models via a single `model_validate()` call. This keeps
 parsing logic separate from model construction.
+
+All data in a .DAT file uses fixed internal units (feet, degrees) and a fixed
+column order regardless of the FORMAT string. The FORMAT string is purely
+display metadata for the Compass editor and is stored as a raw string.
 """
 
+import logging
 import re
 from datetime import date
 from pathlib import Path
@@ -17,17 +22,13 @@ from typing import Any
 from compass_lib.constants import ASCII_ENCODING
 from compass_lib.constants import MISSING_ANGLE_THRESHOLD
 from compass_lib.constants import MISSING_VALUE_THRESHOLD
-from compass_lib.enums import AzimuthUnit
-from compass_lib.enums import InclinationUnit
-from compass_lib.enums import LengthUnit
-from compass_lib.enums import LrudAssociation
-from compass_lib.enums import LrudItem
 from compass_lib.enums import Severity
-from compass_lib.enums import ShotItem
 from compass_lib.errors import CompassParseError
 from compass_lib.errors import SourceLocation
 from compass_lib.survey.models import CompassDatFile
 from compass_lib.validation import days_in_month
+
+logger = logging.getLogger(__name__)
 
 
 class CompassSurveyParser:
@@ -117,7 +118,7 @@ class CompassSurveyParser:
             path: Path to the .DAT file
 
         Returns:
-            Dictionary with "trips" key containing list of trip dicts
+            Dictionary with "surveys" key containing list of survey dicts
         """
         self._source = str(path)
         with path.open(mode="r", encoding=ASCII_ENCODING, errors="replace") as f:
@@ -136,27 +137,27 @@ class CompassSurveyParser:
             source: Source identifier for error messages
 
         Returns:
-            Dictionary with "trips" key containing list of trip dicts
+            Dictionary with "surveys" key containing list of survey dicts
         """
         self._source = source
-        trips: list[dict[str, Any]] = []
+        surveys: list[dict[str, Any]] = []
 
         # Split on form feed character
         sections = data.split("\f")
         for section in sections:
             _section = section.strip()
             if _section:
-                trip = self._parse_trip_to_dict(_section)
-                if trip:
-                    trips.append(trip)
+                survey = self._parse_survey_to_dict(_section)
+                if survey:
+                    surveys.append(survey)
 
-        return {"trips": trips}
+        return {"surveys": surveys}
 
     # -------------------------------------------------------------------------
     # Legacy model-returning methods (thin wrappers for backwards compat)
     # -------------------------------------------------------------------------
 
-    def parse_file(self, path: Path) -> list["CompassTrip"]:  # noqa: F821
+    def parse_file(self, path: Path) -> list["CompassSurvey"]:  # noqa: F821
         """Parse a Compass survey data file.
 
         DEPRECATED: Use parse_file_to_dict() for new code.
@@ -165,18 +166,18 @@ class CompassSurveyParser:
             path: Path to the .DAT file
 
         Returns:
-            List of parsed trips
+            List of parsed surveys
         """
 
         data = self.parse_file_to_dict(path)
         dat_file = CompassDatFile.model_validate(data)
-        return dat_file.trips
+        return dat_file.surveys
 
     def parse_string(
         self,
         data: str,
         source: str = "<string>",
-    ) -> list["CompassTrip"]:  # noqa: F821
+    ) -> list["CompassSurvey"]:  # noqa: F821
         """Parse survey data from a string.
 
         DEPRECATED: Use parse_string_to_dict() for new code.
@@ -186,18 +187,18 @@ class CompassSurveyParser:
             source: Source identifier for error messages
 
         Returns:
-            List of parsed trips
+            List of parsed surveys
         """
 
         parsed = self.parse_string_to_dict(data, source)
         dat_file = CompassDatFile.model_validate(parsed)
-        return dat_file.trips
+        return dat_file.surveys
 
     def _split_header_and_data(self, text: str) -> tuple[str, str]:
-        """Split trip text into header and shot data sections.
+        """Split survey text into header and shot data sections.
 
         Args:
-            text: Complete trip text
+            text: Complete survey text
 
         Returns:
             Tuple of (header_text, data_text)
@@ -208,18 +209,18 @@ class CompassSurveyParser:
             return text[:header_end].strip(), text[header_end:].strip()
         return text.strip(), ""
 
-    def _parse_trip_to_dict(self, text: str) -> dict[str, Any] | None:
-        """Parse a single trip from text to dictionary.
+    def _parse_survey_to_dict(self, text: str) -> dict[str, Any] | None:
+        """Parse a single survey from text to dictionary.
 
         Args:
-            text: Trip text (header + shots)
+            text: survey text (header + shots)
 
         Returns:
             Dictionary with "header" and "shots" keys, or None if parsing fails
         """
         header_text, data_text = self._split_header_and_data(text)
 
-        header = self._parse_trip_header_to_dict(header_text)
+        header = self._parse_survey_header_to_dict(header_text)
         if header is None:
             return None
 
@@ -233,8 +234,8 @@ class CompassSurveyParser:
 
         return {"header": header, "shots": shots}
 
-    def _parse_trip_header_to_dict(self, text: str) -> dict[str, Any] | None:
-        """Parse trip header from text to dictionary.
+    def _parse_survey_header_to_dict(self, text: str) -> dict[str, Any] | None:
+        """Parse survey header from text to dictionary.
 
         Args:
             text: Header text
@@ -254,23 +255,8 @@ class CompassSurveyParser:
             "comment": None,
             "team": None,
             "declination": 0.0,
-            "length_unit": LengthUnit.DECIMAL_FEET.value,
-            "lrud_unit": LengthUnit.DECIMAL_FEET.value,
-            "azimuth_unit": AzimuthUnit.DEGREES.value,
-            "inclination_unit": InclinationUnit.DEGREES.value,
-            "lrud_order": [
-                LrudItem.LEFT.value,
-                LrudItem.RIGHT.value,
-                LrudItem.UP.value,
-                LrudItem.DOWN.value,
-            ],
-            "shot_measurement_order": [
-                ShotItem.LENGTH.value,
-                ShotItem.FRONTSIGHT_AZIMUTH.value,
-                ShotItem.FRONTSIGHT_INCLINATION.value,
-            ],
+            "format_string": None,
             "has_backsights": True,
-            "lrud_association": LrudAssociation.FROM.value,
             "length_correction": 0.0,
             "frontsight_azimuth_correction": 0.0,
             "frontsight_inclination_correction": 0.0,
@@ -540,19 +526,19 @@ class CompassSurveyParser:
     ) -> None:
         """Parse the FORMAT string and update header dictionary.
 
-        Format string structure:
-        - Position 0: Azimuth unit (D/Q/R)
-        - Position 1: Length unit (D/I/M)
-        - Position 2: LRUD unit (D/I/M)
-        - Position 3: Inclination unit (D/G/M/R/W)
-        - Positions 4-7: LRUD order (L/R/U/D)
-        - Positions 8-10 or 8-12: Shot order (L/A/D/a/d)
-        - Optional B: Has backsights
-        - Optional F/T: LRUD association
+        The FORMAT string is purely display metadata for the Compass editor.
+        It does NOT affect how shot data is parsed -- all data uses fixed
+        internal units (feet, degrees) and fixed column order.
+
+        The only structural information extracted is ``has_backsights``,
+        which determines whether backsight columns are present in the data.
+
+        The raw FORMAT string is stored as ``format_string`` for round-trip
+        fidelity.
 
         Args:
             header: Header dictionary to update
-            format_str: Format string
+            format_str: Format string (11-15 characters)
         """
         format_str = format_str.strip()
         if len(format_str) < 11:
@@ -562,144 +548,27 @@ class CompassSurveyParser:
             )
             return
 
-        i = 0
+        # Store the raw format string
+        header["format_string"] = format_str
 
-        # Azimuth unit
-        header["azimuth_unit"] = self._parse_azimuth_unit(format_str[i]).value
-        i += 1
+        # Extract has_backsights from the backsight flag position.
+        # The backsight flag position depends on the format string length:
+        #   11-char: no backsight flag -> default False
+        #   12-char: backsight flag at position 11
+        #   13-char: backsight flag at position 11
+        #   15-char: backsight flag at position 13 (5-item shot order)
+        #   14-char: unusual, treat backsight flag at position 11
+        format_len = len(format_str)
+        if format_len >= 15:
+            backsight_pos = 13
+        elif format_len >= 12:
+            backsight_pos = 11
+        else:
+            # 11-char format has no backsight flag
+            header["has_backsights"] = False
+            return
 
-        # Length unit
-        header["length_unit"] = self._parse_length_unit_char(format_str[i]).value
-        i += 1
-
-        # LRUD unit
-        header["lrud_unit"] = self._parse_length_unit_char(format_str[i]).value
-        i += 1
-
-        # Inclination unit
-        header["inclination_unit"] = self._parse_inclination_unit(format_str[i]).value
-        i += 1
-
-        # LRUD order (4 characters)
-        lrud_order: list[str] = []
-        for j in range(4):
-            if i + j < len(format_str):
-                item = self._parse_lrud_item(format_str[i + j])
-                if item:
-                    lrud_order.append(item.value)
-        if len(lrud_order) == 4:
-            header["lrud_order"] = lrud_order
-        i += 4
-
-        # Shot measurement order (3 or 5 characters)
-        shot_order_len = 5 if len(format_str) >= 15 else 3
-        shot_order: list[str] = []
-        for j in range(shot_order_len):
-            if i + j < len(format_str):
-                item = self._parse_shot_item(format_str[i + j])
-                if item:
-                    shot_order.append(item.value)
-        if shot_order:
-            header["shot_measurement_order"] = shot_order
-        i += shot_order_len
-
-        # Has backsights flag (B = yes, N = no, anything else means check next char)
-        if i < len(format_str):
-            char = format_str[i].upper()
-            if char == "B":
-                header["has_backsights"] = True
-                i += 1
-            elif char == "N":
-                header["has_backsights"] = False
-                i += 1
-            else:
-                # Assume no backsights if char is not B or N
-                header["has_backsights"] = False
-
-        # LRUD association
-        if i < len(format_str):
-            assoc = self._parse_lrud_association(format_str[i])
-            if assoc:
-                header["lrud_association"] = assoc.value
-
-    def _parse_azimuth_unit(self, char: str) -> AzimuthUnit:
-        """Parse azimuth unit character."""
-        char = char.upper()
-        if char == "D":
-            return AzimuthUnit.DEGREES
-        if char == "Q":
-            return AzimuthUnit.QUADS
-        if char == "R":
-            return AzimuthUnit.GRADS
-        self._add_error(f"unrecognized azimuth unit: {char}", char)
-        return AzimuthUnit.DEGREES
-
-    def _parse_length_unit_char(self, char: str) -> LengthUnit:
-        """Parse length unit character."""
-        char = char.upper()
-        if char == "D":
-            return LengthUnit.DECIMAL_FEET
-        if char == "I":
-            return LengthUnit.FEET_AND_INCHES
-        if char == "M":
-            return LengthUnit.METERS
-        self._add_error(f"unrecognized length unit: {char}", char)
-        return LengthUnit.DECIMAL_FEET
-
-    def _parse_inclination_unit(self, char: str) -> InclinationUnit:
-        """Parse inclination unit character."""
-        char = char.upper()
-        if char == "D":
-            return InclinationUnit.DEGREES
-        if char == "G":
-            return InclinationUnit.PERCENT_GRADE
-        if char == "M":
-            return InclinationUnit.DEGREES_AND_MINUTES
-        if char == "R":
-            return InclinationUnit.GRADS
-        if char == "W":
-            return InclinationUnit.DEPTH_GAUGE
-        self._add_error(f"unrecognized inclination unit: {char}", char)
-        return InclinationUnit.DEGREES
-
-    def _parse_lrud_item(self, char: str) -> LrudItem | None:
-        """Parse LRUD item character."""
-        char = char.upper()
-        if char == "L":
-            return LrudItem.LEFT
-        if char == "R":
-            return LrudItem.RIGHT
-        if char == "U":
-            return LrudItem.UP
-        if char == "D":
-            return LrudItem.DOWN
-        self._add_error(f"unrecognized LRUD item: {char}", char)
-        return None
-
-    def _parse_shot_item(self, char: str) -> ShotItem | None:
-        """Parse shot item character (case-sensitive for backsights)."""
-        if char == "L":
-            return ShotItem.LENGTH
-        if char == "A":
-            return ShotItem.FRONTSIGHT_AZIMUTH
-        if char == "D":
-            return ShotItem.FRONTSIGHT_INCLINATION
-        if char == "a":
-            return ShotItem.BACKSIGHT_AZIMUTH
-        if char == "d":
-            return ShotItem.BACKSIGHT_INCLINATION
-        self._add_error(f"unrecognized shot item: {char}", char)
-        return None
-
-    def _parse_lrud_association(self, char: str) -> LrudAssociation | None:
-        """Parse LRUD association character."""
-        char = char.upper()
-        if char == "F":
-            return LrudAssociation.FROM
-        if char == "T":
-            return LrudAssociation.TO
-        self._add_error(f"unrecognized LRUD association: {char}", char)
-        return None
+        header["has_backsights"] = format_str[backsight_pos].upper() == "B"
 
     def _parse_shot_to_dict(
         self,
@@ -708,74 +577,64 @@ class CompassSurveyParser:
     ) -> dict[str, Any] | None:
         """Parse a single shot line to dictionary.
 
+        Compass .DAT files have FIXED column order regardless of FORMAT string.
+        Columns are always:
+        FROM TO LENGTH AZIMUTH INCLINATION LEFT UP DOWN RIGHT [BS_AZ BS_INC] [FLAGS] [COMMENT]
+
+        All values are in fixed internal units: feet for lengths, degrees for angles.
+
         Args:
             line: Shot line text
-            header: Trip header dictionary with format information
+            header: Survey header dictionary (needs ``has_backsights``)
 
         Returns:
             Shot dictionary or None if line is invalid
-        """
+        """  # noqa: E501
         parts = self.NON_WHITESPACE.findall(line)
         if len(parts) < 2:
             return None
 
         idx = 0
 
-        # Station names
+        # Station names (always positions 0, 1)
         from_station = parts[idx]
         idx += 1
         to_station = parts[idx]
         idx += 1
 
-        # Length
-        if idx >= len(parts):
-            self._add_error("missing length", line)
-            return None
-
-        length = self._parse_distance(parts[idx])
+        # Parse LENGTH (always position 2)
+        length = self._parse_distance(parts[idx]) if idx < len(parts) else None
         idx += 1
 
-        # If length is None and we've exhausted parts, skip this shot
+        # Parse AZIMUTH (always position 3)
+        fs_azimuth = self._parse_azimuth(parts[idx]) if idx < len(parts) else None
+        idx += 1
+
+        # Parse INCLINATION (always position 4) -- always in degrees
+        fs_inclination = (
+            self._parse_inclination(parts[idx]) if idx < len(parts) else None
+        )
+        idx += 1
+
+        # Check if length is valid - if not and we've exhausted parts, skip
         if length is None and idx >= len(parts):
             return None
 
-        # Frontsight azimuth
-        if idx >= len(parts):
-            self._add_error("missing frontsight azimuth", line)
-            return None
-        fs_azimuth = self._parse_azimuth(parts[idx])
+        # LRUD values - FIXED order: LEFT UP DOWN RIGHT (positions 5-8)
+        left = self._parse_lrud(parts[idx]) if idx < len(parts) else None
+        idx += 1
+        up = self._parse_lrud(parts[idx]) if idx < len(parts) else None
+        idx += 1
+        down = self._parse_lrud(parts[idx]) if idx < len(parts) else None
+        idx += 1
+        right = self._parse_lrud(parts[idx]) if idx < len(parts) else None
         idx += 1
 
-        # Frontsight inclination
-        if idx >= len(parts):
-            self._add_error("missing frontsight inclination", line)
-            return None
-        fs_inclination = self._parse_inclination(parts[idx])
-        idx += 1
+        # Backsight values (optional, positions 9-10)
+        bs_azimuth: float | None = None
+        bs_inclination: float | None = None
+        has_backsights = header.get("has_backsights", False)
 
-        # LRUD values (left, up, down, right in file order)
-        left = None
-        up = None
-        down = None
-        right = None
-
-        if idx < len(parts):
-            left = self._parse_lrud(parts[idx])
-            idx += 1
-        if idx < len(parts):
-            up = self._parse_lrud(parts[idx])
-            idx += 1
-        if idx < len(parts):
-            down = self._parse_lrud(parts[idx])
-            idx += 1
-        if idx < len(parts):
-            right = self._parse_lrud(parts[idx])
-            idx += 1
-
-        # Backsight values (if present)
-        bs_azimuth = None
-        bs_inclination = None
-        has_backsights = header.get("has_backsights", True)
         if has_backsights:
             if idx < len(parts):
                 bs_azimuth = self._parse_azimuth(parts[idx])

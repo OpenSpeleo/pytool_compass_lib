@@ -480,8 +480,10 @@ class CompassMakFile(BaseModel):
         ]
 
     @property
-    def total_trips(self) -> int:
-        return sum(len(fd.data.trips) if fd.data else 0 for fd in self.file_directives)
+    def total_surveys(self) -> int:
+        return sum(
+            len(fd.data.surveys) if fd.data else 0 for fd in self.file_directives
+        )
 
     @property
     def total_shots(self) -> int:

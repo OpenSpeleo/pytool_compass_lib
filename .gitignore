@@ -170,9 +170,21 @@ cython_debug/
 /main.py
 
 # Decrypted test artifacts files
-!tests/artifactsprivate/*.encrypted
+tests/artifacts/*/
+!tests/artifacts/private/
+!tests/artifacts/private/*.encrypted
 tests/artifacts/private/*.dat
 tests/artifacts/private/*.mak
 tests/artifacts/private/*.kml
+tests/artifacts/private/*.plt
 tests/artifacts/private/*.geojson
 tests/artifacts/private/*.json
+
+# Base Directory
+pytool_compass_lib_old
+/*.mak
+/*.dat
+/*.plt
+/*.json
+/*.geojson
+/*.kml

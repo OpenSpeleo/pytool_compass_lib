@@ -1,4 +1,4 @@
-exclude: "^docs/|/migrations/|devcontainer.json|.*.html|.*.css|.*.js|.*.svg|.*.dist"
+exclude: "^devcontainer.json|.*.html|.*.css|.*.js|.*.svg|.*.dist"
 
 default_language_version:
   python: python3.14
@@ -24,6 +24,14 @@ repos:
       - id: check-case-conflict
       - id: check-docstring-first
       - id: detect-private-key
+
+  # Documentation Formatter
+  - repo: https://github.com/executablebooks/mdformat
+    rev: 1.0.0
+    hooks:
+      - id: mdformat
+        files: ^docs/.*\.md$
+
 
   # Run the Ruff linter.
   - repo: https://github.com/astral-sh/ruff-pre-commit
