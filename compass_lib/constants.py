@@ -90,9 +90,9 @@ UTM_SOUTHERN_HEMISPHERE_OFFSET: float = 10_000_000.0
 #: Maximum relative change to a shot's tape length during traverse adjustment
 #: (0.05 = 5 %).  The solver will never stretch or shrink a shot by more than
 #: this fraction of the original survey measurement.
-SOLVER_MAX_LENGTH_CHANGE: float = 0.10
+SOLVER_MAX_LENGTH_CHANGE: float = 0.15
 
 #: Maximum relative change to a shot's compass heading during traverse
 #: adjustment (0.15 = 15 %).  The solver will never rotate a shot's bearing
 #: or inclination by more than this fraction of the original survey reading.
-SOLVER_MAX_HEADING_CHANGE: float = 0.10
+SOLVER_MAX_HEADING_CHANGE: float = 0.15

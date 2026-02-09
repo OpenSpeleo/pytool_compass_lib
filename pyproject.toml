@@ -56,6 +56,7 @@ classifiers = [
 dependencies = [
     "geojson>=3.2,<4",
     "numpy>=1.26,<3",
+    "scipy>=1.12,<2",
     "orjson>=3.10,<3.12",
     "pydantic>=2.12,<2.13",
     "pydantic-extra-types>=2.11,<3.0",
