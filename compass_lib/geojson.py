@@ -194,24 +194,27 @@ def _get_utm_epsg(zone: int, northern: bool, datum: Datum) -> str:
     """
     zone = abs(zone)
 
-    if datum == Datum.NORTH_AMERICAN_1927:
-        # NAD27 UTM: EPSG:26701-26722 (zones 1-22 north)
-        # Southern hemisphere NAD27 is rare, use WGS84 fallback
-        if northern:
-            return f"EPSG:{26700 + zone}"
-        # NAD27 southern zones don't have standard EPSG codes, use WGS84
-        return f"EPSG:{32700 + zone}"
-    elif datum == Datum.NORTH_AMERICAN_1983:
-        # NAD83 UTM: EPSG:26901-26923 (zones 1-23 north)
-        # EPSG:32601-32660 for south (use WGS84 for southern)
-        if northern:
-            return f"EPSG:{26900 + zone}"
-        return f"EPSG:{32700 + zone}"
-    else:
-        # WGS84 UTM: EPSG:32601-32660 (north), EPSG:32701-32760 (south)
-        if northern:
-            return f"EPSG:{32600 + zone}"
-        return f"EPSG:{32700 + zone}"
+    match Datum:
+        case Datum.NORTH_AMERICAN_1927:
+            # NAD27 UTM: EPSG:26701-26722 (zones 1-22 north)
+            # Southern hemisphere NAD27 is rare, use WGS84 fallback
+            if northern:
+                return f"EPSG:{26700 + zone}"
+            # NAD27 southern zones don't have standard EPSG codes, use WGS84
+            return f"EPSG:{32700 + zone}"
+
+        case Datum.NORTH_AMERICAN_1983:
+            # NAD83 UTM: EPSG:26901-26923 (zones 1-23 north)
+            # EPSG:32601-32660 for south (use WGS84 for southern)
+            if northern:
+                return f"EPSG:{26900 + zone}"
+            return f"EPSG:{32700 + zone}"
+
+        case _:
+            # WGS84 UTM: EPSG:32601-32660 (north), EPSG:32701-32760 (south)
+            if northern:
+                return f"EPSG:{32600 + zone}"
+            return f"EPSG:{32700 + zone}"
 
 
 def _get_transformer(zone: int, northern: bool, datum: Datum) -> Transformer:
@@ -386,7 +389,8 @@ def get_station_location_wgs84(
         InvalidCoordinateError: If conversion fails
     """
     # Always use northern=True because Compass stores all coordinates in northern format
-    # The zone sign is only used for convergence/grid orientation, not coordinate storage
+    # The zone sign is only used for convergence/grid orientation,
+    # not coordinate storage
     lon, lat = utm_to_wgs84(
         station.easting, station.northing, utm_zone, northern=True, datum=datum
     )
@@ -609,7 +613,7 @@ def compute_next_station(
 
     Returns:
         Station with computed coordinates
-    """
+    """  # noqa: E501
     de, dn, dz = compute_shot_delta(shot, is_reverse, declination, convergence)
 
     return Station(
@@ -736,7 +740,7 @@ def propagate_coordinates(
             if survey_key not in survey_declinations:
                 # Find anchor station for this survey's file (priority 1)
                 survey_anchor = None
-                for anchor_name, anchor_station in anchors.items():
+                for anchor_station in anchors.values():
                     if anchor_station.file == file_name:
                         survey_anchor = anchor_station
                         break
@@ -754,7 +758,7 @@ def propagate_coordinates(
                 )
 
                 logger.debug(
-                    "Survey %s: using station %s at UTM(%.1f, %.1f) zone=%d northern=%s -> WGS84(%.4f, %.4f)",
+                    "Survey %s: using station %s at UTM(%.1f, %.1f) zone=%d northern=%s -> WGS84(%.4f, %.4f)",  # noqa: E501
                     survey_key,
                     location_station.name,
                     location_station.easting,
@@ -1049,7 +1053,7 @@ def _shapely_to_passage_features(
                 for x, y in interior.coords
             ]
             holes.append(hole)
-        coords = [ring] + holes
+        coords = [ring, *holes]
         features.append(Feature(geometry=Polygon(coords), properties=properties))
     return features
 
@@ -1057,26 +1061,23 @@ def _shapely_to_passage_features(
 def _build_station_lrud_map(
     survey: ComputedSurvey,
 ) -> dict[str, tuple[tuple[float, float], tuple[float, float]]]:
-    """Build a map of station name -> (left_utm, right_utm) from legs that define LRUD at that station.
+    """Build a map of station name -> (left_utm, right_utm) from legs that define LRUD
+    at that station.
 
-    For each leg, the station that "owns" the LRUD (FROM if lruds_at_to_station is False,
-    TO if True) gets its left/right positions from that leg's azimuth and left/right values.
-    This allows tunnel segments to share edges: the left edge of one leg connects to the
-    left edge of the adjacent leg at the shared station.
+    For each leg, the station that "owns" the LRUD (FROM if lruds_at_to_station
+    is False, TO if True) gets its left/right positions from that leg's azimuth and
+    left/right values. This allows tunnel segments to share edges: the left edge of
+    one leg connects to the  left edge of the adjacent leg at the shared station.
     """
     result: dict[str, tuple[tuple[float, float], tuple[float, float]]] = {}
     for leg in survey.legs:
-        if leg.left is None and leg.right is None:
+        if (leg.left is None and leg.right is None) or leg.azimuth is None:
             continue
-        if leg.azimuth is None:
-            continue
+
         left_m = length_to_meters(leg.left or 0.0)
         right_m = length_to_meters(leg.right or 0.0)
         azimuth_rad = math.radians(leg.azimuth)
-        if leg.lruds_at_to_station:
-            station = leg.to_station
-        else:
-            station = leg.from_station
+        station = leg.to_station if leg.lruds_at_to_station else leg.from_station
         result[station.name] = _station_left_right_utm(
             station.easting, station.northing, azimuth_rad, left_m, right_m
         )
@@ -1096,7 +1097,8 @@ def passage_to_feature(
     Each leg produces a quadrilateral: the "base" is the left/right at FROM and TO.
     When station_lrud is provided, the left/right at each station come from the leg
     that defines LRUD at that station, so segments connect and form a continuous tunnel.
-    If a station is missing from the map, this leg's LRUD and azimuth are used for that end.
+    If a station is missing from the map, this leg's LRUD and azimuth are used for
+    that end.
 
     Args:
         leg: Survey leg with LRUD data
@@ -1107,7 +1109,7 @@ def passage_to_feature(
 
     Returns:
         GeoJSON Feature with Polygon geometry, or None if no LRUD data
-    """
+    """  # noqa: E501
     if leg.left is None and leg.right is None:
         return None
 
@@ -1291,8 +1293,7 @@ def survey_to_geojson(
                 if not clipped.is_empty and clipped.is_valid:
                     elev = ring[0][2]
                     props = dict(passage["properties"])
-                    for feat in _shapely_to_passage_features(clipped, elev, props):
-                        features.append(feat)
+                    features.extend(_shapely_to_passage_features(clipped, elev, props))
                 # Merge full segment into tunnel so next segment is clipped against it
                 existing_tunnel = unary_union([existing_tunnel, segment])
             else:
