@@ -96,12 +96,12 @@ regen-test-geojson:  ## rerun the json conversion to JSON of the test artifacts
 		[ -f "$$file" ] || continue; \
 		out=$${file%.[mM][aA][kK]}.geojson; \
 		echo "Converting $$file → $$out"; \
-		compass geojson -i "$$file" -o "$$out" --passages --anchors; \
+		compass geojson -i "$$file" -o "$$out" --no-stations --anchors; \
 	done; \
 	shopt -u nocaseglob;
 
 regen-test-json:  ## rerun the json conversion to JSON of the test artifacts
-	@shopt -s nocaseglob; \
+	@shopt -s nocaseglob;
 	for file in $(PRIVATE_DATA_DIR)/*.{mak,dat}; do \
 		[ -f "$$file" ] || continue; \
 		out=$$file.json; \

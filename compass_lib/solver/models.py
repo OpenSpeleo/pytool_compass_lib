@@ -176,11 +176,24 @@ class SurveyNetwork:
         for name, st in survey.stations.items():
             stations[name] = Vector3D(st.easting, st.northing, st.elevation)
 
+        # Build a reverse lookup: Station object id -> dict key.
+        # Station.name is the *display* name (unscoped), but dict keys
+        # may be file-scoped.  Legs reference Station objects, so we
+        # need to recover the scoped key for each leg endpoint.
+        station_obj_to_key: dict[int, str] = {
+            id(st): key for key, st in survey.stations.items()
+        }
+
         shots: list[NetworkShot] = []
         seen: set[tuple[str, str]] = set()
         for leg in survey.legs:
-            key = (leg.from_station.name, leg.to_station.name)
-            rev_key = (leg.to_station.name, leg.from_station.name)
+            from_key = station_obj_to_key.get(id(leg.from_station))
+            to_key = station_obj_to_key.get(id(leg.to_station))
+            if from_key is None or to_key is None:
+                continue
+
+            key = (from_key, to_key)
+            rev_key = (to_key, from_key)
             if key in seen or rev_key in seen:
                 continue
             seen.add(key)
@@ -193,16 +206,16 @@ class SurveyNetwork:
             else:
                 # Fallback: coordinate difference (less accurate for
                 # traverse adjustment, but better than nothing).
-                from_pos = stations.get(leg.from_station.name)
-                to_pos = stations.get(leg.to_station.name)
+                from_pos = stations.get(from_key)
+                to_pos = stations.get(to_key)
                 if from_pos is None or to_pos is None:
                     continue
                 delta = to_pos - from_pos
 
             shots.append(
                 NetworkShot(
-                    from_name=leg.from_station.name,
-                    to_name=leg.to_station.name,
+                    from_name=from_key,
+                    to_name=to_key,
                     delta=delta,
                     distance=(delta.length if delta.length > 0 else 1e-6),
                 )

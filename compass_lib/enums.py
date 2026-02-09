@@ -324,6 +324,42 @@ class Datum(str, Enum):
     WGS_1972 = "WGS 1972"
     WGS_1984 = "WGS 1984"
 
+    def get_utm_epsg(self, zone: int, northern: bool) -> str:  # noqa: PLR0911
+        """Get the EPSG code for a UTM zone with this datum.
+
+        Args:
+            zone: UTM zone number (1-60)
+            northern: True for northern hemisphere
+
+        Returns:
+            EPSG code string (e.g., "EPSG:26717" for NAD27 UTM Zone 17N)
+        """
+        zone = abs(zone)
+
+        match self:
+            case Datum.NORTH_AMERICAN_1927:
+                # NAD27 / UTM: EPSG:26701-26722 (zones 1-22 north)
+                return f"EPSG:{26700 + zone}"
+
+            case Datum.NORTH_AMERICAN_1983:
+                # NAD83 / UTM: EPSG:26901-26923 (zones 1-23 north)
+                return f"EPSG:{26900 + zone}"
+
+            case Datum.WGS_1972:
+                # WGS72 / UTM: EPSG:32201-32260 (north), EPSG:32301-32360 (south)
+                if northern:
+                    return f"EPSG:{32200 + zone}"
+                return f"EPSG:{32300 + zone}"
+
+            case Datum.WGS_1984:
+                # WGS84 / UTM: EPSG:32601-32660 (north), EPSG:32701-32760 (south)
+                if northern:
+                    return f"EPSG:{32600 + zone}"
+                return f"EPSG:{32700 + zone}"
+
+            case _:
+                raise NotImplementedError(f"This DATUM: `{self}` is not supported")
+
     @classmethod
     def normalize(cls, value: str | None) -> "Datum | None":
         """Normalize and validate a datum string to a Datum enum value.

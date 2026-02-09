@@ -40,7 +40,7 @@ Implemented in `compass_lib.solver.proportional.ProportionalSolver`.
 
 For each connected pair of anchor stations (A, B):
 
-### Step 1 — Re-propagate from A
+### Step 1 — Unclamped propagation & misclosure
 
 Run a full BFS from anchor A through the network's undirected adjacency graph,
 computing every station's position by summing measurement deltas from A's known
@@ -49,17 +49,12 @@ accumulated error landing at B:
 
 ```
 measured_B = A_pos + sum(deltas along path to B)
-```
-
-### Step 2 — Compute misclosure
-
-```
 misclosure = measured_B - fixed_B
 ```
 
 If `misclosure.length < 1e-9`, this pair needs no correction.
 
-### Step 3 — Compute graph distances
+### Step 2 — Compute graph distances
 
 Two BFS passes compute the cumulative shot-length distance from each anchor to
 every station:
@@ -67,25 +62,30 @@ every station:
 - `d_A[s]` = shortest graph-distance from A to station s
 - `d_B[s]` = shortest graph-distance from B to station s
 
-### Step 4 — Distance-weighted correction
+### Step 3 — Clamped re-propagation
 
-For each non-anchor station `s`:
+A second BFS from A re-propagates the network, but this time each shot receives
+a proportional share of the misclosure correction **clamped in polar
+coordinates**:
 
-```
-fraction = d_A[s] / (d_A[s] + d_B[s])
-corrected[s] = re_propagated[s] - fraction * misclosure
-```
+For each edge (current → neighbor) in BFS order:
 
-This gives:
+1. Compute graph-distance fractions `f_current`, `f_neighbor`.
+2. Ideal correction for this shot:
+   `correction = (f_neighbor - f_current) * misclosure`.
+3. Corrected delta: `new_delta = survey_delta - correction`.
+4. Decompose both the survey delta and the corrected delta into polar:
+   `(length, compass_heading, inclination)`.
+5. **Clamp** each component:
+   - Length: `new_length` within `[0.95 * survey_length, 1.05 * survey_length]`
+   - Heading: change ≤ 15 % of the survey compass reading (floor 2 °)
+   - Inclination: change ≤ 15 % of |survey inclination| (floor 2 °)
+6. Reconstruct the clamped cartesian delta and propagate:
+   `pos[neighbor] = pos[current] + clamped_delta`.
 
-| Station position | fraction | Correction | |---|---|---| | At anchor A | 0 |
-None (anchor is fixed) | | Near A | small | Almost no correction | | Midway |
-0.5 | Half the misclosure | | Near B | large | Nearly full correction | | At
-anchor B | 1 | Full correction (anchor is fixed, skipped) |
-
-Side branches interpolate naturally: a station `E` on a spur off `B` has
-`d_A = d_A(B) + dist(B,E)` and `d_B = dist(B,E)`, so its fraction reflects its
-position in the overall network.
+This guarantees every shot's effective compass heading and tape length stay
+within tolerance of the **original survey reading**, while distributing as much
+error as those limits allow.
 
 ### Multiple anchor pairs
 
@@ -118,9 +118,11 @@ compass_lib/solver/
   distance/azimuth/inclination measurements (with declination and convergence
   applied), **not** from coordinate differences.
 
-- **`ProportionalSolver`** (`proportional.py`): The main solver. Contains
-  `_bfs_propagate()` and `_bfs_distances()` helper functions for the
-  re-propagation and distance computation.
+- **`ProportionalSolver`** (`proportional.py`): The main solver. Uses
+  `_bfs_propagate()` and `_bfs_distances()` for the unclamped propagation and
+  distance computation, then `_clamped_propagate()` for the per-shot polar-
+  clamped re-propagation. Polar helpers `_to_polar()` / `_from_polar()` convert
+  between cartesian deltas and survey-style (length, bearing, inclination).
 
 ### Integration with GeoJSON pipeline
 
@@ -145,6 +147,98 @@ and a simplestyle `stroke` / `marker-color` is assigned per origin using the
 `ORIGIN_COLORS` palette. This allows visual debugging of the BFS propagation
 fronts.
 
+## Per-shot polar clamping (current implementation)
+
+The solver now enforces that every individual shot stays close to its **original
+survey reading**. After computing the ideal proportional correction for each
+shot, the corrected delta is decomposed into polar coordinates (tape length,
+compass heading, inclination) and each component is clamped independently:
+
+- **Length**: clamped to ±5 % of the survey tape distance (configurable via
+  `max_length_change`).
+- **Compass heading**: clamped to ±15 % of the survey compass reading, with a
+  floor of 2 ° for near-north headings (configurable via `max_angle_change`).
+- **Inclination**: clamped to ±15 % of the survey inclination, with a 2 ° floor
+  for near-horizontal shots.
+
+The clamped delta is reconstructed back to cartesian and used to propagate the
+next station's position. This is done **per shot during BFS propagation**, so
+each shot is independently limited — a wild correction on one shot does not
+affect others.
+
+### Constructor parameters
+
+```python
+ProportionalSolver(
+    max_length_change=0.05,   # 5 % of survey tape distance
+    max_angle_change=0.15,    # 15 % of survey compass / inclination
+)
+```
+
+Both parameters are **fractions**, not degrees. A value of `10.0` (1000 %)
+effectively disables clamping.
+
+## Evolution of the clamping strategy
+
+The per-shot polar clamping went through several design iterations before
+arriving at the current implementation.
+
+### Attempt 1 — Global linear scale-back
+
+The first approach computed a single global scale factor `s` in `[0, 1]` and
+applied `s * misclosure` to all stations. For each shot, the correction to its
+delta was `(f_to - f_from) * s * misclosure`; the factor `s` was chosen as the
+minimum of `max_ratio / actual_ratio` across all shots.
+
+**Problem**: the ratio `max/actual` is a *linear approximation* that assumes the
+length and angle change are proportional to `s`. This is only exact when the
+correction is perfectly aligned with the shot direction. For off-axis
+corrections (misclosure perpendicular to a shot), the relationship is
+nonlinear. The linear estimate was too generous: the solver would pick a
+scale factor that *should* give 5 % length change, but the actual change was
+8–12 %, leaving shots wild.
+
+### Attempt 2 — Global binary-search scale-back
+
+To fix the nonlinearity, the linear approximation was replaced with a binary
+search (50 iterations) over `s`. For each shot, the function checked whether
+scale `s` kept the corrected delta within the 3-D angular and length limits
+of `shot.delta`, converging to the exact boundary.
+
+**Problem**: global scaling is inherently the wrong tool. Scaling the entire
+misclosure by a single factor means *all* shots receive a proportionally
+smaller correction. If one shot near an anchor needs heavy clamping, the
+entire network gets under-corrected. The user reported that "the shot at
+the anchor is insane" while "you don't correct enough the other shots."
+
+### Attempt 3 — Global scale-back against survey deltas (no GeoJSON values)
+
+A refinement ensured the constraint was always checked against the *original
+survey measurement* (`shot.delta`, derived from tape/compass/inclination),
+never against the GeoJSON-computed effective delta (which can be wild at BFS
+seams). The "gets worse" heuristic (only clamp shots whose correction moves
+them *further* from the survey reading) was removed so the constraint was
+unconditional.
+
+**Problem**: still global scaling — one bad shot starves all others of
+correction.
+
+### Attempt 4 — Per-shot polar clamping (current)
+
+The fundamental change: instead of finding a single scale factor, **each shot
+is clamped individually** during BFS propagation. The corrected delta for each
+edge is decomposed into polar coordinates (tape length, compass heading,
+inclination), each component is clamped to ±5 %/±15 % of the original survey
+reading, and the clamped delta is reconstructed. This means:
+
+- Shots that need little correction get their full share of error distribution.
+- Shots where the proportional correction would distort the survey measurement
+  beyond tolerance are individually limited.
+- No single shot can go wild regardless of how large the misclosure is.
+- The trade-off: if many shots are clamped, the total distributed correction
+  may be less than the full misclosure, leaving a small residual at the far
+  anchor. In practice this residual is small for well-surveyed networks.
+
 ## Design decisions
 
 1. **Why re-propagate instead of correcting BFS positions?** BFS from multiple
@@ -165,6 +259,19 @@ fronts.
    the actual misclosure. Measurement deltas preserve the raw field measurements
    and reveal the true error.
 
+1. **Why per-shot polar clamping instead of global scaling?** Global scaling
+   (attempts 1–3) treats all shots identically. When one shot has a correction
+   that would distort its survey reading, scaling back the entire misclosure
+   starves every other shot of correction. Per-shot clamping lets each shot
+   absorb as much correction as its survey tolerances allow, independently.
+
+1. **Why clamp in polar (heading/inclination/length) instead of cartesian?** Cave
+   surveyors think in terms of compass readings and tape distances. A ±15 %
+   tolerance on the compass heading is directly interpretable: a shot surveyed
+   at 200° will never be adjusted beyond roughly 170°–230°. Clamping a 3-D
+   angle between cartesian vectors has no such intuitive meaning and conflates
+   heading and inclination changes.
+
 1. **Why no loop closure?** Loop closure (distributing cycle misclosure) was
    removed to keep the solver focused on the anchor-to-anchor traverse problem,
    which is the primary source of visible error in multi-anchor projects. Loop
@@ -184,6 +291,12 @@ Unit tests are in `tests/test_solver.py`:
   - Correction is distance-weighted (closer to A = less correction)
   - Side-branch stations are adjusted
   - All stations present in output
+  - Per-shot clamping limits length change to ±5 %
+  - Clamped corrections are smaller than unclamped
+  - Clamped and unclamped corrections point the same way
+  - Small misclosure triggers no clamping
+  - Large off-axis misclosure is correctly handled
+  - Tighter custom limits produce smaller corrections
 - `TestSurveyNetwork` — adjacency list is undirected and cached
 
 Integration tests in `tests/test_convert_roundtrip.py` compare GeoJSON output

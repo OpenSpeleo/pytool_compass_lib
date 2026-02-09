@@ -257,10 +257,15 @@ class TestProportionalSolver:
         Fraction for C = d_A(C)/(d_A(C)+d_B(C)) = 20/30 = 2/3
 
         So B's correction magnitude should be smaller than C's.
+
+        Uses relaxed limits because the test misclosure (20 % of shot
+        length) is intentionally large for easy arithmetic.
         """
         error = Vector3D(6.0, 0.0, 0.0)
         network = _make_two_anchor_traverse(misclosure=error)
-        solver = ProportionalSolver()
+        solver = ProportionalSolver(
+            max_length_change=10.0, max_angle_change=10.0,
+        )
         result = solver.adjust(network)
 
         # Re-propagated from A: B_prop=(10,0,0), C_prop=(20,0,0)
@@ -306,6 +311,111 @@ class TestProportionalSolver:
         # Both should be non-zero
         assert b_correction > 1e-9
         assert e_correction > 1e-9
+
+    # -- clamping tests ------------------------------------------------------
+
+    def test_clamping_limits_length_change(self):
+        """With default limits (5 % length), each shot's effective
+        length stays within ±5 % of the original survey measurement.
+        """
+        error = Vector3D(6.0, 0.0, 0.0)
+        network = _make_two_anchor_traverse(misclosure=error)
+        solver = ProportionalSolver()  # default 5 % / 15 %
+        result = solver.adjust(network)
+
+        for from_n, to_n, survey_len in [("A", "B", 10.0), ("B", "C", 10.0)]:
+            effective = result[to_n] - result[from_n]
+            length_ratio = abs(effective.length - survey_len) / survey_len
+            assert length_ratio <= 0.05 + 1e-6, (
+                f"Shot {from_n}->{to_n}: "
+                f"length changed by {length_ratio * 100:.1f}%"
+            )
+
+    def test_clamping_reduces_correction(self):
+        """Clamped corrections must be smaller than unclamped ones."""
+        error = Vector3D(6.0, 0.0, 0.0)
+        network = _make_two_anchor_traverse(misclosure=error)
+
+        unclamped = ProportionalSolver(
+            max_length_change=10.0, max_angle_change=10.0,
+        ).adjust(network)
+        clamped = ProportionalSolver().adjust(network)
+
+        for name in ("B", "C"):
+            unclamped_shift = (unclamped[name] - network.stations[name]).length
+            clamped_shift = (clamped[name] - network.stations[name]).length
+            assert clamped_shift < unclamped_shift, (
+                f"{name}: clamped shift ({clamped_shift:.3f}) should be "
+                f"less than unclamped ({unclamped_shift:.3f})"
+            )
+
+    def test_clamping_preserves_direction(self):
+        """Clamped and unclamped corrections should point the same way."""
+        error = Vector3D(6.0, 0.0, 0.0)
+        network = _make_two_anchor_traverse(misclosure=error)
+
+        unclamped = ProportionalSolver(
+            max_length_change=10.0, max_angle_change=10.0,
+        ).adjust(network)
+        clamped = ProportionalSolver().adjust(network)
+
+        for name in ("B", "C"):
+            u = unclamped[name] - network.stations[name]
+            c = clamped[name] - network.stations[name]
+            dot = u.x * c.x + u.y * c.y + u.z * c.z
+            assert dot > 0, f"{name}: correction direction flipped"
+
+    def test_no_clamping_with_small_misclosure(self):
+        """A tiny misclosure should not trigger clamping at all."""
+        error = Vector3D(0.01, 0.0, 0.0)
+        network = _make_two_anchor_traverse(misclosure=error)
+
+        unclamped = ProportionalSolver(
+            max_length_change=10.0, max_angle_change=10.0,
+        ).adjust(network)
+        clamped = ProportionalSolver().adjust(network)
+
+        for name in network.stations:
+            assert unclamped[name].x == pytest.approx(clamped[name].x, abs=1e-9)
+            assert unclamped[name].y == pytest.approx(clamped[name].y, abs=1e-9)
+            assert unclamped[name].z == pytest.approx(clamped[name].z, abs=1e-9)
+
+    def test_clamping_with_large_off_axis_misclosure(self):
+        """Large off-axis misclosure: per-shot polar clamping must keep
+        every shot's heading and length close to the survey.
+        """
+        import math
+
+        error = Vector3D(5.0, 50.0, 0.0)
+        network = _make_two_anchor_traverse(misclosure=error)
+        solver = ProportionalSolver()  # 5 % length / 15 % heading
+        result = solver.adjust(network)
+
+        for shot in [network.shots[0], network.shots[1]]:
+            effective = result[shot.to_name] - result[shot.from_name]
+            survey_len = shot.delta.length
+            eff_len = effective.length
+
+            ratio = abs(eff_len - survey_len) / survey_len
+            assert ratio <= 0.05 + 1e-6, (
+                f"Shot {shot.from_name}->{shot.to_name}: "
+                f"length changed by {ratio * 100:.2f}%"
+            )
+
+    def test_custom_limits(self):
+        """Solver respects custom max_length_change / max_angle_change."""
+        error = Vector3D(6.0, 0.0, 0.0)
+        network = _make_two_anchor_traverse(misclosure=error)
+
+        tight = ProportionalSolver(
+            max_length_change=0.01, max_angle_change=0.05,
+        ).adjust(network)
+        default = ProportionalSolver().adjust(network)
+
+        for name in ("B", "C"):
+            tight_shift = (tight[name] - network.stations[name]).length
+            default_shift = (default[name] - network.stations[name]).length
+            assert tight_shift <= default_shift + 1e-9
 
 
 # ---------------------------------------------------------------------------

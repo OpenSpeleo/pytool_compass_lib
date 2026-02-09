@@ -181,41 +181,6 @@ def length_to_meters(length_ft: float) -> float:
 _transformer_cache: dict[str, Transformer] = {}
 
 
-def _get_utm_epsg(zone: int, northern: bool, datum: Datum) -> str:
-    """Get the EPSG code for a UTM zone with the given datum.
-
-    Args:
-        zone: UTM zone number (1-60)
-        northern: True for northern hemisphere
-        datum: The datum used for the UTM coordinates
-
-    Returns:
-        EPSG code string (e.g., "EPSG:26717" for NAD27 UTM Zone 17N)
-    """
-    zone = abs(zone)
-
-    match Datum:
-        case Datum.NORTH_AMERICAN_1927:
-            # NAD27 UTM: EPSG:26701-26722 (zones 1-22 north)
-            # Southern hemisphere NAD27 is rare, use WGS84 fallback
-            if northern:
-                return f"EPSG:{26700 + zone}"
-            # NAD27 southern zones don't have standard EPSG codes, use WGS84
-            return f"EPSG:{32700 + zone}"
-
-        case Datum.NORTH_AMERICAN_1983:
-            # NAD83 UTM: EPSG:26901-26923 (zones 1-23 north)
-            # EPSG:32601-32660 for south (use WGS84 for southern)
-            if northern:
-                return f"EPSG:{26900 + zone}"
-            return f"EPSG:{32700 + zone}"
-
-        case _:
-            # WGS84 UTM: EPSG:32601-32660 (north), EPSG:32701-32760 (south)
-            if northern:
-                return f"EPSG:{32600 + zone}"
-            return f"EPSG:{32700 + zone}"
-
 
 def _get_transformer(zone: int, northern: bool, datum: Datum) -> Transformer:
     """Get or create a cached transformer from UTM to WGS84.
@@ -228,7 +193,7 @@ def _get_transformer(zone: int, northern: bool, datum: Datum) -> Transformer:
     Returns:
         Transformer from the source UTM CRS to WGS84
     """
-    source_epsg = _get_utm_epsg(zone, northern, datum)
+    source_epsg = datum.get_utm_epsg(zone, northern)
     if source_epsg not in _transformer_cache:
         _transformer_cache[source_epsg] = Transformer.from_crs(
             source_epsg,
@@ -441,6 +406,39 @@ def calculate_survey_declination(
 # -----------------------------------------------------------------------------
 
 
+_FILE_SCOPE_SEP = "\x1f"
+"""Unit-separator character used to scope station names by file.
+
+Station names that are NOT listed as link stations in the MAK file are
+prefixed with ``{filename}<US>`` to prevent accidental cross-file merges.
+Link station names remain unscoped so that they correctly connect files.
+"""
+
+
+def _get_link_names(project: CompassMakFile) -> set[str]:
+    """Collect all link station names across every file directive.
+
+    These names are "global" — they intentionally appear in multiple
+    DAT files and must share a single graph node.  All other station
+    names are file-scoped to prevent accidental cross-file merges.
+    """
+    return {ls.name for fd in project.file_directives for ls in fd.link_stations}
+
+
+def _scope_name(name: str, file: str, link_names: set[str]) -> str:
+    """Return a file-scoped station name, or the raw name for link stations."""
+    if name in link_names:
+        return name
+    return f"{file}{_FILE_SCOPE_SEP}{name}"
+
+
+def _display_name(scoped_name: str) -> str:
+    """Strip the file-scope prefix to recover the original station name."""
+    if _FILE_SCOPE_SEP in scoped_name:
+        return scoped_name.split(_FILE_SCOPE_SEP, 1)[1]
+    return scoped_name
+
+
 def build_station_graph(
     project: CompassMakFile,
 ) -> tuple[
@@ -449,6 +447,12 @@ def build_station_graph(
 ]:
     """Build adjacency graph from all shots in project.
 
+    Station names are **file-scoped**: a name that is NOT a link station
+    in the MAK file gets prefixed with the DAT filename so that
+    identical names in different files do not accidentally merge.
+    Link station names remain global (unscoped) to allow intentional
+    cross-file connections.
+
     Excludes shots that are marked as:
     - excluded_from_all_processing (X flag)
     - excluded_from_plotting (P flag)
@@ -456,6 +460,8 @@ def build_station_graph(
     Returns:
         Tuple of (adjacency_dict, all_shots_list)
     """
+    link_names = _get_link_names(project)
+
     all_shots: list[tuple[CompassShot, str, str, CompassSurvey]] = []
     adjacency: dict[str, list[tuple[CompassShot, str, str, CompassSurvey, bool]]] = {}
 
@@ -467,15 +473,17 @@ def build_station_graph(
             survey_name = survey.header.survey_name or "unnamed"
             for shot in survey.shots:
                 # Skip shots excluded from processing or plotting
-                if shot.excluded_from_all_processing:
-                    continue
-                if shot.excluded_from_plotting:
+                if shot.excluded_from_all_processing or shot.excluded_from_plotting:
                     continue
 
                 all_shots.append((shot, file_dir.file, survey_name, survey))
 
-                from_name = shot.from_station_name
-                to_name = shot.to_station_name
+                from_name = _scope_name(
+                    shot.from_station_name, file_dir.file, link_names
+                )
+                to_name = _scope_name(
+                    shot.to_station_name, file_dir.file, link_names
+                )
 
                 if from_name not in adjacency:
                     adjacency[from_name] = []
@@ -659,6 +667,9 @@ def propagate_coordinates(
     convergence = project.utm_convergence
     logger.info("UTM convergence angle: %.3f°", convergence)
 
+    # Link station names (global namespace — used to scope shot station names)
+    link_names = _get_link_names(project)
+
     # Get LRUD flags from project
     flags = project.flags
     lruds_at_to_station = flags.lruds_at_to_station if flags else False
@@ -671,6 +682,23 @@ def propagate_coordinates(
     result.anchors = set(anchors.keys())
     for anchor_name, anchor_station in result.stations.items():
         anchor_station.origin = anchor_name
+
+    # Validate anchors against the shot graph — an anchor whose name
+    # does not appear in any shot is disconnected and cannot seed BFS.
+    disconnected = {name for name in anchors if name not in adjacency}
+    if disconnected:
+        for name in sorted(disconnected):
+            logger.warning(
+                "Anchor '%s' (file: %s) has no shots in the survey data "
+                "-- check that the link station name matches a station "
+                "in the DAT file",
+                name,
+                anchors[name].file,
+            )
+        # Remove disconnected anchors so they don't pollute the BFS
+        for name in disconnected:
+            del result.stations[name]
+            result.anchors.discard(name)
 
     if not result.stations:
         # No anchors - use project location or origin for first station
@@ -721,13 +749,13 @@ def propagate_coordinates(
         for shot, file_name, survey_name, survey, is_reverse in adjacency.get(
             current_name, []
         ):
-            # Determine direction
+            # Determine direction (use scoped names to match adjacency keys)
             if is_reverse:
-                from_name = shot.to_station_name
-                to_name = shot.from_station_name
+                from_name = _scope_name(shot.to_station_name, file_name, link_names)
+                to_name = _scope_name(shot.from_station_name, file_name, link_names)
             else:
-                from_name = shot.from_station_name
-                to_name = shot.to_station_name
+                from_name = _scope_name(shot.from_station_name, file_name, link_names)
+                to_name = _scope_name(shot.to_station_name, file_name, link_names)
 
             # Skip already processed shots
             shot_key = (min(from_name, to_name), max(from_name, to_name))
@@ -788,7 +816,7 @@ def propagate_coordinates(
                 new_station = compute_next_station(
                     current_station,
                     shot,
-                    to_name,
+                    _display_name(to_name),
                     is_reverse,
                     declination,
                     convergence,
@@ -831,6 +859,17 @@ def propagate_coordinates(
                     measurement_delta=m_delta,
                 )
                 result.legs.append(leg)
+
+    # Detect stations that exist in the shot graph but were never reached
+    all_graph_stations = set(adjacency.keys())
+    orphaned = all_graph_stations - visited_stations
+    if orphaned:
+        display = sorted(_display_name(n) for n in orphaned)
+        logger.warning(
+            "%d station(s) unreachable from any anchor: %s",
+            len(orphaned),
+            ", ".join(display[:20]) + (" ..." if len(display) > 20 else ""),
+        )
 
     logger.info(
         "Computed %d stations and %d legs",
