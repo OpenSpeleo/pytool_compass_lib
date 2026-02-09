@@ -20,7 +20,7 @@ dev = [
 [project]
 name = "compass_lib"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 license = { file = "LICENSE" }
 keywords = ["cave", "survey", "karst"]
 authors = [{ name = "Jonathan Dekhtiar", email = "jonathan@dekhtiar.com" }]
@@ -55,6 +55,7 @@ classifiers = [
 ]
 dependencies = [
     "geojson>=3.2,<4",
+    "numpy>=1.26,<3",
     "orjson>=3.10,<3.12",
     "pydantic>=2.12,<2.13",
     "pydantic-extra-types>=2.11,<3.0",
