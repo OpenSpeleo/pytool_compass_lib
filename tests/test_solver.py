@@ -11,6 +11,7 @@ from compass_lib.solver.models import ZERO
 from compass_lib.solver.models import NetworkShot
 from compass_lib.solver.models import SurveyNetwork
 from compass_lib.solver.models import Vector3D
+from compass_lib.solver.ariane import ArianeSolver
 from compass_lib.solver.noop import NoopSolver
 from compass_lib.solver.proportional import ProportionalSolver
 
@@ -668,3 +669,326 @@ class TestSurveyNetwork:
         adj1 = network.adjacency
         adj2 = network.adjacency
         assert adj1 is adj2
+
+
+# ---------------------------------------------------------------------------
+# ArianeSolver — sparse CG with traverse-quality weighting
+# ---------------------------------------------------------------------------
+
+
+def _make_good_bad_traverse_network() -> SurveyNetwork:
+    """Build a network with one good traverse and one bad traverse.
+
+    ::
+
+        A --10m--> B --10m--> C --10m--> D
+        (anchor)   |                     (anchor)
+                   |
+                  10m (blundered: delta includes 5m error)
+                   |
+                   v
+                   E --10m--> F
+                              (anchor)
+
+    The traverse A-B-C-D is good (small misclosure).
+    The traverse A-B-E-F is bad (large blunder on B->E).
+    Shot B appears in both traverses.  ArianeSolver should protect
+    the good traverse and let the bad one absorb the error.
+    """
+    a = Vector3D(0, 0, 0)
+    d = Vector3D(30, 0, 0)
+    f = Vector3D(10, -10, 0)
+
+    ab_delta = Vector3D(10, 0, 0)
+    bc_delta = Vector3D(10, 0, 0)
+    cd_delta = Vector3D(10, 0.3, 0)  # small misclosure
+
+    be_delta = Vector3D(0, -10, 5.0)  # blunder: 5m error in Z
+    ef_delta = Vector3D(10, 0, 0)
+
+    b = a + ab_delta
+    c = b + bc_delta
+    e = b + be_delta
+
+    shots = [
+        NetworkShot(from_name="A", to_name="B", delta=ab_delta, distance=10.0),
+        NetworkShot(from_name="B", to_name="C", delta=bc_delta, distance=10.0),
+        NetworkShot(from_name="C", to_name="D", delta=cd_delta, distance=10.0),
+        NetworkShot(from_name="B", to_name="E", delta=be_delta, distance=10.0),
+        NetworkShot(from_name="E", to_name="F", delta=ef_delta, distance=10.0),
+    ]
+
+    return SurveyNetwork(
+        stations={"A": a, "B": b, "C": c, "D": d, "E": e, "F": f},
+        shots=shots,
+        anchors={"A", "D", "F"},
+    )
+
+
+class TestArianeSolver:
+    """Tests for ArianeSolver (sparse CG + traverse-quality weighting)."""
+
+    def test_name(self):
+        assert ArianeSolver().name == "ArianeSolver"
+
+    def test_single_anchor_returns_unchanged(self):
+        """With only one anchor, no adjustment is possible."""
+        network = _make_linear_network()
+        solver = ArianeSolver()
+        result = solver.adjust(network)
+
+        for name, pos in network.stations.items():
+            assert result[name] == pos
+
+    def test_perfect_traverse_returns_unchanged(self):
+        """Zero misclosure means no correction needed."""
+        network = _make_two_anchor_traverse(misclosure=ZERO)
+        solver = ArianeSolver()
+        result = solver.adjust(network)
+
+        for name, pos in network.stations.items():
+            assert result[name].x == pytest.approx(pos.x, abs=1e-6)
+            assert result[name].y == pytest.approx(pos.y, abs=1e-6)
+            assert result[name].z == pytest.approx(pos.z, abs=1e-6)
+
+    def test_anchors_at_gps_positions(self):
+        """All anchors must remain at their exact GPS coordinates."""
+        error = Vector3D(3.0, 3.0, 0.0)
+        network = _make_two_anchor_traverse(misclosure=error)
+        solver = ArianeSolver()
+        result = solver.adjust(network)
+
+        assert result["A"] == network.stations["A"]
+        assert result["D"].x == pytest.approx(network.stations["D"].x, abs=1e-9)
+        assert result["D"].y == pytest.approx(network.stations["D"].y, abs=1e-9)
+        assert result["D"].z == pytest.approx(network.stations["D"].z, abs=1e-9)
+
+    def test_interior_stations_are_adjusted(self):
+        """Non-anchor stations must move when misclosure exists."""
+        error = Vector3D(6.0, 0.0, 0.0)
+        network = _make_two_anchor_traverse(misclosure=error)
+        solver = ArianeSolver()
+        result = solver.adjust(network)
+
+        b_original = network.stations["B"]
+        c_original = network.stations["C"]
+
+        assert (result["B"] - b_original).length > 1e-9, "B should move"
+        assert (result["C"] - c_original).length > 1e-9, "C should move"
+
+    def test_equal_shots_equal_distribution(self):
+        """With equal-length shots on a single traverse, error is
+        distributed equally — same as ProportionalSolver.
+
+        3 shots of 10 m, misclosure (6, 0, 0):
+          B_corrected = (8, 0, 0)
+          C_corrected = (16, 0, 0)
+        """
+        error = Vector3D(6.0, 0.0, 0.0)
+        network = _make_two_anchor_traverse(misclosure=error)
+        solver = ArianeSolver()
+        result = solver.adjust(network)
+
+        assert result["B"].x == pytest.approx(8.0, abs=1e-6)
+        assert result["C"].x == pytest.approx(16.0, abs=1e-6)
+
+    def test_matches_proportional_on_single_traverse(self):
+        """On a single traverse, ArianeSolver should produce the same
+        result as ProportionalSolver (all shots on the same traverse
+        get the same quality factor, so relative weights are unchanged).
+        """
+        error = Vector3D(0.3, 0.1, -0.05)
+        network = _make_two_anchor_traverse(misclosure=error)
+
+        ariane = ArianeSolver().adjust(network)
+        proportional = ProportionalSolver().adjust(network)
+
+        for name in network.stations:
+            assert ariane[name].x == pytest.approx(
+                proportional[name].x, abs=1e-6,
+            ), f"{name}.x differs"
+            assert ariane[name].y == pytest.approx(
+                proportional[name].y, abs=1e-6,
+            ), f"{name}.y differs"
+            assert ariane[name].z == pytest.approx(
+                proportional[name].z, abs=1e-6,
+            ), f"{name}.z differs"
+
+    def test_all_stations_present_in_result(self):
+        """Every station must appear in the output."""
+        network = _make_two_anchor_traverse(misclosure=Vector3D(1, 1, 0))
+        solver = ArianeSolver()
+        result = solver.adjust(network)
+
+        assert set(result.keys()) == set(network.stations.keys())
+
+    def test_side_branch_station_is_adjusted(self):
+        """Spur station E must also be corrected."""
+        error = Vector3D(6.0, 0.0, 0.0)
+        network = _make_two_anchor_with_spur(misclosure=error)
+        solver = ArianeSolver()
+        result = solver.adjust(network)
+
+        e_original = network.stations["E"]
+        assert (result["E"] - e_original).length > 1e-9, "E should move"
+
+    def test_side_branch_inherits_branch_point_correction(self):
+        """E branches from B, so E's correction equals B's correction."""
+        error = Vector3D(6.0, 0.0, 0.0)
+        network = _make_two_anchor_with_spur(misclosure=error)
+        solver = ArianeSolver()
+        result = solver.adjust(network)
+
+        b_corr = result["B"] - network.stations["B"]
+        e_corr = result["E"] - network.stations["E"]
+
+        assert b_corr.length > 1e-9
+        assert e_corr.x == pytest.approx(b_corr.x, abs=1e-6)
+        assert e_corr.y == pytest.approx(b_corr.y, abs=1e-6)
+        assert e_corr.z == pytest.approx(b_corr.z, abs=1e-6)
+
+    def test_3d_misclosure(self):
+        """Full 3-D misclosure is handled (unlike Ariane's 2D-only)."""
+        error = Vector3D(0.2, -0.15, 0.3)
+        network = _make_two_anchor_traverse(misclosure=error)
+        solver = ArianeSolver()
+        result = solver.adjust(network)
+
+        # Anchor D must be at GPS.
+        assert result["D"].x == pytest.approx(30.0, abs=1e-6)
+        assert result["D"].y == pytest.approx(0.0, abs=1e-6)
+        assert result["D"].z == pytest.approx(0.0, abs=1e-6)
+
+        # Z should be adjusted (not just X/Y).
+        assert result["B"].z != pytest.approx(0.0, abs=1e-3), (
+            "Z should be adjusted"
+        )
+
+    def test_three_anchor_junction_anchors_fixed(self):
+        """All three anchors must remain at their GPS positions."""
+        network = _make_three_anchor_junction()
+        solver = ArianeSolver()
+        result = solver.adjust(network)
+
+        for name in ("A", "B", "C"):
+            assert result[name] == network.stations[name], (
+                f"Anchor {name} moved from GPS"
+            )
+
+    def test_three_anchor_junction_consistent(self):
+        """Junction station X must satisfy all three anchor constraints."""
+        network = _make_three_anchor_junction()
+        solver = ArianeSolver()
+        result = solver.adjust(network)
+
+        x = result["X"]
+        assert 9.0 < x.x < 11.0, f"X.x = {x.x:.2f}, expected near 10"
+        assert -1.0 < x.y < 1.0, f"X.y = {x.y:.2f}, expected near 0"
+
+        for anchor_name in ("A", "B", "C"):
+            anchor = result[anchor_name]
+            eff_len = (x - anchor).length
+            assert 8.0 < eff_len < 12.0, (
+                f"Shot X->{anchor_name}: effective length {eff_len:.2f} m"
+            )
+
+    def test_reversed_edge_gives_reasonable_result(self):
+        """A reversed middle shot should produce reasonable positions."""
+        error = Vector3D(6.0, 0.0, 0.0)
+        network = _make_reversed_edge_traverse(misclosure=error)
+        solver = ArianeSolver()
+        result = solver.adjust(network)
+
+        assert 5.0 < result["B"].x < 15.0
+        assert 15.0 < result["C"].x < 25.0
+
+    def test_solver_is_deterministic(self):
+        """Same input gives same output regardless of tolerance params."""
+        error = Vector3D(1.0, 0.5, 0.0)
+        network = _make_two_anchor_traverse(misclosure=error)
+
+        result_a = ArianeSolver(
+            max_length_change=0.01, max_angle_change=0.01,
+        ).adjust(network)
+        result_b = ArianeSolver(
+            max_length_change=10.0, max_angle_change=10.0,
+        ).adjust(network)
+
+        for name in network.stations:
+            assert result_a[name].x == pytest.approx(
+                result_b[name].x, abs=1e-9,
+            )
+            assert result_a[name].y == pytest.approx(
+                result_b[name].y, abs=1e-9,
+            )
+            assert result_a[name].z == pytest.approx(
+                result_b[name].z, abs=1e-9,
+            )
+
+    # -- traverse-quality-specific tests ------------------------------------
+
+    def test_good_traverse_protected_from_blunder(self):
+        """Shots on good traverses must be distorted less than shots
+        on bad traverses.
+
+        In the good/bad network, the A-B-C-D traverse is clean while
+        B-E has a 5 m blunder.  The ArianeSolver should protect A-B-C-D
+        and let B-E absorb most of the error.
+        """
+        network = _make_good_bad_traverse_network()
+        solver = ArianeSolver()
+        result = solver.adjust(network)
+
+        # Compute effective shot distortion for good traverse (A-B, B-C).
+        good_distortions = []
+        for from_n, to_n in [("A", "B"), ("B", "C")]:
+            shot = next(
+                s for s in network.shots
+                if s.from_name == from_n and s.to_name == to_n
+            )
+            eff = result[to_n] - result[from_n]
+            distortion = (eff - shot.delta).length
+            good_distortions.append(distortion)
+
+        # Compute effective shot distortion for bad traverse (B-E).
+        bad_shot = next(
+            s for s in network.shots
+            if s.from_name == "B" and s.to_name == "E"
+        )
+        bad_eff = result["E"] - result["B"]
+        bad_distortion = (bad_eff - bad_shot.delta).length
+
+        avg_good = sum(good_distortions) / len(good_distortions)
+
+        # The good shots should have less distortion than the bad shot.
+        # (This test verifies the Larry Fish weighting is working.)
+        assert avg_good < bad_distortion, (
+            f"Good traverse distortion ({avg_good:.4f}) should be "
+            f"less than bad traverse distortion ({bad_distortion:.4f})"
+        )
+
+    def test_unequal_shots_weighted_by_length(self):
+        """Unequal-length shots: shorter shots absorb less absolute
+        correction due to 1/L² weighting.
+        """
+        error = Vector3D(3.0, 0.0, 0.0)
+        network = _make_unequal_traverse(misclosure=error)
+        solver = ArianeSolver()
+        result = solver.adjust(network)
+
+        assert (result["B"] - network.stations["B"]).length > 1e-6
+        assert (result["C"] - network.stations["C"]).length > 0.01
+        assert result["A"] == network.stations["A"]
+        assert result["D"].x == pytest.approx(30.0, abs=1e-6)
+
+    def test_cg_params_can_be_configured(self):
+        """CG parameters can be set at construction time."""
+        solver = ArianeSolver(cg_maxiter=100, cg_tol=1e-4)
+        assert solver._cg_maxiter == 100
+        assert solver._cg_tol == 1e-4
+
+        # Should still solve (small network converges quickly).
+        error = Vector3D(0.3, 0.0, 0.0)
+        network = _make_two_anchor_traverse(misclosure=error)
+        result = solver.adjust(network)
+        assert result["D"].x == pytest.approx(30.0, abs=1e-3)

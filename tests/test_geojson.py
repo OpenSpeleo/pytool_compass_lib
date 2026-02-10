@@ -85,10 +85,9 @@ class TestSurveyToGeoJSON:
         survey = compute_survey_coordinates(project)
         geojson = survey_to_geojson(survey, include_stations=False, include_legs=True)
 
-        # All features should be legs
+        # All features should be legs or misclosure indicators
         for feature in geojson["features"]:
-            assert feature["geometry"]["type"] == "LineString"
-            assert feature["properties"]["type"] == "leg"
+            assert feature["properties"]["type"] in ("leg", "misclosure", "misclosure_station")
 
     @pytest.mark.skipif(
         FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file"
@@ -207,7 +206,7 @@ class TestConvertMakToGeoJSON:
         convert_mak_to_geojson(FIRST_MAK, output_path)
 
         assert output_path.exists()
-        with open(output_path) as f:
+        with output_path.open(mode="r", encoding="utf-8") as f:
             parsed = json.load(f)
         assert parsed["type"] == "FeatureCollection"
 

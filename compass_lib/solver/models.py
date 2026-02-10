@@ -221,5 +221,9 @@ class SurveyNetwork:
                 )
             )
 
-        anchor_names = set(anchors.keys())
+        # Only keep anchors that actually exist in the station dict.
+        # Anchors referencing stations not present in the survey data
+        # (e.g. link stations with no matching DAT station) are silently
+        # dropped — they were already warned about upstream.
+        anchor_names = set(anchors.keys()) & set(stations.keys())
         return cls(stations=stations, shots=shots, anchors=anchor_names)

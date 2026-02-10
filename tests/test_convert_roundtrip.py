@@ -25,7 +25,7 @@ from compass_lib.enums import FormatIdentifier
 from compass_lib.geojson import convert_mak_to_geojson
 from compass_lib.io import load_project
 from compass_lib.io import read_dat_file
-from compass_lib.solver.proportional import ProportionalSolver
+from compass_lib.solver.sparse import SparseSolver
 from compass_lib.survey.models import CompassDatFile
 
 # Import fixtures from conftest
@@ -356,9 +356,11 @@ class TestGeoJSONGeneration:
         # Generate GeoJSON - should not raise
         result_str = convert_mak_to_geojson(
             mak_path,
-            include_stations=True,
+            include_stations=False,
             include_legs=True,
             include_passages=False,
+            include_anchors=True,
+            solver=SparseSolver(),
         )
 
         # Parse result
@@ -402,11 +404,12 @@ class TestGeoJSONBaselineComparison:
         # Generate GeoJSON - must match options used to generate baselines
         result_str = convert_mak_to_geojson(
             mak_path,
-            include_stations=True,
+            include_stations=False,
             include_legs=True,
-            include_passages=True,
+            include_passages=False,
             include_anchors=True,
-            solver=ProportionalSolver(),
+            color_by_origin=False,
+            solver=SparseSolver(),
         )
         result = orjson.loads(result_str)
 

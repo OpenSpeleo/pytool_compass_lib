@@ -188,3 +188,5 @@ pytool_compass_lib_old
 /*.json
 /*.geojson
 /*.kml
+
+*.makbk1

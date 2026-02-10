@@ -16,7 +16,6 @@ anchors — in one pass with no pairwise iteration or averaging.
 from __future__ import annotations
 
 import logging
-from collections import deque
 
 import numpy as np
 
@@ -39,7 +38,9 @@ def _solve_network(
     Weight per shot = ``1 / L²`` so that percentage changes are
     equalised across shots of different lengths.
     """
-    anchors = network.anchors
+    # Filter out anchors that don't exist in stations (orphan link
+    # stations, already warned about upstream).
+    anchors = network.anchors & set(network.stations.keys())
     non_anchors = sorted(set(network.stations.keys()) - anchors)
 
     if not non_anchors:
@@ -51,6 +52,15 @@ def _solve_network(
     anchor_pos: dict[str, Vector3D] = {
         name: network.stations[name] for name in anchors
     }
+
+    # -- Centre coordinates for numerical stability ---------------------------
+    _all_pos = list(anchor_pos.values())
+    origin = Vector3D(
+        sum(p.x for p in _all_pos) / len(_all_pos),
+        sum(p.y for p in _all_pos) / len(_all_pos),
+        sum(p.z for p in _all_pos) / len(_all_pos),
+    )
+    anchor_pos_c = {n: p - origin for n, p in anchor_pos.items()}
 
     # -- Build design matrix and RHS vectors -------------------------------
 
@@ -69,11 +79,11 @@ def _solve_network(
         L = max(shot.distance, 0.1)
 
         if from_anc:
-            a = anchor_pos[shot.from_name]
+            a = anchor_pos_c[shot.from_name]
             row_a_entries.append((row_idx, station_to_idx[shot.to_name], 1.0))
             row_b_list.append((a.x + dx, a.y + dy, a.z + dz))
         elif to_anc:
-            a = anchor_pos[shot.to_name]
+            a = anchor_pos_c[shot.to_name]
             row_a_entries.append((row_idx, station_to_idx[shot.from_name], -1.0))
             row_b_list.append((dx - a.x, dy - a.y, dz - a.z))
         else:
@@ -88,17 +98,16 @@ def _solve_network(
     if n_rows == 0:
         return dict(network.stations)
 
+    # Vectorised matrix fill via advanced indexing.
     A = np.zeros((n_rows, m), dtype=np.float64)
-    bx = np.zeros(n_rows, dtype=np.float64)
-    by = np.zeros(n_rows, dtype=np.float64)
-    bz = np.zeros(n_rows, dtype=np.float64)
+    if row_a_entries:
+        _a = np.array(row_a_entries, dtype=np.float64)
+        A[_a[:, 0].astype(np.intp), _a[:, 1].astype(np.intp)] = _a[:, 2]
 
-    for r, c, v in row_a_entries:
-        A[r, c] = v
-    for i, (vx, vy, vz) in enumerate(row_b_list):
-        bx[i] = vx
-        by[i] = vy
-        bz[i] = vz
+    _b = np.array(row_b_list, dtype=np.float64)
+    bx = _b[:, 0].copy()
+    by = _b[:, 1].copy()
+    bz = _b[:, 2].copy()
 
     # Apply weights.
     W = np.sqrt(np.array(row_weights, dtype=np.float64))
@@ -107,19 +116,22 @@ def _solve_network(
     by *= W
     bz *= W
 
-    # Solve.
+    # Solve via SVD — handles singular / rank-deficient systems
+    # (e.g. stations unreachable from any anchor) gracefully.
     sol_x, _, _, _ = np.linalg.lstsq(A, bx, rcond=None)
     sol_y, _, _, _ = np.linalg.lstsq(A, by, rcond=None)
     sol_z, _, _, _ = np.linalg.lstsq(A, bz, rcond=None)
 
-    # -- Build result ------------------------------------------------------
+    # -- Build result (translate back from centred coords) -------------------
 
     result: dict[str, Vector3D] = {}
     for name in anchors:
         result[name] = network.stations[name]
     for name, idx in station_to_idx.items():
         result[name] = Vector3D(
-            float(sol_x[idx]), float(sol_y[idx]), float(sol_z[idx]),
+            float(sol_x[idx]) + origin.x,
+            float(sol_y[idx]) + origin.y,
+            float(sol_z[idx]) + origin.z,
         )
     for name in network.stations:
         if name not in result:

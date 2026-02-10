@@ -36,6 +36,7 @@ import math
 from collections import deque
 from dataclasses import dataclass
 from dataclasses import field
+from dataclasses import replace
 from typing import TYPE_CHECKING
 from typing import Any
 
@@ -103,6 +104,7 @@ class Station:
     file: str = ""
     survey: str = ""
     origin: str = ""  # Anchor station this was propagated from (debug)
+    path_distance: float = 0.0  # Cumulative survey distance from origin (meters)
 
 
 @dataclass
@@ -123,6 +125,10 @@ class SurveyLeg:
     lruds_at_to_station: bool = (
         False  # Controls which station LRUDs are associated with
     )
+    excluded_from_plotting: bool = False
+    """P-flag: shot participates in coordinate propagation but is
+    not rendered in the GeoJSON output (no leg or passage feature).
+    """
     measurement_delta: tuple[float, float, float] | None = None
     """Measurement-based displacement (de, dn, dz) in metres.
 
@@ -134,11 +140,36 @@ class SurveyLeg:
 
 
 @dataclass
+class MisclosureLeg:
+    """A misclosure gap between two BFS propagation fronts.
+
+    When solver is None (cross-origin), this shows where the BFS from
+    one anchor computed a station at position ``ghost`` while the
+    station already exists at position ``existing``.  The gap between
+    them is the raw survey misclosure.
+
+    When solver is not None (same-origin), this shows where a loop
+    within the same BFS front has a closure error.  The ``ghost`` is
+    the position computed by the arriving (typically longer) path; the
+    ``existing`` is the position already set by the first path to
+    reach the station.  The longest path is considered the "true"
+    segment; closure error is ghost − existing.
+    """
+
+    existing: Station  # Station already computed by another anchor's BFS
+    ghost: Station  # Where the current anchor's BFS would place it
+    file: str = ""
+    survey: str = ""
+    same_origin: bool = False  # True for loops within the same BFS front
+
+
+@dataclass
 class ComputedSurvey:
     """Computed survey with station coordinates."""
 
     stations: dict[str, Station] = field(default_factory=dict)
     legs: list[SurveyLeg] = field(default_factory=list)
+    misclosures: list[MisclosureLeg] = field(default_factory=list)
     anchors: set[str] = field(default_factory=set)
     utm_zone: int | None = None
     utm_northern: bool = True
@@ -407,11 +438,22 @@ def calculate_survey_declination(
 
 
 _FILE_SCOPE_SEP = "\x1f"
-"""Unit-separator character used to scope station names by file.
+"""Unit-separator character used to scope station names.
 
 Station names that are NOT listed as link stations in the MAK file are
-prefixed with ``{filename}<US>`` to prevent accidental cross-file merges.
-Link station names remain unscoped so that they correctly connect files.
+prefixed with ``{scope_id}<US>`` to prevent cross-scope merges.
+Link station names remain unscoped so that they correctly bridge scopes.
+
+Scoping follows the "global until explicit linking" rule:
+
+- By default station names are **global** across all DAT files.
+  Files that do not declare bare (coordinate-free) link stations share
+  the current scope group, so identical names freely merge.
+- A file that lists at least one link station **without** coordinates
+  (a bare name) starts a **new** scope group.  Only the declared link
+  station names bridge the two groups; all other names are isolated.
+- Link stations **with** coordinates are anchors (fixed reference
+  points) and do **not** create a scope boundary.
 """
 
 
@@ -420,16 +462,46 @@ def _get_link_names(project: CompassMakFile) -> set[str]:
 
     These names are "global" — they intentionally appear in multiple
     DAT files and must share a single graph node.  All other station
-    names are file-scoped to prevent accidental cross-file merges.
+    names are scope-grouped to prevent accidental cross-scope merges.
     """
     return {ls.name for fd in project.file_directives for ls in fd.link_stations}
 
 
-def _scope_name(name: str, file: str, link_names: set[str]) -> str:
-    """Return a file-scoped station name, or the raw name for link stations."""
+def _compute_file_scopes(project: CompassMakFile) -> dict[str, int]:
+    """Assign a scope-group ID to each file directive.
+
+    Station names are **global until explicit linking**: files that do
+    not declare bare link stations share the current scope group (their
+    station names freely merge).  When a file directive lists at least
+    one link station **without** coordinates the scope counter
+    increments, isolating that file's non-link station names from the
+    previous group.
+
+    Link stations that carry coordinates are **anchors** (fixed
+    reference points) and do **not** create a scope boundary.
+
+    Returns:
+        Mapping of ``file_directive.file`` → scope-group ID.
+    """
+    file_scopes: dict[str, int] = {}
+    current_scope = 0
+    for fd in project.file_directives:
+        # Explicit linking = at least one link station WITHOUT coordinates.
+        # Link stations with coordinates are just anchors (fixed points).
+        has_explicit_linking = any(
+            ls.location is None for ls in fd.link_stations
+        )
+        if has_explicit_linking:
+            current_scope += 1
+        file_scopes[fd.file] = current_scope
+    return file_scopes
+
+
+def _scope_name(name: str, scope_id: int, link_names: set[str]) -> str:
+    """Return a scope-grouped station name, or the raw name for link stations."""
     if name in link_names:
         return name
-    return f"{file}{_FILE_SCOPE_SEP}{name}"
+    return f"{scope_id}{_FILE_SCOPE_SEP}{name}"
 
 
 def _display_name(scoped_name: str) -> str:
@@ -447,55 +519,80 @@ def build_station_graph(
 ]:
     """Build adjacency graph from all shots in project.
 
-    Station names are **file-scoped**: a name that is NOT a link station
-    in the MAK file gets prefixed with the DAT filename so that
-    identical names in different files do not accidentally merge.
-    Link station names remain global (unscoped) to allow intentional
-    cross-file connections.
+    Station names follow the **global-until-explicit-linking** rule:
+    files that do not declare link stations share a scope group so
+    identical station names freely merge.  When a file directive lists
+    explicit link stations a new scope group starts, and only the
+    declared link station names bridge the two groups.  Link station
+    names remain global (unscoped) across all scopes.
 
-    Excludes shots that are marked as:
-    - excluded_from_all_processing (X flag)
-    - excluded_from_plotting (P flag)
+    Excludes:
+    - Shots marked as excluded_from_all_processing (X flag)
+    - Self-loops (from == to station, data errors)
 
     Returns:
         Tuple of (adjacency_dict, all_shots_list)
     """
     link_names = _get_link_names(project)
+    file_scopes = _compute_file_scopes(project)
 
     all_shots: list[tuple[CompassShot, str, str, CompassSurvey]] = []
-    adjacency: dict[str, list[tuple[CompassShot, str, str, CompassSurvey, bool]]] = {}
+    adjacency: dict[
+        str, list[tuple[CompassShot, str, str, CompassSurvey, bool, str, str]]
+    ] = {}
 
     for file_dir in project.file_directives:
         if not file_dir.data:
             continue
 
+        scope_id = file_scopes.get(file_dir.file, 0)
+
         for survey in file_dir.data.surveys:
             survey_name = survey.header.survey_name or "unnamed"
             for shot in survey.shots:
-                # Skip shots excluded from processing or plotting
-                if shot.excluded_from_all_processing or shot.excluded_from_plotting:
+                # Skip shots excluded from all processing (X flag).
+                # P-flagged shots (excluded from plotting) are kept in
+                # the graph for coordinate propagation; the resulting
+                # legs are marked so they can be hidden in GeoJSON output.
+                if shot.excluded_from_all_processing:
                     continue
 
                 all_shots.append((shot, file_dir.file, survey_name, survey))
 
                 from_name = _scope_name(
-                    shot.from_station_name, file_dir.file, link_names
+                    shot.from_station_name, scope_id, link_names
                 )
                 to_name = _scope_name(
-                    shot.to_station_name, file_dir.file, link_names
+                    shot.to_station_name, scope_id, link_names
                 )
+
+                # Skip self-loops (from == to).  These are data errors
+                # that create impossible solver constraints.
+                if from_name == to_name:
+                    logger.warning(
+                        "Skipping self-loop: %s -> %s in %s:%s",
+                        shot.from_station_name,
+                        shot.to_station_name,
+                        file_dir.file,
+                        survey_name,
+                    )
+                    continue
 
                 if from_name not in adjacency:
                     adjacency[from_name] = []
                 if to_name not in adjacency:
                     adjacency[to_name] = []
 
-                # Add forward and reverse connections
+                # Add forward and reverse connections.
+                # Pre-scoped names are stored in the tuple so BFS
+                # does not need to re-scope per shot.
                 adjacency[from_name].append(
-                    (shot, file_dir.file, survey_name, survey, False)
+                    (shot, file_dir.file, survey_name, survey, False,
+                     from_name, to_name)
                 )
                 adjacency[to_name].append(
-                    (shot, file_dir.file, survey_name, survey, True)
+                    (shot, file_dir.file, survey_name, survey, True,
+                     from_name, to_name)
                 )
 
     return adjacency, all_shots
@@ -636,6 +733,8 @@ def propagate_coordinates(
     project: CompassMakFile,
     anchors: dict[str, Station],
     adjacency: dict[str, list[tuple[CompassShot, str, str, CompassSurvey, bool]]],
+    *,
+    detect_same_origin_loops: bool = False,
 ) -> ComputedSurvey:
     """Propagate coordinates from anchor stations via BFS.
 
@@ -649,6 +748,12 @@ def propagate_coordinates(
         project: The Compass project
         anchors: Dictionary of anchor stations with known coordinates
         adjacency: Station adjacency graph
+        detect_same_origin_loops: When True, record :class:`MisclosureLeg`
+            entries for loops that close within the same BFS front (same
+            origin).  The longest path from the origin to the closing
+            station is the "true" segment; the gap between its computed
+            position and the existing position is the raw closure error.
+            Enable this when a solver will be applied.
 
     Returns:
         ComputedSurvey with all computed stations and legs
@@ -667,9 +772,6 @@ def propagate_coordinates(
     convergence = project.utm_convergence
     logger.info("UTM convergence angle: %.3f°", convergence)
 
-    # Link station names (global namespace — used to scope shot station names)
-    link_names = _get_link_names(project)
-
     # Get LRUD flags from project
     flags = project.flags
     lruds_at_to_station = flags.lruds_at_to_station if flags else False
@@ -677,15 +779,44 @@ def propagate_coordinates(
     # Cache for survey declinations (calculated once per survey)
     survey_declinations: dict[str, float] = {}
 
-    # Initialize with anchors (each anchor's origin is itself)
-    result.stations = dict(anchors)
-    result.anchors = set(anchors.keys())
-    for anchor_name, anchor_station in result.stations.items():
-        anchor_station.origin = anchor_name
+    # Anchor-by-file index for O(1) declination lookup (avoids linear
+    # scan over all anchors per survey).
+    anchor_by_file: dict[str, Station] = {}
+    for _a in anchors.values():
+        if _a.file and _a.file not in anchor_by_file:
+            anchor_by_file[_a.file] = _a
 
-    # Validate anchors against the shot graph — an anchor whose name
-    # does not appear in any shot is disconnected and cannot seed BFS.
-    disconnected = {name for name in anchors if name not in adjacency}
+    # When a solver is active, use *single-origin* BFS: seed from one
+    # anchor and traverse the full network (forward + reverse edges).
+    # This propagates the entire traverse from the same starting point
+    # so that closures appear at the far anchor, not at arbitrary BFS
+    # meeting points.  The longest path is the "true" segment.
+    _secondary_anchors: dict[str, Station] = {}
+
+    if detect_same_origin_loops and len(anchors) > 1:
+        # Pick first connected anchor as primary
+        primary_name = next(
+            (n for n in anchors if n in adjacency),
+            next(iter(anchors.keys())),
+        )
+        primary_station = anchors[primary_name]
+        primary_station.origin = primary_name
+        result.stations = {primary_name: primary_station}
+        result.anchors = {primary_name}
+        _secondary_anchors = {
+            k: v for k, v in anchors.items() if k != primary_name
+        }
+    else:
+        # Multi-origin BFS: seed from all anchors
+        result.stations = dict(anchors)
+        result.anchors = set(anchors.keys())
+        for anchor_name, anchor_station in result.stations.items():
+            anchor_station.origin = anchor_name
+
+    # Validate seeded stations against the shot graph — a station
+    # whose name does not appear in any shot is disconnected and
+    # cannot seed BFS.
+    disconnected = {name for name in result.stations if name not in adjacency}
     if disconnected:
         for name in sorted(disconnected):
             logger.warning(
@@ -693,40 +824,12 @@ def propagate_coordinates(
                 "-- check that the link station name matches a station "
                 "in the DAT file",
                 name,
-                anchors[name].file,
+                result.stations[name].file,
             )
         # Remove disconnected anchors so they don't pollute the BFS
         for name in disconnected:
             del result.stations[name]
             result.anchors.discard(name)
-
-    if not result.stations:
-        # No anchors - use project location or origin for first station
-        loc = project.location
-        if loc and loc.has_location:
-            origin = Station(
-                name="__ORIGIN__",
-                easting=loc.easting,
-                northing=loc.northing,
-                elevation=loc.elevation,
-            )
-        else:
-            origin = Station(
-                name="__ORIGIN__",
-                easting=0.0,
-                northing=0.0,
-                elevation=0.0,
-            )
-
-        # Find first station and place at origin
-        if adjacency:
-            first_station_name = next(iter(adjacency.keys()))
-            result.stations[first_station_name] = Station(
-                name=first_station_name,
-                easting=origin.easting,
-                northing=origin.northing,
-                elevation=origin.elevation,
-            )
 
     if not result.stations:
         raise NoKnownAnchorError("No anchor stations found and no shots available")
@@ -735,7 +838,12 @@ def propagate_coordinates(
         "Starting coordinate propagation from %d anchor(s)", len(result.stations)
     )
 
-    # BFS from anchor stations
+    # BFS from anchor stations.
+    # Multi-origin mode: FORWARD ONLY (reverse edges skipped).
+    # Single-origin mode (solver active): forward + reverse edges
+    # so the full traverse is computed from the same starting point
+    # and closures appear at the far anchor, not at arbitrary BFS
+    # meeting points.
     queue: deque[str] = deque(result.stations.keys())
     visited_stations: set[str] = set(result.stations.keys())
     visited_shots: set[tuple[str, str]] = set()
@@ -746,16 +854,14 @@ def propagate_coordinates(
         if not current_station:
             continue
 
-        for shot, file_name, survey_name, survey, is_reverse in adjacency.get(
-            current_name, []
-        ):
-            # Determine direction (use scoped names to match adjacency keys)
-            if is_reverse:
-                from_name = _scope_name(shot.to_station_name, file_name, link_names)
-                to_name = _scope_name(shot.from_station_name, file_name, link_names)
-            else:
-                from_name = _scope_name(shot.from_station_name, file_name, link_names)
-                to_name = _scope_name(shot.to_station_name, file_name, link_names)
+        for (shot, file_name, survey_name, survey, is_reverse,
+             from_name, to_name) in adjacency.get(current_name, []):
+            # Multi-origin: forward only.  Single-origin: both.
+            if is_reverse and not detect_same_origin_loops:
+                continue
+
+            # Target station depends on traversal direction
+            target_name = from_name if is_reverse else to_name
 
             # Skip already processed shots
             shot_key = (min(from_name, to_name), max(from_name, to_name))
@@ -766,18 +872,9 @@ def propagate_coordinates(
             # Calculate declination for this survey (cached)
             survey_key = f"{file_name}:{survey_name}"
             if survey_key not in survey_declinations:
-                # Find anchor station for this survey's file (priority 1)
-                survey_anchor = None
-                for anchor_station in anchors.values():
-                    if anchor_station.file == file_name:
-                        survey_anchor = anchor_station
-                        break
-
-                # Use survey anchor if found, otherwise use current station (priority 2)
+                survey_anchor = anchor_by_file.get(file_name)
                 location_station = survey_anchor if survey_anchor else current_station
 
-                # Convert station to WGS84 for declination calculation
-                # Use proper datum transformation for accurate coordinate conversion
                 station_wgs84 = get_station_location_wgs84(
                     location_station,
                     result.utm_zone,
@@ -811,41 +908,44 @@ def propagate_coordinates(
             else:
                 declination = survey_declinations[survey_key]
 
-            # Compute new station if needed
-            if to_name not in result.stations:
-                new_station = compute_next_station(
-                    current_station,
-                    shot,
-                    _display_name(to_name),
-                    is_reverse,
-                    declination,
-                    convergence,
+            # Direction-dependent delta.  For forward edges this uses
+            # the frontsight; for reverse edges it uses the backsight
+            # (or frontsight + 180° when no backsight is available).
+            shot_delta = compute_shot_delta(
+                shot, is_reverse, declination, convergence,
+            )
+            de, dn, dz = shot_delta
+
+            # Compute target station position.
+            ghost_e = current_station.easting + de
+            ghost_n = current_station.northing + dn
+            ghost_z = current_station.elevation + dz
+
+            if target_name not in result.stations:
+                # New station: place it at the computed position.
+                new_station = Station(
+                    name=_display_name(target_name),
+                    easting=ghost_e,
+                    northing=ghost_n,
+                    elevation=ghost_z,
                 )
                 new_station.file = file_name
                 new_station.survey = survey_name
                 new_station.origin = current_station.origin
-                result.stations[to_name] = new_station
+                new_station.path_distance = (
+                    current_station.path_distance
+                    + length_to_meters(shot.length or 0.0)
+                )
+                result.stations[target_name] = new_station
 
-                if to_name not in visited_stations:
-                    visited_stations.add(to_name)
-                    queue.append(to_name)
+                if target_name not in visited_stations:
+                    visited_stations.add(target_name)
+                    queue.append(target_name)
 
-            # Compute measurement-based delta for EVERY shot (needed for
-            # traverse adjustment -- coordinate differences telescope to zero,
-            # but measurement deltas reveal the actual misclosure).
-            m_delta = compute_shot_delta(shot, is_reverse, declination, convergence)
-
-            # Create leg
-            from_station = result.stations.get(from_name)
-            to_station = result.stations.get(to_name)
-
-            if from_station and to_station:
-                # LRUD association based on O/T flags
-                # If lruds_at_to_station is True, associate LRUDs with TO station
-                # Otherwise (default), associate with FROM station
+                # Create the leg.
                 leg = SurveyLeg(
-                    from_station=from_station,
-                    to_station=to_station,
+                    from_station=current_station,
+                    to_station=new_station,
                     distance=shot.length or 0.0,
                     azimuth=shot.frontsight_azimuth,
                     inclination=shot.frontsight_inclination,
@@ -856,13 +956,447 @@ def propagate_coordinates(
                     up=shot.up,
                     down=shot.down,
                     lruds_at_to_station=lruds_at_to_station,
-                    measurement_delta=m_delta,
+                    excluded_from_plotting=shot.excluded_from_plotting,
+                    measurement_delta=shot_delta,
                 )
                 result.legs.append(leg)
 
-    # Detect stations that exist in the shot graph but were never reached
+            else:
+                # Target station already exists.  If it was computed by
+                # a different origin, record a misclosure gap.
+                existing_station = result.stations[target_name]
+
+                if existing_station.origin != current_station.origin:
+                    # Ghost = where THIS front would place the station.
+                    ghost_station = Station(
+                        name=_display_name(target_name) + "'",
+                        easting=ghost_e,
+                        northing=ghost_n,
+                        elevation=ghost_z,
+                    )
+                    ghost_station.file = file_name
+                    ghost_station.survey = survey_name
+                    ghost_station.origin = current_station.origin
+                    ghost_station.path_distance = (
+                        current_station.path_distance
+                        + length_to_meters(shot.length or 0.0)
+                    )
+
+                    # Leg from current → ghost (shows where BFS goes).
+                    leg = SurveyLeg(
+                        from_station=current_station,
+                        to_station=ghost_station,
+                        distance=shot.length or 0.0,
+                        azimuth=shot.frontsight_azimuth,
+                        inclination=shot.frontsight_inclination,
+                        file=file_name,
+                        survey=survey_name,
+                        left=shot.left,
+                        right=shot.right,
+                        up=shot.up,
+                        down=shot.down,
+                        lruds_at_to_station=lruds_at_to_station,
+                        excluded_from_plotting=shot.excluded_from_plotting,
+                        measurement_delta=shot_delta,
+                    )
+                    result.legs.append(leg)
+
+                    # Misclosure line from ghost → existing.
+                    result.misclosures.append(
+                        MisclosureLeg(
+                            existing=existing_station,
+                            ghost=ghost_station,
+                            file=file_name,
+                            survey=survey_name,
+                        ),
+                    )
+                else:
+                    # Same origin: create a normal leg to the
+                    # existing station (loop within same BFS front).
+                    leg = SurveyLeg(
+                        from_station=current_station,
+                        to_station=existing_station,
+                        distance=shot.length or 0.0,
+                        azimuth=shot.frontsight_azimuth,
+                        inclination=shot.frontsight_inclination,
+                        file=file_name,
+                        survey=survey_name,
+                        left=shot.left,
+                        right=shot.right,
+                        up=shot.up,
+                        down=shot.down,
+                        lruds_at_to_station=lruds_at_to_station,
+                        excluded_from_plotting=shot.excluded_from_plotting,
+                        measurement_delta=shot_delta,
+                    )
+                    result.legs.append(leg)
+
+                    # When a solver will be applied, record same-origin
+                    # loop closures.  The whole path is propagated from
+                    # the same origin; the longest path to the closing
+                    # station is the "true" segment.
+                    if detect_same_origin_loops:
+                        ghost_station = Station(
+                            name=_display_name(target_name) + "'",
+                            easting=ghost_e,
+                            northing=ghost_n,
+                            elevation=ghost_z,
+                            file=file_name,
+                            survey=survey_name,
+                            origin=current_station.origin,
+                            path_distance=(
+                                current_station.path_distance
+                                + length_to_meters(shot.length or 0.0)
+                            ),
+                        )
+                        result.misclosures.append(
+                            MisclosureLeg(
+                                existing=existing_station,
+                                ghost=ghost_station,
+                                file=file_name,
+                                survey=survey_name,
+                                same_origin=True,
+                            ),
+                        )
+
+    # ── Secondary anchor closure (single-origin BFS) ────────────
+    # In single-origin mode, secondary anchors were placed by BFS
+    # with propagated positions.  Compare with their known (fixed)
+    # positions to get the full-traverse closure, then snap them
+    # to the known position so the solver treats them as anchors.
+    #
+    # Secondary anchors that were NOT reached by BFS belong to
+    # disconnected components (separate caves).  They are placed
+    # at their known position and queued for additional BFS so
+    # their connected stations are also computed.
+    _disconnected_secondaries: list[str] = []
+
+    if _secondary_anchors:
+        for sec_name, sec_known in _secondary_anchors.items():
+            bfs_station = result.stations.get(sec_name)
+            if bfs_station is not None:
+                gap = (
+                    (bfs_station.easting - sec_known.easting) ** 2
+                    + (bfs_station.northing - sec_known.northing) ** 2
+                    + (bfs_station.elevation - sec_known.elevation) ** 2
+                ) ** 0.5
+                if gap > 1e-6:
+                    ghost = Station(
+                        name=sec_known.name + "'",
+                        easting=bfs_station.easting,
+                        northing=bfs_station.northing,
+                        elevation=bfs_station.elevation,
+                        file=bfs_station.file,
+                        survey=bfs_station.survey,
+                        origin=bfs_station.origin,
+                        path_distance=bfs_station.path_distance,
+                    )
+                    result.misclosures.append(
+                        MisclosureLeg(
+                            existing=Station(
+                                name=sec_known.name,
+                                easting=sec_known.easting,
+                                northing=sec_known.northing,
+                                elevation=sec_known.elevation,
+                                file=sec_known.file,
+                            ),
+                            ghost=ghost,
+                            file=bfs_station.file,
+                            survey=bfs_station.survey,
+                        ),
+                    )
+                    logger.info(
+                        "Closure at anchor '%s': %.3f m "
+                        "(path distance: %.1f m)",
+                        sec_known.name,
+                        gap,
+                        bfs_station.path_distance,
+                    )
+                # Snap to known anchor position for the solver
+                bfs_station.easting = sec_known.easting
+                bfs_station.northing = sec_known.northing
+                bfs_station.elevation = sec_known.elevation
+                bfs_station.origin = sec_name
+            else:
+                # Not reached by BFS — disconnected component.
+                # Place at known position and queue for BFS.
+                sec_station = Station(
+                    name=sec_known.name,
+                    easting=sec_known.easting,
+                    northing=sec_known.northing,
+                    elevation=sec_known.elevation,
+                    file=sec_known.file,
+                    origin=sec_name,
+                )
+                result.stations[sec_name] = sec_station
+                _disconnected_secondaries.append(sec_name)
+            result.anchors.add(sec_name)
+
+    # ── BFS from disconnected secondary anchors ────────────────
+    # Each disconnected secondary anchor seeds an independent BFS
+    # for its connected component.  These are separate caves that
+    # don't share any stations with the primary anchor's component.
+    if _disconnected_secondaries:
+        logger.info(
+            "Running BFS from %d disconnected anchor(s): %s",
+            len(_disconnected_secondaries),
+            ", ".join(_disconnected_secondaries),
+        )
+        for sec_name in _disconnected_secondaries:
+            sec_queue: deque[str] = deque([sec_name])
+            visited_stations.add(sec_name)
+
+            while sec_queue:
+                current_name = sec_queue.popleft()
+                current_station = result.stations.get(current_name)
+                if not current_station:
+                    continue
+
+                for (shot, file_name, survey_name, survey, is_reverse,
+                     from_name, to_name) in adjacency.get(current_name, []):
+                    # Same traversal rules as main BFS
+                    target_name = from_name if is_reverse else to_name
+
+                    shot_key = (min(from_name, to_name), max(from_name, to_name))
+                    if shot_key in visited_shots:
+                        continue
+                    visited_shots.add(shot_key)
+
+                    survey_key = f"{file_name}:{survey_name}"
+                    if survey_key not in survey_declinations:
+                        survey_anchor = anchor_by_file.get(file_name)
+                        location_station = (
+                            survey_anchor if survey_anchor else current_station
+                        )
+                        station_wgs84 = get_station_location_wgs84(
+                            location_station,
+                            result.utm_zone,
+                            result.utm_northern,
+                            result.datum or Datum.WGS_1984,
+                        )
+                        declination = calculate_survey_declination(
+                            station_wgs84, survey.header.date,
+                        )
+                        survey_declinations[survey_key] = declination
+                        logger.debug(
+                            "Survey %s declination: %.2f° (date: %s)",
+                            survey_key, declination, survey.header.date,
+                        )
+                    else:
+                        declination = survey_declinations[survey_key]
+
+                    shot_delta = compute_shot_delta(
+                        shot, is_reverse, declination, convergence,
+                    )
+                    de, dn, dz = shot_delta
+
+                    ghost_e = current_station.easting + de
+                    ghost_n = current_station.northing + dn
+                    ghost_z = current_station.elevation + dz
+
+                    if target_name not in result.stations:
+                        new_station = Station(
+                            name=_display_name(target_name),
+                            easting=ghost_e,
+                            northing=ghost_n,
+                            elevation=ghost_z,
+                            file=file_name,
+                            survey=survey_name,
+                            origin=sec_name,
+                            path_distance=(
+                                current_station.path_distance
+                                + length_to_meters(shot.length or 0.0)
+                            ),
+                        )
+                        result.stations[target_name] = new_station
+
+                        if target_name not in visited_stations:
+                            visited_stations.add(target_name)
+                            sec_queue.append(target_name)
+
+                        leg = SurveyLeg(
+                            from_station=current_station,
+                            to_station=new_station,
+                            distance=shot.length or 0.0,
+                            azimuth=shot.frontsight_azimuth,
+                            inclination=shot.frontsight_inclination,
+                            file=file_name,
+                            survey=survey_name,
+                            left=shot.left,
+                            right=shot.right,
+                            up=shot.up,
+                            down=shot.down,
+                            lruds_at_to_station=lruds_at_to_station,
+                            excluded_from_plotting=shot.excluded_from_plotting,
+                            measurement_delta=shot_delta,
+                        )
+                        result.legs.append(leg)
+                    else:
+                        existing_station = result.stations[target_name]
+                        leg = SurveyLeg(
+                            from_station=current_station,
+                            to_station=existing_station,
+                            distance=shot.length or 0.0,
+                            azimuth=shot.frontsight_azimuth,
+                            inclination=shot.frontsight_inclination,
+                            file=file_name,
+                            survey=survey_name,
+                            left=shot.left,
+                            right=shot.right,
+                            up=shot.up,
+                            down=shot.down,
+                            lruds_at_to_station=lruds_at_to_station,
+                            excluded_from_plotting=shot.excluded_from_plotting,
+                            measurement_delta=shot_delta,
+                        )
+                        result.legs.append(leg)
+
+                        if detect_same_origin_loops:
+                            ghost_station = Station(
+                                name=_display_name(target_name) + "'",
+                                easting=ghost_e,
+                                northing=ghost_n,
+                                elevation=ghost_z,
+                                file=file_name,
+                                survey=survey_name,
+                                origin=sec_name,
+                                path_distance=(
+                                    current_station.path_distance
+                                    + length_to_meters(shot.length or 0.0)
+                                ),
+                            )
+                            result.misclosures.append(
+                                MisclosureLeg(
+                                    existing=existing_station,
+                                    ghost=ghost_station,
+                                    file=file_name,
+                                    survey=survey_name,
+                                    same_origin=True,
+                                ),
+                            )
+
+    # Fallback: stations unreachable by forward-only BFS.
+    # Some surveys have the link station as the TO station, so
+    # the only way to reach their FROM stations is via reverse.
+    # Do a second pass using reverse edges for these orphans only.
     all_graph_stations = set(adjacency.keys())
     orphaned = all_graph_stations - visited_stations
+
+    if orphaned:
+        # Seed the queue with all already-computed stations that have
+        # reverse edges to orphaned stations.
+        fallback_queue: deque[str] = deque()
+        for name in list(visited_stations):
+            for (shot, file_name, survey_name, survey, is_reverse,
+                 _from_scoped, _to_scoped) in adjacency.get(name, []):
+                if not is_reverse:
+                    continue
+                if _from_scoped in orphaned:
+                    fallback_queue.append(name)
+                    break
+
+        while fallback_queue:
+            current_name = fallback_queue.popleft()
+            current_station = result.stations.get(current_name)
+            if not current_station:
+                continue
+
+            for (shot, file_name, survey_name, survey, is_reverse,
+                 from_name, to_name) in adjacency.get(current_name, []):
+
+                shot_key = (min(from_name, to_name), max(from_name, to_name))
+                if shot_key in visited_shots:
+                    continue
+
+                # Determine target and direction.
+                if is_reverse:
+                    target_name = from_name
+                else:
+                    target_name = to_name
+
+                if target_name in result.stations:
+                    continue  # Already computed
+
+                visited_shots.add(shot_key)
+
+                survey_key = f"{file_name}:{survey_name}"
+                if survey_key not in survey_declinations:
+                    survey_anchor = anchor_by_file.get(file_name)
+                    location_station = (
+                        survey_anchor if survey_anchor else current_station
+                    )
+                    station_wgs84 = get_station_location_wgs84(
+                        location_station,
+                        result.utm_zone,
+                        result.utm_northern,
+                        result.datum or Datum.WGS_1984,
+                    )
+                    declination = calculate_survey_declination(
+                        station_wgs84, survey.header.date,
+                    )
+                    survey_declinations[survey_key] = declination
+                else:
+                    declination = survey_declinations[survey_key]
+
+                forward_delta = compute_shot_delta(
+                    shot, False, declination, convergence,
+                )
+                de, dn, dz = forward_delta
+
+                if is_reverse:
+                    # Computing from_station from to_station.
+                    new_station = Station(
+                        name=_display_name(target_name),
+                        easting=current_station.easting - de,
+                        northing=current_station.northing - dn,
+                        elevation=current_station.elevation - dz,
+                    )
+                    leg_from = new_station
+                    leg_to = current_station
+                else:
+                    # Computing to_station from from_station.
+                    new_station = Station(
+                        name=_display_name(target_name),
+                        easting=current_station.easting + de,
+                        northing=current_station.northing + dn,
+                        elevation=current_station.elevation + dz,
+                    )
+                    leg_from = current_station
+                    leg_to = new_station
+
+                new_station.file = file_name
+                new_station.survey = survey_name
+                new_station.origin = current_station.origin
+                new_station.path_distance = (
+                    current_station.path_distance
+                    + length_to_meters(shot.length or 0.0)
+                )
+                result.stations[target_name] = new_station
+                visited_stations.add(target_name)
+                fallback_queue.append(target_name)
+
+                # Leg always in forward direction.
+                leg = SurveyLeg(
+                    from_station=leg_from,
+                    to_station=leg_to,
+                    distance=shot.length or 0.0,
+                    azimuth=shot.frontsight_azimuth,
+                    inclination=shot.frontsight_inclination,
+                    file=file_name,
+                    survey=survey_name,
+                    left=shot.left,
+                    right=shot.right,
+                    up=shot.up,
+                    down=shot.down,
+                    lruds_at_to_station=lruds_at_to_station,
+                    excluded_from_plotting=shot.excluded_from_plotting,
+                    measurement_delta=forward_delta,
+                )
+                result.legs.append(leg)
+
+        # Re-check for any still-orphaned stations.
+        orphaned = all_graph_stations - visited_stations
+
     if orphaned:
         display = sorted(_display_name(n) for n in orphaned)
         logger.warning(
@@ -899,10 +1433,37 @@ def compute_survey_coordinates(
     """
     adjacency, _ = build_station_graph(project)
     anchors = find_anchor_stations(project)
-    result = propagate_coordinates(project, anchors, adjacency)
+    result = propagate_coordinates(
+        project, anchors, adjacency,
+        detect_same_origin_loops=(solver is not None),
+    )
 
     if solver is not None:
         logger.info("Applying survey adjustment: %s", solver.name)
+
+        # Solver handles all closures — clear misclosure lines
+        # so they do not appear in the GeoJSON output.
+        result.misclosures.clear()
+
+        # Reconnect ghost-station leg endpoints to real stations.
+        _name_to_station: dict[str, Station] = {}
+        for _key, _st in result.stations.items():
+            _name_to_station[_st.name] = _st
+            _dname = _display_name(_key)
+            if _dname != _st.name:
+                _name_to_station[_dname] = _st
+
+        for leg in result.legs:
+            if leg.to_station.name.endswith("'"):
+                real = _name_to_station.get(leg.to_station.name[:-1])
+                if real is not None:
+                    leg.to_station = real
+            if leg.from_station.name.endswith("'"):
+                real = _name_to_station.get(leg.from_station.name[:-1])
+                if real is not None:
+                    leg.from_station = real
+
+        # Run solver
         network = SurveyNetwork.from_computed_survey(result, anchors)
         adjusted = solver.adjust(network)
         for name, coords in adjusted.items():
@@ -920,11 +1481,37 @@ def compute_survey_coordinates(
 # -----------------------------------------------------------------------------
 
 
+def _cached_utm_to_wgs84(
+    easting: float,
+    northing: float,
+    zone: int,
+    northern: bool,
+    datum: Datum,
+    cache: dict[tuple[float, float], tuple[float, float]] | None = None,
+) -> tuple[float, float]:
+    """UTM-to-WGS84 with optional coordinate cache.
+
+    When *cache* is provided, results are memoised by ``(easting,
+    northing)`` so that the same station is only converted once
+    through pyproj regardless of how many legs reference it.
+    """
+    if cache is not None:
+        key = (easting, northing)
+        hit = cache.get(key)
+        if hit is not None:
+            return hit
+        result = utm_to_wgs84(easting, northing, zone, northern, datum)
+        cache[key] = result
+        return result
+    return utm_to_wgs84(easting, northing, zone, northern, datum)
+
+
 def station_to_feature(
     station: Station,
     zone: int,
     northern: bool,
     datum: Datum = Datum.WGS_1984,
+    wgs84_cache: dict[tuple[float, float], tuple[float, float]] | None = None,
 ) -> Feature:
     """Convert a station to a GeoJSON Point Feature.
 
@@ -933,11 +1520,14 @@ def station_to_feature(
         zone: UTM zone number
         northern: True if northern hemisphere
         datum: Source datum for UTM coordinates (critical for NAD27 data)
+        wgs84_cache: Optional coordinate cache for deduplication
 
     Returns:
         GeoJSON Feature with Point geometry
     """
-    lon, lat = utm_to_wgs84(station.easting, station.northing, zone, northern, datum)
+    lon, lat = _cached_utm_to_wgs84(
+        station.easting, station.northing, zone, northern, datum, wgs84_cache,
+    )
 
     properties: dict[str, Any] = {
         "type": "station",
@@ -960,6 +1550,7 @@ def anchor_to_feature(
     zone: int,
     northern: bool,
     datum: Datum = Datum.WGS_1984,
+    wgs84_cache: dict[tuple[float, float], tuple[float, float]] | None = None,
 ) -> Feature:
     """Convert an anchor station to a GeoJSON Point Feature.
 
@@ -971,11 +1562,14 @@ def anchor_to_feature(
         zone: UTM zone number
         northern: True if northern hemisphere
         datum: Source datum for UTM coordinates (critical for NAD27 data)
+        wgs84_cache: Optional coordinate cache for deduplication
 
     Returns:
         GeoJSON Feature with Point geometry and type "anchor"
     """
-    lon, lat = utm_to_wgs84(station.easting, station.northing, zone, northern, datum)
+    lon, lat = _cached_utm_to_wgs84(
+        station.easting, station.northing, zone, northern, datum, wgs84_cache,
+    )
 
     return Feature(
         geometry=Point((lon, lat, round(station.elevation, 2))),
@@ -993,6 +1587,7 @@ def leg_to_feature(
     zone: int,
     northern: bool,
     datum: Datum = Datum.WGS_1984,
+    wgs84_cache: dict[tuple[float, float], tuple[float, float]] | None = None,
 ) -> Feature:
     """Convert a survey leg to a GeoJSON LineString Feature.
 
@@ -1001,15 +1596,18 @@ def leg_to_feature(
         zone: UTM zone number
         northern: True if northern hemisphere
         datum: Source datum for UTM coordinates (critical for NAD27 data)
+        wgs84_cache: Optional coordinate cache for deduplication
 
     Returns:
         GeoJSON Feature with LineString geometry
     """
-    from_lon, from_lat = utm_to_wgs84(
-        leg.from_station.easting, leg.from_station.northing, zone, northern, datum
+    from_lon, from_lat = _cached_utm_to_wgs84(
+        leg.from_station.easting, leg.from_station.northing,
+        zone, northern, datum, wgs84_cache,
     )
-    to_lon, to_lat = utm_to_wgs84(
-        leg.to_station.easting, leg.to_station.northing, zone, northern, datum
+    to_lon, to_lat = _cached_utm_to_wgs84(
+        leg.to_station.easting, leg.to_station.northing,
+        zone, northern, datum, wgs84_cache,
     )
 
     properties: dict[str, Any] = {
@@ -1067,6 +1665,8 @@ def _shapely_to_passage_features(
     """Convert Shapely Polygon or MultiPolygon to GeoJSON Feature(s) with elevation."""
     features: list[Feature] = []
     if geom.is_empty or not geom.is_valid:
+        return features
+    if geom.geom_type not in ("Polygon", "MultiPolygon"):
         return features
     polys = list(geom.geoms) if geom.geom_type == "MultiPolygon" else [geom]
     for poly in polys:
@@ -1130,6 +1730,7 @@ def passage_to_feature(
     datum: Datum = Datum.WGS_1984,
     station_lrud: dict[str, tuple[tuple[float, float], tuple[float, float]]]
     | None = None,
+    wgs84_cache: dict[tuple[float, float], tuple[float, float]] | None = None,
 ) -> Feature | None:
     """Convert LRUD data to a passage polygon Feature (one tunnel segment).
 
@@ -1145,6 +1746,7 @@ def passage_to_feature(
         northern: True if northern hemisphere
         datum: Source datum for UTM coordinates (critical for NAD27 data)
         station_lrud: Optional precomputed map station name -> ((left_e, left_n), (right_e, right_n))
+        wgs84_cache: Optional coordinate cache for deduplication
 
     Returns:
         GeoJSON Feature with Polygon geometry, or None if no LRUD data
@@ -1190,10 +1792,18 @@ def passage_to_feature(
         )
 
     try:
-        from_left = utm_to_wgs84(from_left_e, from_left_n, zone, northern, datum)
-        from_right = utm_to_wgs84(from_right_e, from_right_n, zone, northern, datum)
-        to_left = utm_to_wgs84(to_left_e, to_left_n, zone, northern, datum)
-        to_right = utm_to_wgs84(to_right_e, to_right_n, zone, northern, datum)
+        from_left = _cached_utm_to_wgs84(
+            from_left_e, from_left_n, zone, northern, datum, wgs84_cache,
+        )
+        from_right = _cached_utm_to_wgs84(
+            from_right_e, from_right_n, zone, northern, datum, wgs84_cache,
+        )
+        to_left = _cached_utm_to_wgs84(
+            to_left_e, to_left_n, zone, northern, datum, wgs84_cache,
+        )
+        to_right = _cached_utm_to_wgs84(
+            to_right_e, to_right_n, zone, northern, datum, wgs84_cache,
+        )
     except InvalidCoordinateError:
         return None
 
@@ -1236,6 +1846,7 @@ def survey_to_geojson(
     include_legs: bool = True,
     include_passages: bool = False,
     include_anchors: bool = False,
+    color_by_origin: bool = True,
     properties: dict[str, Any] | None = None,
 ) -> FeatureCollection:
     """Convert computed survey to GeoJSON FeatureCollection.
@@ -1246,6 +1857,8 @@ def survey_to_geojson(
         include_legs: Include LineString features for survey legs
         include_passages: Include Polygon features for passage outlines
         include_anchors: Include Point features for anchor stations
+        color_by_origin: Color stations and legs by their propagation
+            origin anchor (default True)
 
     Returns:
         GeoJSON FeatureCollection
@@ -1261,24 +1874,30 @@ def survey_to_geojson(
     datum = survey.datum or Datum.WGS_1984
     features: list[Feature] = []
 
+    # Coordinate cache: avoids redundant pyproj calls for the same
+    # (easting, northing) pair.  Each station appears once as a Point,
+    # then again as the endpoint of every leg it touches.
+    wgs84_cache: dict[tuple[float, float], tuple[float, float]] = {}
+
     # Build origin -> colour mapping (stable: sorted anchor names)
-    origin_names = sorted({s.origin for s in survey.stations.values() if s.origin})
-    origin_color_map: dict[str, str] = {
-        name: ORIGIN_COLORS[i % len(ORIGIN_COLORS)]
-        for i, name in enumerate(origin_names)
-    }
+    origin_color_map: dict[str, str] = {}
+    if color_by_origin:
+        origin_names = sorted({s.origin for s in survey.stations.values() if s.origin})
+        origin_color_map = {
+            name: ORIGIN_COLORS[i % len(ORIGIN_COLORS)]
+            for i, name in enumerate(origin_names)
+        }
 
     # Add station points
     if include_stations:
         for name, station in survey.stations.items():
-            if name.startswith("__"):
-                continue  # Skip internal markers
 
             try:
-                feat = station_to_feature(station, zone, northern, datum)
-                color = origin_color_map.get(station.origin)
-                if color:
-                    feat["properties"]["marker-color"] = color
+                feat = station_to_feature(station, zone, northern, datum, wgs84_cache)
+                if color_by_origin:
+                    color = origin_color_map.get(station.origin)
+                    if color:
+                        feat["properties"]["marker-color"] = color
                 features.append(feat)
             except InvalidCoordinateError:
                 logger.warning("Skipping station %s: invalid coordinates", name)
@@ -1290,28 +1909,98 @@ def survey_to_geojson(
             if station is None:
                 continue
             try:
-                feat = anchor_to_feature(station, zone, northern, datum)
-                color = origin_color_map.get(station.origin)
-                if color:
-                    feat["properties"]["marker-color"] = color
+                feat = anchor_to_feature(station, zone, northern, datum, wgs84_cache)
+                if color_by_origin:
+                    color = origin_color_map.get(station.origin)
+                    if color:
+                        feat["properties"]["marker-color"] = color
                 features.append(feat)
             except InvalidCoordinateError:
                 logger.warning("Skipping anchor %s: invalid coordinates", name)
 
-    # Add survey legs
+    # Add survey legs (skip P-excluded legs — they were used for
+    # coordinate propagation but are not rendered).
     if include_legs:
         try:
             for leg in survey.legs:
-                feat = leg_to_feature(leg, zone, northern, datum)
-                color = origin_color_map.get(leg.from_station.origin)
-                if color:
-                    feat["properties"]["stroke"] = color
-                    feat["properties"]["stroke-width"] = 2
-                    feat["properties"]["stroke-opacity"] = 1
+                if leg.excluded_from_plotting:
+                    continue
+                feat = leg_to_feature(leg, zone, northern, datum, wgs84_cache)
+                if color_by_origin:
+                    color = origin_color_map.get(leg.from_station.origin)
+                    if color:
+                        feat["properties"]["stroke"] = color
+                        feat["properties"]["stroke-width"] = 2
+                        feat["properties"]["stroke-opacity"] = 1
                 features.append(feat)
         except InvalidCoordinateError:
             logger.exception("Invalid leg coordinates")
             raise
+
+    # Add misclosure gap lines.
+    # Cross-origin misclosures (same_origin=False) are present only
+    # when solver is None — raw BFS shows where propagation fronts
+    # disagree.
+    # Same-origin misclosures (same_origin=True) are present when a
+    # solver was applied — they show the raw loop closure error
+    # computed with both paths propagated from the same origin,
+    # using the longest path as the "true" segment.
+    if include_legs and survey.misclosures:
+        for misc in survey.misclosures:
+            try:
+                ex_lon, ex_lat = utm_to_wgs84(
+                    misc.existing.easting, misc.existing.northing,
+                    zone, northern, datum,
+                )
+                gh_lon, gh_lat = utm_to_wgs84(
+                    misc.ghost.easting, misc.ghost.northing,
+                    zone, northern, datum,
+                )
+
+                gap_dist = (
+                    (misc.existing.easting - misc.ghost.easting) ** 2
+                    + (misc.existing.northing - misc.ghost.northing) ** 2
+                    + (misc.existing.elevation - misc.ghost.elevation) ** 2
+                ) ** 0.5
+
+                props: dict[str, Any] = {
+                    "type": "misclosure",
+                    "from": misc.ghost.name,
+                    "to": misc.existing.name,
+                    "gap_m": round(gap_dist, 2),
+                    "file": misc.file,
+                    "survey": misc.survey,
+                    "stroke": "#ff0000",
+                    "stroke-width": 3,
+                    "stroke-opacity": 1,
+                }
+
+                if misc.same_origin:
+                    props["same_origin"] = True
+                    # Report the true (longest) and closing (shortest)
+                    # segment distances so users can assess the loop.
+                    true_dist = max(
+                        misc.ghost.path_distance,
+                        misc.existing.path_distance,
+                    )
+                    closing_dist = min(
+                        misc.ghost.path_distance,
+                        misc.existing.path_distance,
+                    )
+                    props["true_segment_distance_m"] = round(true_dist, 2)
+                    props["closing_segment_distance_m"] = round(closing_dist, 2)
+
+                line_feat = Feature(
+                    geometry=LineString([
+                        (gh_lon, gh_lat, round(misc.ghost.elevation, 2)),
+                        (ex_lon, ex_lat, round(misc.existing.elevation, 2)),
+                    ]),
+                    properties=props,
+                )
+                features.append(line_feat)
+
+            except InvalidCoordinateError:
+                pass
 
     # Add passage polygons (tunnel segments); clip each new segment to the "outside"
     # of the tunnel so far so overlapping layers are not drawn (collision detection).
@@ -1319,7 +2008,11 @@ def survey_to_geojson(
         station_lrud = _build_station_lrud_map(survey)
         existing_tunnel: ShapelyPolygon | None = None
         for leg in survey.legs:
-            passage = passage_to_feature(leg, zone, northern, datum, station_lrud)
+            if leg.excluded_from_plotting:
+                continue
+            passage = passage_to_feature(
+                leg, zone, northern, datum, station_lrud, wgs84_cache,
+            )
             if not passage:
                 continue
             ring = passage["geometry"]["coordinates"][0]
@@ -1366,6 +2059,7 @@ def project_to_geojson(
     include_legs: bool = True,
     include_passages: bool = False,
     include_anchors: bool = False,
+    color_by_origin: bool = True,
     solver: SurveyAdjuster | None = None,
 ) -> FeatureCollection:
     """Convert a Compass project to GeoJSON.
@@ -1379,6 +2073,7 @@ def project_to_geojson(
         include_legs: Include LineString features for survey legs
         include_passages: Include Polygon features for passage outlines
         include_anchors: Include Point features for anchor stations
+        color_by_origin: Color stations and legs by propagation origin
         solver: Optional survey adjuster
 
     Returns:
@@ -1391,6 +2086,7 @@ def project_to_geojson(
         include_legs=include_legs,
         include_passages=include_passages,
         include_anchors=include_anchors,
+        color_by_origin=color_by_origin,
     )
 
 
@@ -1402,7 +2098,9 @@ def convert_mak_to_geojson(
     include_legs: bool = True,
     include_passages: bool = False,
     include_anchors: bool = False,
+    color_by_origin: bool = True,
     solver: SurveyAdjuster | None = None,
+    minify: bool = False,
 ) -> str:
     """Convert a MAK file (with DAT files) to GeoJSON.
 
@@ -1413,7 +2111,9 @@ def convert_mak_to_geojson(
         include_legs: Include LineString features for survey legs
         include_passages: Include Polygon features for passage outlines
         include_anchors: Include Point features for anchor stations
+        color_by_origin: Color stations and legs by propagation origin
         solver: Optional survey adjuster
+        minify: Omit indentation for compact output
 
     Returns:
         GeoJSON string
@@ -1426,11 +2126,13 @@ def convert_mak_to_geojson(
         include_legs=include_legs,
         include_passages=include_passages,
         include_anchors=include_anchors,
+        color_by_origin=color_by_origin,
         solver=solver,
     )
 
     # Use orjson for fast serialization
-    json_bytes = orjson.dumps(geojson, option=orjson.OPT_INDENT_2)
+    opts = 0 if minify else orjson.OPT_INDENT_2
+    json_bytes = orjson.dumps(geojson, option=opts)
     json_str = json_bytes.decode(JSON_ENCODING)
 
     if output_path:

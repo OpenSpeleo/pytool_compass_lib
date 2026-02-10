@@ -1,7 +1,0 @@
-body         { font-family: Arial }
-/* You must maintain tag order */
-ul { 
-list-style:square;
-list-style-position: inside; 
-margin-left: 4; 
-}
