@@ -54,6 +54,7 @@ from shapely.ops import unary_union
 from compass_lib.constants import FEET_TO_METERS
 from compass_lib.constants import GEOJSON_COORDINATE_PRECISION
 from compass_lib.constants import JSON_ENCODING
+from compass_lib.constants import METERS_TO_FEET
 from compass_lib.enums import Datum
 from compass_lib.geo_utils import GeoLocation
 from compass_lib.geo_utils import get_declination
@@ -1571,13 +1572,14 @@ def anchor_to_feature(
         station.easting, station.northing, zone, northern, datum, wgs84_cache,
     )
 
+    depth_ft = round(station.elevation * METERS_TO_FEET, 2)
+
     return Feature(
-        geometry=Point((lon, lat, round(station.elevation, 2))),
+        geometry=Point((lon, lat)),
         properties={
-            "type": "anchor",
-            "name": station.name,
-            "file": station.file,
-            "elevation_m": round(station.elevation, 2),
+            "id": station.name,
+            "depth": depth_ft,
+            "name": station.survey,
         },
     )
 
@@ -1610,27 +1612,22 @@ def leg_to_feature(
         zone, northern, datum, wgs84_cache,
     )
 
+    avg_elevation_m = (leg.from_station.elevation + leg.to_station.elevation) / 2
+    depth_ft = round(avg_elevation_m * METERS_TO_FEET, 2)
+
+    shot_name = f"{leg.from_station.name}-{leg.to_station.name}"
+
     properties: dict[str, Any] = {
-        "type": "leg",
-        "from": leg.from_station.name,
-        "to": leg.to_station.name,
-        "distance_ft": leg.distance,
-        "distance_m": round(length_to_meters(leg.distance), 2)
-        if leg.distance
-        else None,
-        "azimuth": leg.azimuth,
-        "inclination": leg.inclination,
-        "file": leg.file,
-        "survey": leg.survey,
+        "id": shot_name,
+        "depth": depth_ft,
+        "name": leg.survey,
     }
-    if leg.from_station.origin:
-        properties["origin"] = leg.from_station.origin
 
     return Feature(
         geometry=LineString(
             [
-                (from_lon, from_lat, round(leg.from_station.elevation, 2)),
-                (to_lon, to_lat, round(leg.to_station.elevation, 2)),
+                (from_lon, from_lat),
+                (to_lon, to_lat),
             ]
         ),
         properties=properties,

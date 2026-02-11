@@ -87,7 +87,10 @@ class TestSurveyToGeoJSON:
 
         # All features should be legs or misclosure indicators
         for feature in geojson["features"]:
-            assert feature["properties"]["type"] in ("leg", "misclosure", "misclosure_station")
+            props = feature["properties"]
+            is_leg = "id" in props and "depth" in props and "name" in props
+            is_misclosure = props.get("type") in ("misclosure", "misclosure_station")
+            assert is_leg or is_misclosure
 
     @pytest.mark.skipif(
         FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file"
@@ -184,7 +187,7 @@ class TestConvertMakToGeoJSON:
 
         # Check that stations have valid WGS84 coordinates
         stations = [
-            f for f in parsed["features"] if f["properties"]["type"] == "station"
+            f for f in parsed["features"] if f["properties"].get("type") == "station"
         ]
         assert len(stations) > 0, f"No stations in {mak_path.name}"
 
@@ -223,7 +226,7 @@ class TestGeoJSONFeatureProperties:
         geojson = project_to_geojson(project)
 
         stations = [
-            f for f in geojson["features"] if f["properties"]["type"] == "station"
+            f for f in geojson["features"] if f["properties"].get("type") == "station"
         ]
 
         for station in stations:
@@ -240,32 +243,40 @@ class TestGeoJSONFeatureProperties:
         project = load_project(FIRST_MAK)
         geojson = project_to_geojson(project)
 
-        legs = [f for f in geojson["features"] if f["properties"]["type"] == "leg"]
+        legs = [
+            f for f in geojson["features"]
+            if f["geometry"]["type"] == "LineString"
+            and "id" in f["properties"]
+        ]
 
+        assert len(legs) > 0, "Should have at least one leg"
         for leg in legs:
             props = leg["properties"]
-            assert "from" in props
-            assert "to" in props
-            assert "distance_ft" in props
-            assert "distance_m" in props
-            assert "file" in props
-            assert "survey" in props
+            assert "id" in props
+            assert "depth" in props
+            assert "name" in props
+            assert isinstance(props["id"], str)
+            assert isinstance(props["depth"], (int, float))
+            assert isinstance(props["name"], str)
 
     @pytest.mark.skipif(
         FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file"
     )
-    def test_coordinates_are_3d(self):
-        """Test that coordinates include elevation."""
+    def test_coordinate_dimensions(self):
+        """Test that station coordinates are 3D and leg coordinates are 2D."""
         project = load_project(FIRST_MAK)
         geojson = project_to_geojson(project)
 
         for feature in geojson["features"]:
-            if feature["geometry"]["type"] == "Point":
+            geom_type = feature["geometry"]["type"]
+            props = feature["properties"]
+            if geom_type == "Point":
                 coords = feature["geometry"]["coordinates"]
                 assert len(coords) == 3, "Point should have 3D coordinates"
-            elif feature["geometry"]["type"] == "LineString":
+            elif geom_type == "LineString" and "id" in props:
+                # Leg features use 2D coordinates
                 for coord in feature["geometry"]["coordinates"]:
-                    assert len(coord) == 3, "LineString coords should be 3D"
+                    assert len(coord) == 2, "Leg coords should be 2D"
 
 
 class TestAnchorValidation:
@@ -326,7 +337,7 @@ class TestPrivateProjectsGeoJSON:
         geojson = project_to_geojson(project)
 
         stations = [
-            f for f in geojson["features"] if f["properties"]["type"] == "station"
+            f for f in geojson["features"] if f["properties"].get("type") == "station"
         ]
 
         # Should have at least some stations
