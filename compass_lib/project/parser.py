@@ -18,6 +18,7 @@ from compass_lib.enums import FormatIdentifier
 from compass_lib.errors import CompassParseException
 from compass_lib.errors import SourceLocation
 from compass_lib.project.models import CompassMakFile
+from compass_lib.project.models import CompassProjectDirective
 
 
 class CompassProjectParser:
@@ -133,7 +134,7 @@ class CompassProjectParser:
     # Legacy model-returning methods (thin wrappers for backwards compat)
     # -------------------------------------------------------------------------
 
-    def parse_file(self, path: Path) -> list["CompassProjectDirective"]:  # noqa: F821
+    def parse_file(self, path: Path) -> list[CompassProjectDirective]:
         """Parse a project file.
 
         DEPRECATED: Use parse_file_to_dict() for new code.
@@ -156,7 +157,7 @@ class CompassProjectParser:
         self,
         data: str,
         source: str = "<string>",
-    ) -> list["CompassProjectDirective"]:  # noqa: F821
+    ) -> list[CompassProjectDirective]:
         """Parse project data from a string.
 
         DEPRECATED: Use parse_string_to_dict() for new code.

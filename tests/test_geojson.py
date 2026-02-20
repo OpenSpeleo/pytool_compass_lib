@@ -5,10 +5,13 @@ All test files are sourced from tests/artifacts/private/.
 """
 
 import json
+import logging
 from pathlib import Path
 
 import pytest
+
 from compass_lib import load_project
+from compass_lib.constants import METERS_TO_FEET
 from compass_lib.geojson import compute_survey_coordinates
 from compass_lib.geojson import convert_mak_to_geojson
 from compass_lib.geojson import project_to_geojson
@@ -17,6 +20,8 @@ from compass_lib.geojson import survey_to_geojson
 # Import fixtures from conftest
 from tests.conftest import ALL_MAK_FILES
 from tests.conftest import FIRST_MAK
+
+logger = logging.getLogger(__name__)
 
 
 class TestComputeSurveyCoordinates:
@@ -244,9 +249,9 @@ class TestGeoJSONFeatureProperties:
         geojson = project_to_geojson(project)
 
         legs = [
-            f for f in geojson["features"]
-            if f["geometry"]["type"] == "LineString"
-            and "id" in f["properties"]
+            f
+            for f in geojson["features"]
+            if f["geometry"]["type"] == "LineString" and "id" in f["properties"]
         ]
 
         assert len(legs) > 0, "Should have at least one leg"
@@ -274,9 +279,78 @@ class TestGeoJSONFeatureProperties:
                 coords = feature["geometry"]["coordinates"]
                 assert len(coords) == 3, "Point should have 3D coordinates"
             elif geom_type == "LineString" and "id" in props:
-                # Leg features use 2D coordinates
                 for coord in feature["geometry"]["coordinates"]:
-                    assert len(coord) == 2, "Leg coords should be 2D"
+                    assert len(coord) == 3, "Leg coords should be 3D"
+
+    @pytest.mark.skipif(
+        FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file"
+    )
+    def test_depth_property_is_positive_feet(self):
+        """Every feature with a 'depth' property must have a non-negative value."""
+        project = load_project(FIRST_MAK)
+        geojson = project_to_geojson(project, include_anchors=True)
+
+        features_with_depth = [
+            f for f in geojson["features"] if "depth" in f["properties"]
+        ]
+        assert len(features_with_depth) > 0, "Expected features with depth property"
+
+        for feat in features_with_depth:
+            depth = feat["properties"]["depth"]
+            assert isinstance(depth, (int, float)), f"depth must be numeric, got {type(depth)}"
+            assert depth >= 0, (
+                f"depth must be >= 0 (positive feet), got {depth} "
+                f"on feature {feat['properties'].get('id', feat['properties'].get('name'))}"
+            )
+
+    @pytest.mark.skipif(
+        FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file"
+    )
+    def test_elevation_coordinate_matches_property(self):
+        """Station Point elevation coordinate must equal the elevation_m property."""
+        project = load_project(FIRST_MAK)
+        geojson = project_to_geojson(project)
+
+        stations = [
+            f for f in geojson["features"] if f["properties"].get("type") == "station"
+        ]
+        assert len(stations) > 0
+
+        for station in stations:
+            coords = station["geometry"]["coordinates"]
+            elevation_coord = coords[2]
+            elevation_prop = station["properties"]["elevation_m"]
+            assert elevation_coord == pytest.approx(elevation_prop, abs=0.01), (
+                f"Station '{station['properties']['name']}': coordinate elevation "
+                f"({elevation_coord}) != elevation_m property ({elevation_prop})"
+            )
+
+    @pytest.mark.skipif(
+        FIRST_MAK is None or not FIRST_MAK.exists(), reason="No test file"
+    )
+    def test_depth_consistent_with_elevation(self):
+        """The depth property (positive feet) must equal abs(elevation_m * METERS_TO_FEET)."""
+        project = load_project(FIRST_MAK)
+        geojson = project_to_geojson(project, include_anchors=True)
+
+        for feat in geojson["features"]:
+            props = feat["properties"]
+            if "depth" not in props:
+                continue
+
+            geom = feat["geometry"]
+            if geom["type"] == "Point":
+                elev_m = geom["coordinates"][2]
+            elif geom["type"] == "LineString":
+                elev_m = geom["coordinates"][-1][2]
+            else:
+                continue
+
+            expected_depth = abs(round(elev_m * METERS_TO_FEET, 2))
+            assert props["depth"] == pytest.approx(expected_depth, abs=0.1), (
+                f"Feature {props.get('id', props.get('name'))}: "
+                f"depth={props['depth']} != abs(round({elev_m} * METERS_TO_FEET, 2))={expected_depth}"
+            )
 
 
 class TestAnchorValidation:
@@ -303,7 +377,6 @@ class TestAnchorValidation:
     )
     def test_disconnected_anchor_logged_as_warning(self, caplog):
         """A disconnected anchor must produce a warning."""
-        import logging
 
         with caplog.at_level(logging.WARNING):
             project = load_project(self.PROJECT022)
@@ -353,3 +426,29 @@ class TestPrivateProjectsGeoJSON:
         assert survey.utm_zone is not None
         assert survey.utm_zone != 0, "UTM zone cannot be 0"
         assert abs(survey.utm_zone) <= 60, f"Invalid UTM zone: {survey.utm_zone}"
+
+    @pytest.mark.parametrize("mak_path", ALL_MAK_FILES)
+    def test_all_coordinates_are_3d(self, mak_path):
+        """Every coordinate tuple (Point, LineString, Polygon) must have 3 elements."""
+        project = load_project(mak_path)
+        geojson = project_to_geojson(project, include_passages=True, include_anchors=True)
+
+        for feat in geojson["features"]:
+            geom = feat["geometry"]
+            geom_type = geom["type"]
+
+            if geom_type == "Point":
+                assert len(geom["coordinates"]) == 3, (
+                    f"Point coords should be 3D in {mak_path.name}"
+                )
+            elif geom_type == "LineString":
+                for i, coord in enumerate(geom["coordinates"]):
+                    assert len(coord) == 3, (
+                        f"LineString coord[{i}] should be 3D in {mak_path.name}"
+                    )
+            elif geom_type == "Polygon":
+                for ring in geom["coordinates"]:
+                    for i, coord in enumerate(ring):
+                        assert len(coord) == 3, (
+                            f"Polygon coord[{i}] should be 3D in {mak_path.name}"
+                        )
