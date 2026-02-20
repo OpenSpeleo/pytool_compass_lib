@@ -7,11 +7,9 @@ package = true
 
 [dependency-groups]
 dev = [
-    "check-manifest",
     "prek>=0.3.3,<0.4",
     "ruff>=0.14,<0.16",
     "flit>=3.12,<4",
-    "wheel>=0.45",
     # File encryption/decryption
     "python-dotenv>=1.0.0,<2.0.0",
     "cryptography>=44.0.0,<47.0.0",
@@ -99,13 +97,6 @@ geojson = "compass_lib.commands.geojson:geojson"
 testpaths = ["tests/"]
 addopts = "-vvv --cov=compass_lib --cov-report=term-missing"
 # addopts = "-vvv --cov=compass_lib --cov-report=term-missing --capture=no"
-
-# # This is configuration specific to the `setuptools` build backend.
-# # If you are using a different build backend, you will need to change this.
-# [tool.setuptools]
-# # If there are data files included in your packages that need to be
-# # installed, specify them here.
-# package-data = {"sample" = ["*.dat"]}
 
 [tool.pytest_env]
 env_files = [".env"]
