@@ -90,7 +90,7 @@ jobs:
         run: uv build
 
       - name: Upload wheels
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           path: dist
           if-no-files-found: error
