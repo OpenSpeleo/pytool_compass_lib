@@ -12,7 +12,7 @@ dev = [
     "flit>=3.12,<4",
     # File encryption/decryption
     "python-dotenv>=1.0.0,<2.0.0",
-    "cryptography>=44.0.0,<47.0.0",
+    "cryptography>=46.0.7,<47.0.0",
 ]
 
 [project]
@@ -68,7 +68,7 @@ dynamic = ["description", "version"]
 [project.optional-dependencies]
 test = [
     # File encryption/decryption
-    "cryptography>=44.0.0,<47.0.0",
+    "cryptography>=46.0.7,<47.0.0",
     "python-dotenv>=1.0.0,<2.0.0",
     # Testing
     "deepdiff>=7.0,<9.0",
