@@ -1,5 +1,5 @@
 [build-system]
-requires = ["flit_core >=3.11,<4"]
+requires = ["flit_core >=3.12.0,<4"]
 build-backend = "flit_core.buildapi"
 
 [tool.uv]
@@ -7,12 +7,12 @@ package = true
 
 [dependency-groups]
 dev = [
-    "prek>=0.3.3,<0.4",
-    "ruff>=0.14,<0.16",
+    "prek>=0.3.9,<0.4",
+    "ruff>=0.15.10,<0.16",
     "flit>=3.12,<4",
     # File encryption/decryption
-    "python-dotenv>=1.0.0,<2.0.0",
-    "cryptography>=44.0.0,<47.0.0",
+    "python-dotenv>=1.2.2,<2.0.0",
+    "cryptography>=46.0.7,<47.0.0",
 ]
 
 [project]
@@ -53,14 +53,14 @@ classifiers = [
 ]
 dependencies = [
     "geojson>=3.2,<4",
-    "numpy>=1.26,<3",
-    "scipy>=1.12,<2",
-    "orjson>=3.10,<3.12",
-    "pydantic>=2.12,<2.13",
-    "pydantic-extra-types>=2.11,<3.0",
+    "numpy>=2.4.4,<3",
+    "scipy>=1.17.1,<2",
+    "orjson>=3.11.8,<3.12",
+    "pydantic>=2.13.1,<2.14",
+    "pydantic-extra-types>=2.11.1,<3.0",
     "pyIGRF14==1.0.4",
-    "pyproj>=3.7.1,<3.8",
-    "shapely>=2.0,<3",
+    "pyproj>=3.7.2,<3.8",
+    "shapely>=2.1.2,<3",
     "utm>=0.8.1,<0.9",
 ]
 dynamic = ["description", "version"]
@@ -68,14 +68,14 @@ dynamic = ["description", "version"]
 [project.optional-dependencies]
 test = [
     # File encryption/decryption
-    "cryptography>=44.0.0,<47.0.0",
-    "python-dotenv>=1.0.0,<2.0.0",
+    "cryptography>=46.0.7,<47.0.0",
+    "python-dotenv>=1.2.2,<2.0.0",
     # Testing
-    "deepdiff>=7.0,<9.0",
-    "pytest>=8.0.0,<10.0.0",
-    "pytest-cov>=5.0.0,<8.0.0",
-    "pytest-env>=1.1.3,<2.0.0",
-    "pytest-runner>=6.0.0,<7.0.0",
+    "deepdiff>=7.0,<10.0",
+    "pytest>=9.0.3,<10.0.0",
+    "pytest-cov>=7.1.0,<8.0.0",
+    "pytest-env>=1.6.0,<2.0.0",
+    "pytest-runner>=6.0.1,<7.0.0",
     "pytest-ordering>=0.6,<1.0.0",
     "parameterized>=0.9.0,<0.10",
 ]

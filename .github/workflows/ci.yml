@@ -21,7 +21,7 @@ jobs:
       - name: Checkout Code Repository
         uses: actions/checkout@v6
 
-      - uses: j178/prek-action@v1
+      - uses: j178/prek-action@v2
         with:
           install-only: true
 
@@ -90,13 +90,13 @@ jobs:
         run: uv build
 
       - name: Upload wheels
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           path: dist
           if-no-files-found: error
 
       - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v3
+        uses: actions/attest-build-provenance@v4
         with:
           subject-path: 'dist/*'
 
