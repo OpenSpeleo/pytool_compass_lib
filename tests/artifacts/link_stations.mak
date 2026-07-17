@@ -1,6 +1,6 @@
-# FULFORD.DAT /comment 1    
+# FULFORD.DAT /comment 1
  ,/comment 2
- A / comment3 
+ A / comment3
  [ f, 1.1, / comment4
 /comment5
 2.2, 3.3

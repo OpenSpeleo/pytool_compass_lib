@@ -437,24 +437,23 @@ def calculate_survey_declination(
 # -----------------------------------------------------------------------------
 
 
+# Unit-separator character used to scope station names.
+#
+# Station names that are not listed as link stations in the MAK file are
+# prefixed with ``{scope_id}<US>`` to prevent cross-scope merges. Link station
+# names remain unscoped so that they correctly bridge scopes.
+#
+# Scoping follows the "global until explicit linking" rule:
+#
+# - By default station names are global across all DAT files. Files that do not
+#   declare bare (coordinate-free) link stations share the current scope group,
+#   so identical names freely merge.
+# - A file that lists at least one link station without coordinates (a bare
+#   name) starts a new scope group. Only the declared link station names bridge
+#   the two groups; all other names are isolated.
+# - Link stations with coordinates are anchors (fixed reference points) and do
+#   not create a scope boundary.
 _FILE_SCOPE_SEP = "\x1f"
-"""Unit-separator character used to scope station names.
-
-Station names that are NOT listed as link stations in the MAK file are
-prefixed with ``{scope_id}<US>`` to prevent cross-scope merges.
-Link station names remain unscoped so that they correctly bridge scopes.
-
-Scoping follows the "global until explicit linking" rule:
-
-- By default station names are **global** across all DAT files.
-  Files that do not declare bare (coordinate-free) link stations share
-  the current scope group, so identical names freely merge.
-- A file that lists at least one link station **without** coordinates
-  (a bare name) starts a **new** scope group.  Only the declared link
-  station names bridge the two groups; all other names are isolated.
-- Link stations **with** coordinates are anchors (fixed reference
-  points) and do **not** create a scope boundary.
-"""
 
 
 def _get_link_names(project: CompassMakFile) -> set[str]:

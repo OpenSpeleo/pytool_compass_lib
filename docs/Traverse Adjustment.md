@@ -190,12 +190,12 @@ applied `s * misclosure` to all stations. For each shot, the correction to its
 delta was `(f_to - f_from) * s * misclosure`; the factor `s` was chosen as the
 minimum of `max_ratio / actual_ratio` across all shots.
 
-**Problem**: the ratio `max/actual` is a *linear approximation* that assumes the
+**Problem**: the ratio `max/actual` is a _linear approximation_ that assumes the
 length and angle change are proportional to `s`. This is only exact when the
 correction is perfectly aligned with the shot direction. For off-axis
 corrections (misclosure perpendicular to a shot), the relationship is nonlinear.
 The linear estimate was too generous: the solver would pick a scale factor that
-*should* give 5 % length change, but the actual change was 8–12 %, leaving shots
+_should_ give 5 % length change, but the actual change was 8–12 %, leaving shots
 wild.
 
 ### Attempt 2 — Global binary-search scale-back
@@ -206,18 +206,18 @@ scale `s` kept the corrected delta within the 3-D angular and length limits of
 `shot.delta`, converging to the exact boundary.
 
 **Problem**: global scaling is inherently the wrong tool. Scaling the entire
-misclosure by a single factor means *all* shots receive a proportionally smaller
+misclosure by a single factor means _all_ shots receive a proportionally smaller
 correction. If one shot near an anchor needs heavy clamping, the entire network
 gets under-corrected. The user reported that "the shot at the anchor is insane"
 while "you don't correct enough the other shots."
 
 ### Attempt 3 — Global scale-back against survey deltas (no GeoJSON values)
 
-A refinement ensured the constraint was always checked against the *original
-survey measurement* (`shot.delta`, derived from tape/compass/inclination), never
+A refinement ensured the constraint was always checked against the _original
+survey measurement_ (`shot.delta`, derived from tape/compass/inclination), never
 against the GeoJSON-computed effective delta (which can be wild at BFS seams).
 The "gets worse" heuristic (only clamp shots whose correction moves them
-*further* from the survey reading) was removed so the constraint was
+_further_ from the survey reading) was removed so the constraint was
 unconditional.
 
 **Problem**: still global scaling — one bad shot starves all others of
