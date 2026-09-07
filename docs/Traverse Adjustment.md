@@ -170,8 +170,8 @@ affect others.
 
 ```python
 ProportionalSolver(
-    max_length_change=0.05,   # 5 % of survey tape distance
-    max_angle_change=0.15,    # 15 % of survey compass / inclination
+    max_length_change=0.05,  # 5 % of survey tape distance
+    max_angle_change=0.15,  # 15 % of survey compass / inclination
 )
 ```
 
