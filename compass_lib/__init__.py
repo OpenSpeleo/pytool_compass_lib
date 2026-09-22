@@ -21,7 +21,7 @@ Usage:
     directives = read_mak_file(Path("project.MAK"))
 """
 
-__version__ = "0.0.8"
+__version__ = "0.0.9"
 
 # Constants
 from compass_lib.constants import COMPASS_ENCODING
