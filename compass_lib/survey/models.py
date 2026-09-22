@@ -100,6 +100,8 @@ class CompassSurvey(BaseModel):
 
     header: CompassSurveyHeader
     shots: list[CompassShot] = Field(default_factory=list)
+    # Derived project-wide display metadata, never written into source files.
+    color: str | None = Field(default=None, exclude=True)
 
 
 class CompassDatFile(BaseModel):

@@ -15,6 +15,25 @@ COMPASS_ENCODING = "cp1252"
 #: Encoding used for JSON files
 JSON_ENCODING = "utf-8"
 
+#: Bright, saturated palette shared by section colors and origin debug styling.
+#: No black, white, gray, brown, or muted shades.
+SURVEY_COLORS: tuple[str, ...] = (
+    "#ff1744",  # vivid red
+    "#ff6d00",  # bright orange
+    "#ffea00",  # electric yellow
+    "#aaff00",  # lime
+    "#00e676",  # spring green
+    "#00ffb3",  # bright mint
+    "#00e5ff",  # cyan
+    "#2979ff",  # electric blue
+    "#d500f9",  # purple
+    "#ff00a8",  # hot pink
+)
+
+#: HSV bounds also enforced when crowded junctions require additional colors.
+SURVEY_COLOR_MIN_SATURATION: float = 0.8
+SURVEY_COLOR_MIN_VALUE: float = 0.9
+
 #: Encoding used when reading raw Compass files (ASCII with replacements)
 ASCII_ENCODING = "ascii"
 

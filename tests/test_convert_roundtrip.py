@@ -8,6 +8,7 @@ All test files are sourced from tests/artifacts/private/.
 """
 
 import json
+import re
 import shutil
 import tempfile
 from pathlib import Path
@@ -415,6 +416,18 @@ class TestGeoJSONBaselineComparison:
 
         # Load baseline
         baseline = orjson.loads(geojson_baseline.read_bytes())
+
+        # Legacy geographic baselines predate additive shot colors. Validate the
+        # new contract separately, then retain every original geometry/property
+        # comparison. Section ownership and adjacency are covered synthetically
+        # in test_section_colors without changing private baseline artifacts.
+        for feature in result["features"]:
+            color = feature["properties"].pop("color", None)
+            if feature["geometry"]["type"] == "LineString":
+                assert isinstance(color, str)
+                assert re.fullmatch(r"#[0-9a-f]{6}", color)
+            else:
+                assert color is None
 
         ddiff = DeepDiff(baseline, result, ignore_order=True)
         assert ddiff == {}, ddiff

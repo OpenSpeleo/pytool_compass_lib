@@ -55,10 +55,12 @@ from compass_lib.constants import FEET_TO_METERS
 from compass_lib.constants import GEOJSON_COORDINATE_PRECISION
 from compass_lib.constants import JSON_ENCODING
 from compass_lib.constants import METERS_TO_FEET
+from compass_lib.constants import SURVEY_COLORS
 from compass_lib.enums import Datum
 from compass_lib.geo_utils import GeoLocation
 from compass_lib.geo_utils import get_declination
 from compass_lib.io import load_project
+from compass_lib.section_colors import assign_section_colors
 from compass_lib.solver.models import SurveyNetwork
 
 if TYPE_CHECKING:
@@ -139,6 +141,9 @@ class SurveyLeg:
     but measurement deltas do not).
     """
 
+    color: str | None = None
+    """Derived source-section color, independent of propagation origin."""
+
 
 @dataclass
 class MisclosureLeg:
@@ -185,18 +190,7 @@ class ComputedSurvey:
 #: stations can be visually distinguished by their propagation source.
 #: Viewers that support the simplestyle spec (geojson.io, GitHub, QGIS,
 #: Mapbox, …) will render these automatically.
-ORIGIN_COLORS: list[str] = [
-    "#1f77b4",  # blue
-    "#ff7f0e",  # orange
-    "#2ca02c",  # green
-    "#d62728",  # red
-    "#9467bd",  # purple
-    "#8c564b",  # brown
-    "#e377c2",  # pink
-    "#7f7f7f",  # grey
-    "#bcbd22",  # olive
-    "#17becf",  # cyan
-]
+ORIGIN_COLORS: list[str] = list(SURVEY_COLORS)
 
 
 # -----------------------------------------------------------------------------
@@ -757,6 +751,9 @@ def propagate_coordinates(
     Returns:
         ComputedSurvey with all computed stations and legs
     """
+    assign_section_colors(
+        project, ([edge[3] for edge in edges] for edges in adjacency.values())
+    )
     result = ComputedSurvey()
 
     # Set metadata
@@ -957,6 +954,7 @@ def propagate_coordinates(
                     inclination=shot.frontsight_inclination,
                     file=file_name,
                     survey=survey_name,
+                    color=survey.color,
                     left=shot.left,
                     right=shot.right,
                     up=shot.up,
@@ -997,6 +995,7 @@ def propagate_coordinates(
                         inclination=shot.frontsight_inclination,
                         file=file_name,
                         survey=survey_name,
+                        color=survey.color,
                         left=shot.left,
                         right=shot.right,
                         up=shot.up,
@@ -1027,6 +1026,7 @@ def propagate_coordinates(
                         inclination=shot.frontsight_inclination,
                         file=file_name,
                         survey=survey_name,
+                        color=survey.color,
                         left=shot.left,
                         right=shot.right,
                         up=shot.up,
@@ -1240,6 +1240,7 @@ def propagate_coordinates(
                             inclination=shot.frontsight_inclination,
                             file=file_name,
                             survey=survey_name,
+                            color=survey.color,
                             left=shot.left,
                             right=shot.right,
                             up=shot.up,
@@ -1259,6 +1260,7 @@ def propagate_coordinates(
                             inclination=shot.frontsight_inclination,
                             file=file_name,
                             survey=survey_name,
+                            color=survey.color,
                             left=shot.left,
                             right=shot.right,
                             up=shot.up,
@@ -1415,6 +1417,7 @@ def propagate_coordinates(
                     inclination=shot.frontsight_inclination,
                     file=file_name,
                     survey=survey_name,
+                    color=survey.color,
                     left=shot.left,
                     right=shot.right,
                     up=shot.up,
@@ -1676,6 +1679,7 @@ def leg_to_feature(
             "id": str(uuid.uuid5(uuid.NAMESPACE_OID, leg.to_station.name)),
             "depth": abs(depth_ft),  # Compass depth is < 0
             "name": leg.survey,
+            **({"color": leg.color} if leg.color is not None else {}),
         },
     )
 
@@ -1886,6 +1890,7 @@ def passage_to_feature(
         ),
         properties={
             "type": "passage",
+            **({"color": leg.color} if leg.color is not None else {}),
             "from": leg.from_station.name,
             "to": leg.to_station.name,
             "left_ft": leg.left,
