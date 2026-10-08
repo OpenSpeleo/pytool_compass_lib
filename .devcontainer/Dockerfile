@@ -1,6 +1,8 @@
 FROM python:3.14.0-bookworm
 
-RUN apt update && apt install -y --no-install-recommends \
+# Keep development utilities current with Debian's package updates.
+# hadolint ignore=DL3008
+RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     curl \
     wget \
@@ -10,7 +12,7 @@ RUN apt update && apt install -y --no-install-recommends \
     zsh \
     tmux \
     # cleaning up unused files
-    && apt clean \
+    && apt-get clean \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && rm -rf /var/lib/apt/lists/*
 
