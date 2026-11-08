@@ -5,7 +5,7 @@ This module contains Pydantic models for representing plot commands
 found in Compass .PLT plot files.
 """
 
-import datetime
+import datetime as dt
 from decimal import Decimal
 
 from pydantic import BaseModel
@@ -34,7 +34,7 @@ class BeginSurveyCommand(CompassPlotCommand):
     """
 
     survey_name: str
-    date: datetime.date | None = None
+    date: dt.date | None = None
     comment: str | None = None
 
     def __str__(self) -> str:

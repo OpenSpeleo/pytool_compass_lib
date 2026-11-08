@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import datetime
+from datetime import datetime
 
 import pyIGRF14 as pyIGRF
 from pydantic import BaseModel
@@ -24,11 +24,11 @@ class GeoLocation(BaseModel):
         )
 
 
-def decimal_year(dt: datetime.datetime) -> float:
-    dt_start = datetime.datetime(  # noqa: DTZ001
+def decimal_year(dt: datetime) -> float:
+    dt_start = datetime(  # noqa: DTZ001
         year=dt.year, month=1, day=1, hour=0, minute=0, second=0
     )
-    dt_end = datetime.datetime(  # noqa: DTZ001
+    dt_end = datetime(  # noqa: DTZ001
         year=dt.year + 1, month=1, day=1, hour=0, minute=0, second=0
     )
     return round(
@@ -37,7 +37,7 @@ def decimal_year(dt: datetime.datetime) -> float:
     )
 
 
-def get_declination(location: GeoLocation, dt: datetime.datetime) -> float:
+def get_declination(location: GeoLocation, dt: datetime) -> float:
     declination, _, _, _, _, _, _ = pyIGRF.igrf_value(
         location.latitude,
         location.longitude,

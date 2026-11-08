@@ -17,7 +17,7 @@ Compass editor and is stored as a raw string on the header.
 
 from __future__ import annotations
 
-import datetime  # noqa: TC003
+import datetime as dt  # noqa: TC003
 
 from pydantic import BaseModel
 from pydantic import ConfigDict
@@ -75,7 +75,7 @@ class CompassSurveyHeader(BaseModel):
 
     cave_name: str | None = None
     survey_name: str | None = None
-    date: datetime.date | None = None
+    date: dt.date | None = None
     comment: str | None = None
     team: str | None = None
     declination: float = 0.0

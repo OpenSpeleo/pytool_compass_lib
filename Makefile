@@ -1,4 +1,4 @@
-.PHONY: clean test coverage build install lint
+.PHONY: clean test coverage build install
 
 SHELL := /bin/bash
 
@@ -24,18 +24,6 @@ clean-test: ## remove test and coverage artifacts
 	rm -f .coverage*
 	rm -fr htmlcov/
 	rm -fr .pytest_cache
-
-# ============================================================================ #
-# LINT COMMANDS
-# ============================================================================ #
-
-lint:
-# Lint all files in the current directory (and any subdirectories).
-	ruff check --fix
-
-format:
-# Format all files in the current directory (and any subdirectories).
-	ruff format
 
 # ============================================================================ #
 # TEST COMMANDS

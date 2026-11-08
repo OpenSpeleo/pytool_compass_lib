@@ -65,16 +65,15 @@ Run the standalone checks from this package directory:
 
 ```bash
 uv sync --frozen --all-extras --dev
-uv run ruff check .
-uv run ruff format --check .
 uv run pytest
 uv run prek run --all-files
 ```
 
-Prek may apply fixes; inspect its diff and rerun affected checks. For test runs,
-prefer the CI command `uv run pytest` over legacy Make targets that may require
-extra tools or perform cleanup. Preserve test fixtures; put generated test
-outputs in temporary directories.
+Prek is the entrypoint for linting and formatting. It may apply fixes; inspect
+its diff and rerun affected checks. For test runs, prefer the CI command
+`uv run pytest` over legacy Make targets that may require extra tools or perform
+cleanup. Preserve test fixtures; put generated test outputs in temporary
+directories.
 
 ## Dependencies and integration
 

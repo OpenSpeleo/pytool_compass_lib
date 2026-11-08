@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import colorsys
-import datetime
+import datetime as dt
 import json
 from collections import deque
 from itertools import islice
@@ -47,7 +47,7 @@ if TYPE_CHECKING:
 
 def section(*edges: tuple[str, str], name: str = "Duplicate") -> CompassSurvey:
     return CompassSurvey(
-        header=CompassSurveyHeader(survey_name=name, date=datetime.date(2020, 1, 1)),
+        header=CompassSurveyHeader(survey_name=name, date=dt.date(2020, 1, 1)),
         shots=[
             CompassShot(
                 from_station_name=start,
