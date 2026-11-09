@@ -6,6 +6,13 @@ build-backend = "flit_core.buildapi"
 
 [tool.uv]
 package = true
+required-version = ">=0.12.17"
+# Limit the Cachebox metadata correction to the validated DeepDiff release.
+override-dependencies = [
+    { package = { name = "deepdiff", version = "9.1.0" }, dependencies = [
+        "cachebox>=6.2.10,<7",
+    ] },
+]
 
 [dependency-groups]
 dev = [
@@ -73,7 +80,7 @@ test = [
     "cryptography>=50.0.0,<51",
     "python-dotenv>=1.2.2,<2",
     # Testing
-    "deepdiff>=7.0,<10",
+    "deepdiff>=9.1.0,<10",
     "pytest>=9.0.3,<10",
     "pytest-cov>=7.1.0,<8",
     "pytest-env>=1.6.0,<2",
