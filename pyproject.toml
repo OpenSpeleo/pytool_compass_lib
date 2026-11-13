@@ -5,6 +5,8 @@ requires = [
 build-backend = "flit_core.buildapi"
 
 [tool.uv]
+# Flit derives version metadata from the package module.
+cache-keys = [{ file = "pyproject.toml" }, { file = "compass_lib/__init__.py" }]
 package = true
 required-version = ">=0.12.17"
 # Limit the Cachebox metadata correction to the validated DeepDiff release.
@@ -61,6 +63,7 @@ classifiers = [
     "Programming Language :: Python :: 3 :: Only",
 ]
 dependencies = [
+    "cave-closure==0.0.5",
     "geojson>=3.2,<4",
     "numpy>=2.4.4,<3",
     "scipy>=1.17.1,<2",

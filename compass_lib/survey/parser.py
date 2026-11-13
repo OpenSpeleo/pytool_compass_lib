@@ -301,15 +301,15 @@ class CompassSurveyParser:
                 if len(parts) >= 1:
                     val = self._parse_measurement(parts[0])
                     if val is not None:
-                        header["length_correction"] = val
+                        header["frontsight_azimuth_correction"] = val
                 if len(parts) >= 2:
                     val = self._parse_measurement(parts[1])
                     if val is not None:
-                        header["frontsight_azimuth_correction"] = val
+                        header["frontsight_inclination_correction"] = val
                 if len(parts) >= 3:
                     val = self._parse_measurement(parts[2])
                     if val is not None:
-                        header["frontsight_inclination_correction"] = val
+                        header["length_correction"] = val
 
             elif field_upper == "CORRECTIONS2:":
                 parts = self.NON_WHITESPACE.findall(value)

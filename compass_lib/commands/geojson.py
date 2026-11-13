@@ -9,12 +9,12 @@ import argparse
 import logging
 from pathlib import Path
 
+from cave_closure import LoopClosureAlgorithm
+from cave_closure import LoopClosureMode
+
 from compass_lib.enums import FileExtension
 from compass_lib.geojson import convert_mak_to_geojson
-from compass_lib.solver.ariane import ArianeSolver
-from compass_lib.solver.lse import LSESolver
-from compass_lib.solver.proportional import ProportionalSolver
-from compass_lib.solver.sparse import SparseSolver
+from compass_lib.loop_closure import LoopClosure
 
 logger = logging.getLogger(__name__)
 
@@ -89,15 +89,29 @@ Notes:
         help="Disable origin-based coloring of stations and legs",
     )
     parser.add_argument(
-        "--solver",
-        choices=["proportional", "sparse", "lse", "ariane", "none"],
-        default="proportional",
-        help="Survey adjustment solver: "
-        "proportional (L2, spreads error evenly), "
-        "sparse (L1, fewest/smallest changes), "
-        "lse (blunder-aware, protects good data), "
-        "ariane (sparse CG + blunder-aware, scales to large caves), "
-        "none (raw BFS, shows misclosure gaps)",
+        "--algorithm",
+        choices=[algorithm.name for algorithm in LoopClosureAlgorithm.variants()],
+        default=LoopClosureAlgorithm.LSE_REDUCED_PCG.name,
+        help="Covariance-weighted loop closure algorithm",
+    )
+    parser.add_argument(
+        "--mode",
+        type=LoopClosureMode,
+        choices=list(LoopClosureMode),
+        default=LoopClosureMode.SPATIAL,
+    )
+    parser.add_argument(
+        "--sigma-m",
+        type=float,
+        default=1.0,
+        help=(
+            "Independent Cartesian placement standard deviation in metres (default: 1)"
+        ),
+    )
+    parser.add_argument(
+        "--raw",
+        action="store_true",
+        help="Export measured geometry without loop closure",
     )
     parser.add_argument(
         "--minify",
@@ -119,14 +133,15 @@ Notes:
         return 1
 
     try:
-        solvers = {
-            "proportional": ProportionalSolver,
-            "sparse": SparseSolver,
-            "lse": LSESolver,
-            "ariane": ArianeSolver,
-            "none": lambda: None,
-        }
-        solver = solvers[parsed_args.solver]()
+        loop_closure = (
+            None
+            if parsed_args.raw
+            else LoopClosure(
+                mode=parsed_args.mode,
+                sigma_m=parsed_args.sigma_m,
+                algorithm=getattr(LoopClosureAlgorithm, parsed_args.algorithm),
+            )
+        )
 
         result = convert_mak_to_geojson(
             parsed_args.input_file,
@@ -136,7 +151,7 @@ Notes:
             include_passages=parsed_args.passages,
             include_anchors=parsed_args.anchors,
             color_by_origin=not parsed_args.no_colors,
-            solver=solver,
+            loop_closure=loop_closure,
             minify=parsed_args.minify,
         )
 

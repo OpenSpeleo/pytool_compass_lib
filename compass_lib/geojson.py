@@ -61,13 +61,12 @@ from compass_lib.geo_utils import GeoLocation
 from compass_lib.geo_utils import get_declination
 from compass_lib.io import load_project
 from compass_lib.section_colors import assign_section_colors
-from compass_lib.solver.models import SurveyNetwork
 
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from compass_lib.loop_closure import LoopClosure
     from compass_lib.project.models import CompassMakFile
-    from compass_lib.solver.base import SurveyAdjuster
     from compass_lib.survey.models import CompassShot
     from compass_lib.survey.models import CompassSurvey
 
@@ -136,7 +135,7 @@ class SurveyLeg:
     """Measurement-based displacement (de, dn, dz) in metres.
 
     Computed from the shot's distance, bearing, inclination with
-    declination and convergence applied.  Used by survey adjustment solvers
+    declination and convergence applied.  Used by survey loop_closure solvers
     to detect misclosure (coordinate differences telescope to zero,
     but measurement deltas do not).
     """
@@ -149,12 +148,12 @@ class SurveyLeg:
 class MisclosureLeg:
     """A misclosure gap between two BFS propagation fronts.
 
-    When solver is None (cross-origin), this shows where the BFS from
+    When loop_closure is None (cross-origin), this shows where the BFS from
     one anchor computed a station at position ``ghost`` while the
     station already exists at position ``existing``.  The gap between
     them is the raw survey misclosure.
 
-    When solver is not None (same-origin), this shows where a loop
+    When loop_closure is not None (same-origin), this shows where a loop
     within the same BFS front has a closure error.  The ``ghost`` is
     the position computed by the arriving (typically longer) path; the
     ``existing`` is the position already set by the first path to
@@ -180,6 +179,9 @@ class ComputedSurvey:
     utm_zone: int | None = None
     utm_northern: bool = True
     datum: Datum | None = None
+    frame_corrections: dict[tuple[str, int], tuple[float, float]] = field(
+        default_factory=dict
+    )
 
 
 # -----------------------------------------------------------------------------
@@ -554,7 +556,7 @@ def build_station_graph(
                 to_name = _scope_name(shot.to_station_name, scope_id, link_names)
 
                 # Skip self-loops (from == to).  These are data errors
-                # that create impossible solver constraints.
+                # that create impossible loop_closure constraints.
                 if from_name == to_name:
                     logger.warning(
                         "Skipping self-loop: %s -> %s in %s:%s",
@@ -665,7 +667,7 @@ def compute_shot_delta(
             azimuth = None
 
         if shot.backsight_inclination is not None:
-            inclination = -shot.backsight_inclination
+            inclination = shot.backsight_inclination
         elif shot.frontsight_inclination is not None:
             inclination = -shot.frontsight_inclination
         else:
@@ -728,6 +730,7 @@ def propagate_coordinates(
     adjacency: dict[str, list[tuple[CompassShot, str, str, CompassSurvey, bool]]],
     *,
     detect_same_origin_loops: bool = False,
+    frame_corrections: dict[tuple[str, int], tuple[float, float]] | None = None,
 ) -> ComputedSurvey:
     """Propagate coordinates from anchor stations via BFS.
 
@@ -746,7 +749,7 @@ def propagate_coordinates(
             origin).  The longest path from the origin to the closing
             station is the "true" segment; the gap between its computed
             position and the existing position is the raw closure error.
-            Enable this when a solver will be applied.
+            Enable this when a loop_closure will be applied.
 
     Returns:
         ComputedSurvey with all computed stations and legs
@@ -773,7 +776,15 @@ def propagate_coordinates(
     lruds_at_to_station = flags.lruds_at_to_station if flags else False
 
     # Cache for survey declinations (calculated once per survey)
-    survey_declinations: dict[str, float] = {}
+    survey_frames = {
+        (directive.file, id(survey)): frame_corrections[(directive.file, index)]
+        for directive in project.file_directives
+        if directive.data is not None
+        for index, survey in enumerate(directive.data.surveys)
+        if frame_corrections is not None
+        and (directive.file, index) in frame_corrections
+    }
+    survey_declinations = {key: frame[0] for key, frame in survey_frames.items()}
 
     # Anchor-by-file index for O(1) declination lookup (avoids linear
     # scan over all anchors per survey).
@@ -782,7 +793,7 @@ def propagate_coordinates(
         if _a.file and _a.file not in anchor_by_file:
             anchor_by_file[_a.file] = _a
 
-    # When a solver is active, use *single-origin* BFS: seed from one
+    # When a loop_closure is active, use *single-origin* BFS: seed from one
     # anchor and traverse the full network (forward + reverse edges).
     # This propagates the entire traverse from the same starting point
     # so that closures appear at the far anchor, not at arbitrary BFS
@@ -834,7 +845,7 @@ def propagate_coordinates(
 
     # BFS from anchor stations.
     # Multi-origin mode: FORWARD ONLY (reverse edges skipped).
-    # Single-origin mode (solver active): forward + reverse edges
+    # Single-origin mode (loop_closure active): forward + reverse edges
     # so the full traverse is computed from the same starting point
     # and closures appear at the far anchor, not at arbitrary BFS
     # meeting points.
@@ -871,7 +882,7 @@ def propagate_coordinates(
             visited_shots.add(shot_key)
 
             # Calculate declination for this survey (cached)
-            survey_key = f"{file_name}:{survey_name}"
+            survey_key = (file_name, id(survey))
             if survey_key not in survey_declinations:
                 survey_anchor = anchor_by_file.get(file_name)
                 location_station = survey_anchor if survey_anchor else current_station
@@ -916,7 +927,7 @@ def propagate_coordinates(
                 shot,
                 is_reverse,
                 declination,
-                convergence,
+                survey_frames.get(survey_key, (declination, convergence))[1],
             )
             de, dn, dz = shot_delta
 
@@ -1037,7 +1048,7 @@ def propagate_coordinates(
                     )
                     result.legs.append(leg)
 
-                    # When a solver will be applied, record same-origin
+                    # When a loop_closure will be applied, record same-origin
                     # loop closures.  The whole path is propagated from
                     # the same origin; the longest path to the closing
                     # station is the "true" segment.
@@ -1069,7 +1080,7 @@ def propagate_coordinates(
     # In single-origin mode, secondary anchors were placed by BFS
     # with propagated positions.  Compare with their known (fixed)
     # positions to get the full-traverse closure, then snap them
-    # to the known position so the solver treats them as anchors.
+    # to the known position so the loop_closure treats them as anchors.
     #
     # Secondary anchors that were NOT reached by BFS belong to
     # disconnected components (separate caves).  They are placed
@@ -1117,7 +1128,7 @@ def propagate_coordinates(
                         gap,
                         bfs_station.path_distance,
                     )
-                # Snap to known anchor position for the solver
+                # Snap to known anchor position for the loop_closure
                 bfs_station.easting = sec_known.easting
                 bfs_station.northing = sec_known.northing
                 bfs_station.elevation = sec_known.elevation
@@ -1174,7 +1185,7 @@ def propagate_coordinates(
                         continue
                     visited_shots.add(shot_key)
 
-                    survey_key = f"{file_name}:{survey_name}"
+                    survey_key = (file_name, id(survey))
                     if survey_key not in survey_declinations:
                         survey_anchor = anchor_by_file.get(file_name)
                         location_station = (
@@ -1204,7 +1215,7 @@ def propagate_coordinates(
                         shot,
                         is_reverse,
                         declination,
-                        convergence,
+                        survey_frames.get(survey_key, (declination, convergence))[1],
                     )
                     de, dn, dz = shot_delta
 
@@ -1349,7 +1360,7 @@ def propagate_coordinates(
 
                 visited_shots.add(shot_key)
 
-                survey_key = f"{file_name}:{survey_name}"
+                survey_key = (file_name, id(survey))
                 if survey_key not in survey_declinations:
                     survey_anchor = anchor_by_file.get(file_name)
                     location_station = (
@@ -1373,7 +1384,9 @@ def propagate_coordinates(
                     shot,
                     is_reverse=False,
                     declination=declination,
-                    convergence=convergence,
+                    convergence=survey_frames.get(
+                        survey_key, (declination, convergence)
+                    )[1],
                 )
                 de, dn, dz = forward_delta
 
@@ -1439,6 +1452,17 @@ def propagate_coordinates(
             ", ".join(display[:20]) + (" ..." if len(display) > 20 else ""),
         )
 
+    result.frame_corrections = {
+        (directive.file, index): survey_frames.get(
+            (directive.file, id(survey)),
+            (survey_declinations[(directive.file, id(survey))], convergence),
+        )
+        for directive in project.file_directives
+        if directive.data is not None
+        for index, survey in enumerate(directive.data.surveys)
+        if (directive.file, id(survey)) in survey_declinations
+    }
+
     logger.info(
         "Computed %d stations and %d legs",
         len(result.stations),
@@ -1450,7 +1474,7 @@ def propagate_coordinates(
 
 def compute_survey_coordinates(
     project: CompassMakFile,
-    solver: SurveyAdjuster | None = None,
+    loop_closure: LoopClosure | None = None,
 ) -> ComputedSurvey:
     """Compute station coordinates from survey data.
 
@@ -1458,9 +1482,8 @@ def compute_survey_coordinates(
 
     Args:
         project: Loaded CompassMakFile with DAT data
-        solver: Optional survey adjuster.  When provided, traverse
-            adjustment is applied after BFS propagation.  Pass
-            ``ProportionalSolver()`` for proportional correction.
+        loop_closure: Optional loop-closure configuration applied after BFS
+            propagation. Pass an explicit ``LoopClosure`` to select its algorithm.
 
     Returns:
         ComputedSurvey with station coordinates and legs
@@ -1471,11 +1494,24 @@ def compute_survey_coordinates(
         project,
         anchors,
         adjacency,
-        detect_same_origin_loops=(solver is not None),
+        detect_same_origin_loops=(loop_closure is not None),
+        frame_corrections=(
+            dict(loop_closure.frame_corrections)
+            if loop_closure is not None and loop_closure.frame_corrections is not None
+            else None
+        ),
     )
 
-    if solver is not None:
-        logger.info("Applying survey adjustment: %s", solver.name)
+    if loop_closure is not None:
+        logger.info(
+            "Applying loop closure: %s",
+            loop_closure.name
+            or (
+                loop_closure.algorithm.name
+                if loop_closure.algorithm is not None
+                else loop_closure.method.value
+            ),
+        )
 
         # Solver handles all closures — clear misclosure lines
         # so they do not appear in the GeoJSON output.
@@ -1499,15 +1535,13 @@ def compute_survey_coordinates(
                 if real is not None:
                     leg.from_station = real
 
-        # Run solver
-        network = SurveyNetwork.from_computed_survey(result, anchors)
-        adjusted = solver.adjust(network)
+        adjusted = loop_closure.apply(project, result, anchors)
         for name, coords in adjusted.items():
             station = result.stations.get(name)
             if station is not None:
-                station.easting = coords.x
-                station.northing = coords.y
-                station.elevation = coords.z
+                station.easting = coords[0]
+                station.northing = coords[1]
+                station.elevation = coords[2]
 
     return result
 
@@ -2006,10 +2040,10 @@ def survey_to_geojson(
 
     # Add misclosure gap lines.
     # Cross-origin misclosures (same_origin=False) are present only
-    # when solver is None — raw BFS shows where propagation fronts
+    # when loop_closure is None — raw BFS shows where propagation fronts
     # disagree.
     # Same-origin misclosures (same_origin=True) are present when a
-    # solver was applied — they show the raw loop closure error
+    # loop_closure was applied — they show the raw loop closure error
     # computed with both paths propagated from the same origin,
     # using the longest path as the "true" segment.
     if include_legs and survey.misclosures:
@@ -2140,7 +2174,7 @@ def project_to_geojson(
     include_passages: bool = False,
     include_anchors: bool = False,
     color_by_origin: bool = True,
-    solver: SurveyAdjuster | None = None,
+    loop_closure: LoopClosure | None = None,
 ) -> FeatureCollection:
     """Convert a Compass project to GeoJSON.
 
@@ -2154,12 +2188,12 @@ def project_to_geojson(
         include_passages: Include Polygon features for passage outlines
         include_anchors: Include Point features for anchor stations
         color_by_origin: Color stations and legs by propagation origin
-        solver: Optional survey adjuster
+        loop_closure: Optional loop-closure configuration
 
     Returns:
         GeoJSON FeatureCollection
     """
-    survey = compute_survey_coordinates(project, solver=solver)
+    survey = compute_survey_coordinates(project, loop_closure=loop_closure)
     return survey_to_geojson(
         survey,
         include_stations=include_stations,
@@ -2179,7 +2213,7 @@ def convert_mak_to_geojson(
     include_passages: bool = False,
     include_anchors: bool = False,
     color_by_origin: bool = True,
-    solver: SurveyAdjuster | None = None,
+    loop_closure: LoopClosure | None = None,
     minify: bool = False,
 ) -> str:
     """Convert a MAK file (with DAT files) to GeoJSON.
@@ -2192,7 +2226,7 @@ def convert_mak_to_geojson(
         include_passages: Include Polygon features for passage outlines
         include_anchors: Include Point features for anchor stations
         color_by_origin: Color stations and legs by propagation origin
-        solver: Optional survey adjuster
+        loop_closure: Optional loop-closure configuration
         minify: Omit indentation for compact output
 
     Returns:
@@ -2207,7 +2241,7 @@ def convert_mak_to_geojson(
         include_passages=include_passages,
         include_anchors=include_anchors,
         color_by_origin=color_by_origin,
-        solver=solver,
+        loop_closure=loop_closure,
     )
 
     # Use orjson for fast serialization

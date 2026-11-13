@@ -318,8 +318,9 @@ DECLINATION: 1.00  FORMAT: DDDDLUDRADLBF  CORRECTIONS: 2.00 3.00 4.00 CORRECTION
         assert header.declination == pytest.approx(1.0)
         assert header.format_string == "DDDDLUDRADLBF"
         assert header.has_backsights is True
-        assert header.length_correction == pytest.approx(2.0)
-        assert header.frontsight_azimuth_correction == pytest.approx(3.0)
+        assert header.length_correction == pytest.approx(4.0)
+        assert header.frontsight_azimuth_correction == pytest.approx(2.0)
+        assert header.frontsight_inclination_correction == pytest.approx(3.0)
 
     def test_parse_format_with_no_backsights(self):
         """Test parsing format string without backsights."""

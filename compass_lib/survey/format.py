@@ -178,38 +178,29 @@ def format_survey_header(
     declination = header.declination
     decl_line = f"DECLINATION: {declination:.2f}  FORMAT: {format_str}"
 
-    # Corrections
-    has_corrections = any(
-        [
-            header.length_correction,
+    # Native order is compass, inclinometer, tape. Backsight calibration is
+    # independent of the frontsight calibration block.
+    if any(
+        (
             header.frontsight_azimuth_correction,
             header.frontsight_inclination_correction,
-        ]
-    )
-
-    if has_corrections:
-        corr_values = [
-            header.length_correction or 0.0,
-            header.frontsight_azimuth_correction or 0.0,
-            header.frontsight_inclination_correction or 0.0,
-        ]
-        corr_str = " ".join(f"{v:.2f}" for v in corr_values)
-        decl_line += f"  CORRECTIONS: {corr_str}"
-
-        # Backsight corrections
-        has_bs_corrections = any(
-            [
-                header.backsight_azimuth_correction,
-                header.backsight_inclination_correction,
-            ]
+            header.length_correction,
         )
-        if has_bs_corrections:
-            bs_values = [
-                header.backsight_azimuth_correction or 0.0,
-                header.backsight_inclination_correction or 0.0,
-            ]
-            bs_str = " ".join(f"{v:.2f}" for v in bs_values)
-            decl_line += f" CORRECTIONS2: {bs_str}"
+    ):
+        corr_values = [
+            header.frontsight_azimuth_correction,
+            header.frontsight_inclination_correction,
+            header.length_correction,
+        ]
+        decl_line += "  CORRECTIONS: " + " ".join(f"{v:.2f}" for v in corr_values)
+    if any(
+        (header.backsight_azimuth_correction, header.backsight_inclination_correction)
+    ):
+        bs_values = [
+            header.backsight_azimuth_correction,
+            header.backsight_inclination_correction,
+        ]
+        decl_line += "  CORRECTIONS2: " + " ".join(f"{v:.2f}" for v in bs_values)
 
     lines.append(decl_line)
 

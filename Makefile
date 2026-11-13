@@ -84,7 +84,7 @@ regen-test-geojson:  ## rerun the json conversion to JSON of the test artifacts
 		[ -f "$$file" ] || continue; \
 		out=$${file%.[mM][aA][kK]}.geojson; \
 		echo "Converting $$file → $$out"; \
-		compass geojson -i "$$file" -o "$$out" --no-stations --anchors --no-colors --solver sparse; \
+		compass geojson -i "$$file" -o "$$out" --no-stations --anchors --no-colors --algorithm LSE_REDUCED_PCG --mode spatial --sigma-m 1; \
 	done; \
 	shopt -u nocaseglob;
 

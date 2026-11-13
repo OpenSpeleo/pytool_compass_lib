@@ -9,7 +9,8 @@
   implementations.
 - `compass_lib/io.py` and `interface.py`: public loading and saving entry
   points.
-- `compass_lib/solver/`: survey calculations.
+- `compass_lib/solver/`: survey calculations, including required loop-closure
+  support in `loop_closure.py`.
 - `compass_lib/commands/`: the `compass` CLI and conversion/encryption actions.
 - `tests/`: parsing, round-trip, validation, solver, and geographic regressions.
 

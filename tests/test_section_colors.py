@@ -11,6 +11,7 @@ from itertools import pairwise
 from typing import TYPE_CHECKING
 
 import pytest
+from cave_closure import LoopClosureMode
 
 from compass_lib import section_colors
 from compass_lib.commands.geojson import geojson
@@ -25,6 +26,7 @@ from compass_lib.geojson import project_to_geojson
 from compass_lib.geojson import survey_to_geojson
 from compass_lib.io import load_project
 from compass_lib.io import save_project
+from compass_lib.loop_closure import LoopClosure
 from compass_lib.models import NEVLocation
 from compass_lib.project.models import CompassMakFile
 from compass_lib.project.models import FileDirective
@@ -32,8 +34,6 @@ from compass_lib.project.models import LinkStation
 from compass_lib.project.models import UTMZoneDirective
 from compass_lib.section_colors import _additional_colors
 from compass_lib.section_colors import assign_section_colors
-from compass_lib.solver.noop import NoopSolver
-from compass_lib.solver.sparse import SparseSolver
 from compass_lib.survey.models import CompassDatFile
 from compass_lib.survey.models import CompassShot
 from compass_lib.survey.models import CompassSurvey
@@ -41,8 +41,6 @@ from compass_lib.survey.models import CompassSurveyHeader
 
 if TYPE_CHECKING:
     from pathlib import Path
-
-    from compass_lib.solver.base import SurveyAdjuster
 
 
 def section(*edges: tuple[str, str], name: str = "Duplicate") -> CompassSurvey:
@@ -199,9 +197,12 @@ def test_assignment_does_not_change_dat_serialization() -> None:
     assert assigned[0] != assigned[1]
 
 
-@pytest.mark.parametrize("solver", [None, NoopSolver(), SparseSolver()])
+@pytest.mark.parametrize(
+    "loop_closure",
+    [None, LoopClosure(mode=LoopClosureMode.SPATIAL, sigma_m=1.0)],
+)
 def test_color_is_carried_through_forward_reverse_and_secondary_propagation(
-    solver: SurveyAdjuster | None,
+    loop_closure: LoopClosure | None,
 ) -> None:
     first = section(("A", "B"), ("B", "C"), name="First")
     reverse = section(("D", "C"), name="Reverse")
@@ -213,7 +214,7 @@ def test_color_is_carried_through_forward_reverse_and_secondary_propagation(
             location=NEVLocation(easting=501000, northing=4400000, elevation=0),
         )
     )
-    computed = compute_survey_coordinates(survey_project, solver=solver)
+    computed = compute_survey_coordinates(survey_project, loop_closure=loop_closure)
     expected = {s.header.survey_name: s.color for s in [first, reverse, secondary]}
     assert len(computed.legs) == 6
     assert all(leg.color == expected[leg.survey] for leg in computed.legs)

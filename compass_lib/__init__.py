@@ -21,7 +21,8 @@ Usage:
     directives = read_mak_file(Path("project.MAK"))
 """
 
-__version__ = "0.0.9"
+__version__ = "0.0.10"
+
 
 # Constants
 from compass_lib.constants import COMPASS_ENCODING
@@ -52,6 +53,9 @@ from compass_lib.io import read_mak_file
 from compass_lib.io import save_project
 from compass_lib.io import write_dat_file
 from compass_lib.io import write_mak_file
+from compass_lib.loop_closure import LoopClosure
+from compass_lib.loop_closure import LoopClosureMethod
+from compass_lib.loop_closure.presets import InverseLengthWeightedL1SpatialSolver
 from compass_lib.models import Bounds
 from compass_lib.models import Location
 from compass_lib.models import NEVLocation
@@ -94,9 +98,12 @@ __all__ = [
     "FileDirective",
     "FileFormat",
     "InclinationUnit",
+    "InverseLengthWeightedL1SpatialSolver",
     "LengthUnit",
     "LinkStation",
     "Location",
+    "LoopClosure",
+    "LoopClosureMethod",
     "LrudAssociation",
     "LrudItem",
     "NEVLocation",

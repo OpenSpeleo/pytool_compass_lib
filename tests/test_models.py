@@ -435,7 +435,7 @@ class TestUTMLocationToLatLon:
     def test_to_latlon_with_convergence(self, sample_utm_coords, datum):
         """Test that convergence doesn't affect lat/lon conversion.
 
-        Convergence is used for bearing adjustments, not coordinate conversion.
+        Convergence is used for bearing corrections, not coordinate conversion.
         """
         coords_no_conv = sample_utm_coords.copy()
         coords_no_conv["datum"] = datum

@@ -26,7 +26,7 @@ from compass_lib.enums import FormatIdentifier
 from compass_lib.geojson import convert_mak_to_geojson
 from compass_lib.io import load_project
 from compass_lib.io import read_dat_file
-from compass_lib.solver.sparse import SparseSolver
+from compass_lib.loop_closure.presets import InverseLengthWeightedL1SpatialSolver
 from compass_lib.survey.models import CompassDatFile
 
 # Import fixtures from conftest
@@ -237,6 +237,20 @@ class TestBaselineConsistency:
         # Load baseline
         baseline = orjson.loads(json_baseline.read_bytes())
 
+        # Historical JSON baselines predate the native compass/inclinometer/tape
+        # ordering fix. Interpret their mislabeled fields without rewriting the
+        # encrypted source fixture. Independent header tables cover the wire order.
+        for survey in baseline["surveys"]:
+            header = survey["header"]
+            tape, compass, inclinometer = (
+                header["length_correction"],
+                header["frontsight_azimuth_correction"],
+                header["frontsight_inclination_correction"],
+            )
+            header["frontsight_azimuth_correction"] = tape
+            header["frontsight_inclination_correction"] = compass
+            header["length_correction"] = inclinometer
+
         ddiff = DeepDiff(baseline, result, ignore_order=True)
         assert ddiff == {}, ddiff
 
@@ -361,7 +375,6 @@ class TestGeoJSONGeneration:
             include_legs=True,
             include_passages=False,
             include_anchors=True,
-            solver=SparseSolver(),
         )
 
         # Parse result
@@ -410,7 +423,7 @@ class TestGeoJSONBaselineComparison:
             include_passages=False,
             include_anchors=True,
             color_by_origin=False,
-            solver=SparseSolver(),
+            loop_closure=InverseLengthWeightedL1SpatialSolver,
         )
         result = orjson.loads(result_str)
 
