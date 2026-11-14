@@ -63,7 +63,7 @@ classifiers = [
     "Programming Language :: Python :: 3 :: Only",
 ]
 dependencies = [
-    "cave-closure==0.0.5",
+    "cave-closure>=0.0.6,<0.1",
     "geojson>=3.2,<4",
     "numpy>=2.4.4,<3",
     "scipy>=1.17.1,<2",

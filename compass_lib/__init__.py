@@ -21,7 +21,7 @@ Usage:
     directives = read_mak_file(Path("project.MAK"))
 """
 
-__version__ = "0.0.10"
+__version__ = "0.0.11"
 
 
 # Constants
